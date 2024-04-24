@@ -1,11 +1,9 @@
 // Created by zihao zhou on 2024/4/24.
 // This head will hold the data structure of the role(enemy or main character)
-
-#define MAX_NAME 20
-#define MAX_SKILL 4
+#include "common.h"
 
 typedef struct {
-    char name[MAX_NAME];
+    char name[NAME_LENGTH];
     int atk;
     int hp;
     int def;
@@ -13,7 +11,7 @@ typedef struct {
 }Main_character;
 
 typedef struct {
-    char name[MAX_NAME];
+    char name[NAME_LENGTH];
     int atk;
     int hp;
     int def;
@@ -21,12 +19,12 @@ typedef struct {
 
 // Main struct handling skills functionality
 typedef struct Skills {
-    char name[20];
+    char name[NAME_LENGTH];
     int attack;
     int type;
     int uses;
     int cooldown;
-    char desc[200];
+    char desc[DESCRITPION_LENGTH];
 } Skills;
 
 #ifndef CHARACTER_H
