@@ -1,3 +1,1 @@
-ADD DESCRIPTION OF SOLUTION 
-
-TO DO
+Names: Rui Lin, Zihao Zhou, Marti Melcio
