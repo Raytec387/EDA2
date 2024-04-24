@@ -19,6 +19,16 @@ typedef struct {
     int def;
 }Enemy;
 
+// Main struct handling skills functionality
+typedef struct Skills {
+    char name[20];
+    int attack;
+    int type;
+    int uses;
+    int cooldown;
+    char desc[200];
+} Skills;
+
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
