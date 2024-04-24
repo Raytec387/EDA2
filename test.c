@@ -1,4 +1,4 @@
-//
+#include <stdio.h>
 // Created by zzh96 on 2024/4/23.
 //
 int main(void) {
