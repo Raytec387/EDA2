@@ -1,5 +1,6 @@
-// Created by zihao zhou on 2024/4/24.
+// Created on 2024/4/24.
 // This head will hold the data structure of the role(enemy or main character)
+// And skill of main character
 #include "common.h"
 
 typedef struct {
