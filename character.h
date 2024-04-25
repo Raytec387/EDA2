@@ -1,6 +1,6 @@
 // Created on 2024/4/24.
 // This head will hold the data structure of the role(enemy or main character)
-// And skill of main character
+// And skill of main charactersss
 #include "common.h"
 
 // Data structure of main character it holds the basic datas of the main character
