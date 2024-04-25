@@ -3,6 +3,8 @@
 // And skill of main character
 #include "common.h"
 
+// Data structure of main character it holds the basic datas of the main character
+// Such as atk/hp/def, skills, the name
 typedef struct {
     char name[NAME_LENGTH];
     int atk;
@@ -11,6 +13,8 @@ typedef struct {
     int skill_array[MAX_SKILL];
 }Main_character;
 
+// Data structure of main character it holds the basic datas of the enemies
+// Such as atk/hp/def, the name
 typedef struct {
     char name[NAME_LENGTH];
     int atk;
