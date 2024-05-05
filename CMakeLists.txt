@@ -6,4 +6,5 @@ set(CMAKE_C_STANDARD 11)
 add_executable(EDA2 main.c
         test.c
         Character.h
+        common.h
 )
