@@ -53,14 +53,13 @@ void displayMenu(){
     printf("===Red Rain===\n");
     printf("1.-Start a new game.\n");
     printf("2.-Configure the character\n");
-    printf("3.-Skills\n");
 }
 void run(){
     int option;
     do{
         displayMenu();
         do{
-            printf("select an option 1-3\n");
+            printf("select an option (%d-%d):"START_GAME,CONFIGURE_CHARACTER);
             option=read_int();
         }while(option < START_GAME || option> CONFIGURE_cHARACTER);
         switch(option){
