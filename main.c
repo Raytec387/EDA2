@@ -60,7 +60,7 @@ void run(){
             case START_GAME:
                 start_game();
                 break;
-            case CONFIGURE_CHARACTERS:
+            case CONFIGURE_CHARACTER:
                 configure_character();
                 break;
         }
