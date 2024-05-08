@@ -1,10 +1,10 @@
 // Created 08/05/2024
 
-#ifndef _COMBAT_H_
+#ifndef COMBAT_H
+#define COMBAT_H
 
 #include <character.h>
 
-#define _COMBAT_H_
 #define MAX_TURNS 10
 
 // Queue with linkedlists
@@ -14,11 +14,18 @@ typedef struct Turn_node {
     Turn_node *next;
 } Turn_node;
 
-typedef struct turn_queue {  
+typedef struct Turn_queue {  
     Turn_node *head;
     Turn_node *tail;
     int size;
     int num_turns;
-} turn_queue;
+} Turn_queue;
 
-#endif _COMBAT_H_
+// Combat Functions
+
+Turn_node* create_Tnode(Character *character);
+Turn_queue* create_Tqueue();
+void enqueue(Turn_queue *queue, Turn_node *node);
+Turn_node* dequeue(Turn_queue *queue);
+
+#endif
