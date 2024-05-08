@@ -1,10 +1,11 @@
 #include "common.h"
+#include "character.h"
 
 void start_game(){
 
 }
 
-void configure_character(){
+void configure_character(Character *character){
 
     displayCharacter_Configuration();
     do{
@@ -14,21 +15,20 @@ void configure_character(){
     }while(option < NAME || option > DEF);
 
     switch (option){
-case NAME:
-    printf("Insert the new name of the character:");
-    Main_character.name=scanf();
-    
-    break;
-
-case HP:
-    printf("Insert the HP of the character:");
-    break;
-case ATK:
-    printf("Instert the ATK of the character:");
-    break;
-case DEF:
-    printf("Instert the DEF of the character:");
-    break;
+    case NAME:
+        printf();
+        scanf("Insert the new name of the character:", character->name);
+        break;
+    case HP:
+        printf("Insert the HP of the character:");
+        break;
+    case ATK:
+        printf("Insert the ATK of the character:");
+        break;
+    case DEF:
+        printf("Insert the DEF of the character:");
+        break;
+    }
 }
 
 
