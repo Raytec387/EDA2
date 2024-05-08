@@ -29,11 +29,6 @@ case ATK:
 case DEF:
     printf("Instert the DEF of the character:");
     break;
-
-        
-            
-    
-
 }
 
 
@@ -46,8 +41,6 @@ void displayCharacter_Configuration(){
     printf("3.-Change characater ATK\n");
     printf("4.-Change characater DEF\n");
 }
-
-
 
 
 void displayMenu(){
