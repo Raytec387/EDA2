@@ -16,6 +16,7 @@ void configure_character(){
     switch (option){
 case NAME:
     printf("Insert the new name of the character:");
+    Main_character.name=scanf();
     
     break;
 
