@@ -2,7 +2,6 @@
 #include <string.h>
 #define MAX_STR_NAME 20
 #define MAX_SCENARIO 5
-const char txt[MAX_SCENARIO][MAX_STR_NAME] = {{"1.scenario.txt"},{"2.scenario.txt"},{"3.scenario.txt"},{"4.scenario.txt"},{"4.end.txt"}};
 
 char scenario_txt(char txt[MAX_STR_NAME]){
     FILE *fp;
@@ -88,9 +87,10 @@ void scenario_end_txt(char txt[MAX_STR_NAME]){
 
 // This is for testing, we need to create a main.c file 
 int main(){
-    // scenario_txt(txt[integer number here]); // return a char type function
+    char txt[MAX_SCENARIO][MAX_STR_NAME] = {{"1.scenario.txt"},{"2.scenario.txt"},{"3.scenario.txt"},{"4.scenario.txt"},{"4.end.txt"}};
+    //scenario_txt(txt["Here put a numebr"]); // return a char type function
     /*
     Battle system here
     */
-    // scenario_end_txt(txt[integer number here]); // return nothing just show the plot
+    //scenario_end_txt(txt["Here put a numebr"]); // return nothing just show the plot
 }
