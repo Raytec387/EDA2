@@ -111,8 +111,3 @@ void scenario_good_end(){
         fclose(fp);
     }
 }
-int main(){
-    scenario_4_txt();
-    scenario_4_end_txt();
-    scenario_good_end();
-}

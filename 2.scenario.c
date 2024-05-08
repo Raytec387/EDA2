@@ -81,12 +81,3 @@ void scenario_2_end_txt(){
         fclose(fp);
     }
 }
-
-int main(){
-    
-    scenario_2_txt(); // return a char type function
-    /*
-    Battle system here
-    */
-    scenario_2_end_txt(); // return nothing just show the plot
-}

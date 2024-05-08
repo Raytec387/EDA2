@@ -81,13 +81,3 @@ void scenario_1_end_txt(){
         fclose(fp);
     }
 }
-
-// This is for testing, we need to create a main.c file 
-int main(){
-    
-    scenario_1_txt(); // return a char type function
-    /*
-    Battle system here
-    */
-    scenario_1_end_txt(); // return nothing just show the plot
-}
