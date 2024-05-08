@@ -8,6 +8,8 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <string.h>
+#include <stdio.h> 
+#include <cjson/cJSON.h> 
 
 #define NAME_LENGTH 20
 #define DESCRITPION_LENGTH 100

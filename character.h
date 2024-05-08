@@ -20,9 +20,8 @@ typedef struct {
 // Main struct handling skills functionality
 typedef struct Skills {
     char name[NAME_LENGTH];
-    int attack;
+    int value;
     int type;
-    int uses;
     int cooldown;
     char desc[DESCRITPION_LENGTH];
 } Skills;
