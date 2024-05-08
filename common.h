@@ -9,8 +9,10 @@
 #include <assert.h>
 #include <string.h>
 #include <stdio.h> 
-#include <cjson/cJSON.h> 
+#include <cjson/cJSON.h>
 
+#define MAX_STR_NAME 20
+#define MAX_SCENARIO 5
 #define NAME_LENGTH 20
 #define DESCRITPION_LENGTH 100
 #define MAX_SKILL 4
