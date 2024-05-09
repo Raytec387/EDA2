@@ -1,8 +1,4 @@
-#include <stdio.h> 
-#include "cJSON.h"
-#include "cJSON.c"
-#define SIZE_OF_BUFFER 1200
-#include <string.h>
+#include "common.h"
 
 int main() { 
     // open the file 
