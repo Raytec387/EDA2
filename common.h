@@ -8,8 +8,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <string.h>
-#include <stdio.h> 
-#include <cjson/cJSON.h>
+
 
 #define MAX_STR_NAME 20
 #define MAX_SCENARIO 5
