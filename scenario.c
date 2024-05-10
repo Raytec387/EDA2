@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <string.h>
-#define MAX_STR_NAME 20
+#define NAME_LENGTH 20
 #define MAX_SCENARIO 5
 
-char scenario_txt(char txt[MAX_STR_NAME]){
+char scenario_txt(char txt[NAME_LENGTH]){
     FILE *fp;
 
     fp = fopen(txt, "r");
@@ -52,7 +52,7 @@ char scenario_txt(char txt[MAX_STR_NAME]){
     return choose;
 }
 
-void scenario_end_txt(char txt[MAX_STR_NAME]){
+void scenario_end_txt(char txt[NAME_LENGTH]){
     FILE *fp;
     fp = fopen(txt, "r");
 
@@ -87,7 +87,7 @@ void scenario_end_txt(char txt[MAX_STR_NAME]){
 
 // This is for testing, we need to create a main.c file 
 int main(){
-    char txt[MAX_SCENARIO][MAX_STR_NAME] = {{"1.scenario.txt"},{"2.scenario.txt"},{"3.scenario.txt"},{"4.scenario.txt"},{"4.end.txt"}};
+    char txt[MAX_SCENARIO][NAME_LENGTH] = {{"1.scenario.txt"},{"2.scenario.txt"},{"3.scenario.txt"},{"4.scenario.txt"},{"4.end.txt"}};
     //scenario_txt(txt["Here put a numebr"]); // return a char type function
     /*
     Battle system here
