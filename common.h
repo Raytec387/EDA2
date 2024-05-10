@@ -18,5 +18,6 @@
 #define NAME_LENGTH 20
 #define DESCRITPION_LENGTH 100
 #define MAX_SKILL 4
+#define MAX_TEMP_STR 30
 
 #endif
