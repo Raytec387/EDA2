@@ -13,7 +13,7 @@
 #include "cJSON.c"
 
 
-#define SIZE_OF_BUFFER 1200
+#define SIZE_OF_BUFFER 2048
 #define MAX_STR_NAME 20
 #define MAX_SCENARIO 5
 #define NAME_LENGTH 20

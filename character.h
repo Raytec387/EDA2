@@ -15,7 +15,7 @@
 typedef struct Skills {
     char name[NAME_LENGTH];
     int type;
-    float value;
+    int value;
     int cooldown;
     char desc[DESCRITPION_LENGTH];
 } Skills;
