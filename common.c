@@ -1,7 +1,6 @@
 // Created on 10/5/2024
 // This file stores the useful function that will call 
 // Many times when building the project
-
 #include "common.h"
 
 // Create a json pointer to access to the json file
