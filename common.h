@@ -21,4 +21,8 @@
 #define MAX_SKILL 4
 #define MAX_SKILL_IN_GAME 8
 
+// all skill in the game
+char All_skill[MAX_SKILL_IN_GAME][NAME_LENGTH] = {  {"Defence"},{"Strong Hit"},{"Heal"},{"Concentrate"},
+                                                    {"Heal+"},{"Good Swordart"},{"Wind Field"},{"Last Stardust"}};
+
 #endif
