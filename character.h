@@ -5,6 +5,7 @@
 #define _CHARACTER_H_
 
 #include "common.h"
+
 #define NAME_LENGTH 20
 #define DESCRITPION_LENGTH 100
 #define MAX_SKILL 4

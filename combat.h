@@ -3,7 +3,8 @@
 #ifndef _COMBAT_H_
 #define _COMBAT_H_
 
-#include <character.h>
+#include "common.h"
+#include "character.h"
 
 #define MAX_TURNS 10
 

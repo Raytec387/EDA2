@@ -1,6 +1,5 @@
 #include "common.h"
 #include "character.h"
-#include "common.c"
 
 // return description of the skill from json file
 const char *description(char temp_skill[NAME_LENGTH],char temp_description[DESCRITPION_LENGTH]){
@@ -127,6 +126,10 @@ int skill_use(int enemies_number,Character user,Character enemies[enemies_number
             break;
     }
     return turn;
+}
+
+int damage(int damage,int def){
+    return (damage * 100/(100+def));
 }
 
 /*

@@ -12,14 +12,12 @@
 #include "cJSON.h"
 #include "cJSON.c"
 
-<<<<<<< HEAD
 
 #define SIZE_OF_BUFFER 2048
 #define MAX_STR_NAME 20
 #define MAX_SCENARIO 5
-=======
+
 // Character Macros
->>>>>>> 1259ee2 (Changes to main, added new file to have all the "UI" element functions)
 #define NAME_LENGTH 20
 #define DESCRITPION_LENGTH 100
 #define MAX_SKILL 4
@@ -34,5 +32,9 @@ char All_skill[MAX_SKILL_IN_GAME][NAME_LENGTH] = {  {"Defence"},{"Strong Hit"},{
 #define START_GAME 1
 #define LOAD_GAME 2
 #define SAVE_GAME 3
+
+cJSON *create_json(char file_name[NAME_LENGTH]);
+
+int check_input(int lower,int upper);
 
 #endif

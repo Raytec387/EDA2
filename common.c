@@ -32,16 +32,12 @@ cJSON *create_json(char file_name[NAME_LENGTH]){
 
 // This function checks if the input is in the interval
 int check_input(int lower,int upper){
-    int choose;
-    if(scanf("%d",&choose) != 1)  {printf("Error!"); return -1;} 
-    while(!(choose >= lower && choose <= upper)){
+    int option;
+    if(scanf("%d",&option) != 1)  {printf("Error!"); return -1;} 
+    while(!(option >= lower && option <= upper)){
         printf("Please enter a valid number:\n");
-        scanf("%d",&choose);
+        scanf("%d",&otpion);
     }
     printf("\n");
-    return choose;
-}
-
-int damage(int damage,int def){
-    return (damage * 100/(100+def));
+    return option;
 }
