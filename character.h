@@ -24,7 +24,7 @@ typedef struct {
     char name[NAME_LENGTH];
     int atk;
     int hp;
-    int hp_limit;
+    int hp_limit; 					// constant value, the max hp
     int def;
     Skills skill_array[MAX_SKILL];
     bool is_player;

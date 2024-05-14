@@ -48,10 +48,9 @@ void initialize_skill(Skills skill_array[MAX_SKILL]){
         code = skill_code(skill_array[i].desc);
         skill_array = decode(skill_array,code,i);
     }
-
 }
 
-// This function is for change the skill, player can choose at most four skill
+// This function changes the skill, player can choose at most four skill
 void skill_change(char All_skill[MAX_SKILL_IN_GAME][NAME_LENGTH],Skills skill_array[MAX_SKILL],int current_skill){
     // Show the skills can be choosed
     char temp_description[DESCRITPION_LENGTH];
@@ -88,6 +87,9 @@ int skill_use(int enemies_number,Character user,Character enemies[enemies_number
     int type = user.skill_array->type;
     float value = user.skill_array[skill_choosen].value/10.0;
     int turn = user.skill_array->cooldown;
+    // Print the name of the skill
+    printf("\n%s uses %s\n",user.name,user.skill_array[skill_choosen].name);
+    // Each skill is distinguished by the different turn it has
     switch(type){
         case 0:
             // The target is always the user
@@ -95,10 +97,11 @@ int skill_use(int enemies_number,Character user,Character enemies[enemies_number
             if (turn == 2) user.def *=  value; 
             // Increase ATK for 2 turn
             else if (turn == 3) user.atk *= value;
+            // Heal
             else user.hp += value * (user.hp_limit - user.hp);
             break;
         case 1:
-            // This is atack skill
+            // This is atack skill, can choose the target
             if(turn == 1){
                 int target = check_input(1,enemies_number);
                 enemies[target-1].hp -= damage(value*user.atk,enemies[target-1].def);
@@ -110,14 +113,14 @@ int skill_use(int enemies_number,Character user,Character enemies[enemies_number
             }
             break;
         case 2:
-            // This is for the skill of the main character
+            // The unique skill wind field
             for(int i = 0;i<enemies_number;i++){
                 enemies[i].hp -= value * enemies[i].hp_limit;
             }
             user.hp -= value  * user.hp_limit;
             break;
         case 3:
-            // This is for the skill of the main character
+            // The unique skill last stardust
             int target = check_input(1,enemies_number);
             enemies[target-1].hp -= damage(value*user.atk,enemies[target-1].def);
             user.hp -= value * user.hp;
