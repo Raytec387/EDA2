@@ -35,8 +35,8 @@ int check_input(int lower,int upper){
     int option;
     if(scanf("%d",&option) != 1)  {printf("Error!"); return -1;} 
     while(!(option >= lower && option <= upper)){
-        printf("Please enter a valid number:\n");
-        scanf("%d",&otpion);
+        printf("Please enter a valid option (%d-%d): ", lower, upper);
+        scanf("%d",&option);
     }
     printf("\n");
     return option;

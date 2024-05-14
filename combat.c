@@ -1,5 +1,4 @@
-#include <common.h>
-#include <combat.h>
+#include "combat.h"
 
 // Function to initialize a node struct
 // Returns adress of a node
