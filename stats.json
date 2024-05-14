@@ -1,0 +1,40 @@
+{
+    "Main_Character":{
+        "ATK": 10,
+        "DEF": 8,
+        "HP": 100
+    },
+
+    "enemies":{
+        "bullier":{
+            "chapter": 1,
+            "ATK": 5,
+            "DEF": 3,
+            "HP": 50,
+        },
+        "rogue": {
+            "chapter": 2,
+            "ATK": 6,
+            "DEF": 4,
+            "HP": 60,
+        },
+        "master": {
+            "chapter": 3,
+            "ATK": 7,
+            "DEF": 5,
+            "HP": 70,
+        },
+        "piracy": {
+            "chapter": 4,
+            "ATK": 8,
+            "DEF": 6,
+            "HP": 80,
+        },
+        "archer ": {
+            "chapter": 4,
+            "ATK": 9,
+            "DEF": 7,
+            "HP": 90,
+        }
+    }
+}
