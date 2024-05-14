@@ -1,8 +1,8 @@
 // Created on 2024/4/24.
 // This head will hold the data structure of the role(enemy or main character)
 // And skill of main character
-#ifndef CHARACTER_H
-#define CHARACTER_H
+#ifndef _CHARACTER_H_
+#define _CHARACTER_H_
 
 #include "common.h"
 #define NAME_LENGTH 20

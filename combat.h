@@ -1,7 +1,7 @@
 // Created 08/05/2024
 
-#ifndef COMBAT_H
-#define COMBAT_H
+#ifndef _COMBAT_H_
+#define _COMBAT_H_
 
 #include <character.h>
 

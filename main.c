@@ -1,74 +1,26 @@
-#include "common.h"
-#include "character.h"
+#include "main.h"
 
-void start_game(){
-
-}
-
-void configure_character(Character *character){
-
-    displayCharacter_Configuration();
-    do{
-        printf("What do yoy want to change(%d-%d):"NAME, DEF);
-        int option;
-        option=read_int();
-    }while(option < NAME || option > DEF);
-
-    switch (option){
-    case NAME:
-        printf();
-        scanf("Insert the new name of the character:", character->name);
-        break;
-    case HP:
-        printf("Insert the HP of the character:");
-        break;
-    case ATK:
-        printf("Insert the ATK of the character:");
-        break;
-    case DEF:
-        printf("Insert the DEF of the character:");
-        break;
-    }
-}
-
-
-void skill_test(){
-
-}
-void displayCharacter_Configuration(){
-    printf("1.-Change characater name\n");
-    printf("2.-Change character HP\n");
-    printf("3.-Change characater ATK\n");
-    printf("4.-Change characater DEF\n");
-}
-
-
-void displayMenu(){
-    printf("===Red Rain===\n");
-    printf("1.-Start a new game.\n");
-    printf("2.-Configure the character\n");
-}
 void run(){
     int option;
     do{
         displayMenu();
         do{
-            printf("select an option (%d-%d):"START_GAME,CONFIGURE_CHARACTER);
-            option=read_int();
-        }while(option < START_GAME || option> CONFIGURE_cHARACTER);
+            printf("select an option: ");
+            scanf("%d", &option);
+        }while(option < EXIT_BACK || option > SAVE_GAME);
+        
         switch(option){
             case START_GAME:
                 start_game();
                 break;
-            case CONFIGURE_CHARACTER:
-                configure_character();
+            case LOAD_GAME:
+                load_game();
+                break;
+            case SAVE_GAME:
+                save_game();
                 break;
         }
-            
-
-    }
-
-
+    } while (option != EXIT_BACK);
 }
 
 int main(){
