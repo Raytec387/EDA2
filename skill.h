@@ -5,6 +5,9 @@
 
 #include "common.h"
 
+#define MAX_SKILL 4
+#define MAX_SKILL_IN_GAME 8
+
 // Forward declaration of Character struct
 struct Character;
 
@@ -38,5 +41,9 @@ typedef struct {
     int remaining_cooldown;
     Effect effect;
 } Skill;
+
+// Function defnitions
+
+int damage(int damage, int def);
 
 #endif

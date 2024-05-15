@@ -1,8 +1,58 @@
 #include "skill.h"
 #include "character.h"
 
+// Damage calculation - damage vs defense
 int damage(int damage,int def){
     return (damage * 100/(100+def));
+}
+
+void apply_active_effect(Character *character){
+    for (int i = 0; i < MAX_ACTIVE_EFFECTS; i++){
+        Effect current_effect = character->active_effects[i];
+        if (current_effect.duration > 0){
+            switch (character->active_effects[i].type)
+            {
+            case DMG_OVER_TIME:
+                character->hp -= damage(current_effect.value, character->def);
+                printf("%s suffers %d of damage from ongoing effects\n", character->name, damage(current_effect.value, character->def));
+                break;
+            case HEAL_OVER_TIME:
+                character->hp += current_effect.value;
+                printf("%s heals for %d from ongoing effects\n", character->name, current_effect.value);
+            case DEF_BUFF:
+                /* code */
+                /* How do we implement stuff like this ??*/
+                /* Need something to keep track of the buff*/
+                /* Then remove the value once it goes away*/
+                /* Solution: Apply buff at skill usage*/
+                /* Remove buff here once its duration is 0*/
+            case HP_BUFF:
+                // TO DO
+            case ATK_BUFF:
+                // TO DO
+            default:
+                break;
+            }
+        }
+    }
+}
+
+void use_skill(Skill *skill, Character *player, Character *characters, int target_index){
+    if (skill->remaining_cooldown > 0) {
+        printf("Skill %s is still in cooldown: %d.\n", skill->name, skill->remaining_cooldown);
+        return;
+    }
+
+    switch (skill->type)
+    {
+    case SELF:
+        player->hp = skill->value;
+        skill->remaining_cooldown = skill->cooldown;
+        break;
+    
+    default:
+        break;
+    }
 }
 
 // Load Skill from Json
@@ -22,7 +72,7 @@ void load_skill(const char *filename, Skill *skills) {
         skills[i].type = cJSON_GetObjectItem(skill_json, "type")->valueint;
         skills[i].value = cJSON_GetObjectItem(skill_json, "value")->valuedouble;
         skills[i].cooldown = cJSON_GetObjectItem(skill_json, "cooldown")->valueint;
-        
+
         // Read effect
         cJSON *effect_json = cJSON_GetObjectItem(skill_json, "effects");
         skills[i].effect.type = cJSON_GetObjectItem(effect_json, "type")->valueint;

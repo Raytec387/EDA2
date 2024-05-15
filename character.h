@@ -7,10 +7,6 @@
 #include "common.h"
 #include "skill.h"
 
-#define NAME_LENGTH 20
-#define DESCRITPION_LENGTH 100
-#define MAX_SKILL 4
-
 // Data structure of character it holds the basic datas of the characters
 typedef struct {
     char name[NAME_LENGTH];
@@ -20,6 +16,7 @@ typedef struct {
     int def;
     Skill skill_array[MAX_SKILL];
     bool is_player;
+    Effect active_effects[MAX_ACTIVE_EFFECTS];
 } Character;
 
 #endif

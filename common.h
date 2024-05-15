@@ -20,8 +20,7 @@
 // Character Macros
 #define NAME_LENGTH 20
 #define DESCRITPION_LENGTH 100
-#define MAX_SKILL 4
-#define MAX_SKILL_IN_GAME 8
+#define MAX_ACTIVE_EFFECTS 8
 
 // all skill in the game THIS BREAKS THE CODE! BAD IDEA
 /*char All_skill[MAX_SKILL_IN_GAME][NAME_LENGTH] = {  {"Defence"},{"Strong Hit"},{"Heal"},{"Concentrate"},
