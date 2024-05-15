@@ -16,7 +16,7 @@ typedef struct Turn_node {
     Character *character;
     Skill available_Skill[MAX_SKILL];
     bool is_last;
-    Turn_node *next;
+    struct Turn_node *next;
 } Turn_node;
 
 // Queue struct, contains information for num of turns and last and first element in queue

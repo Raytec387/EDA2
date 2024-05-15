@@ -1,5 +1,5 @@
 #include "skill.h"
-//#include "character.h"
+#include "character.h"
 
 int damage(int damage,int def){
     return (damage * 100/(100+def));
@@ -7,10 +7,10 @@ int damage(int damage,int def){
 
 // Load Skill from Json
 void load_skill(const char *filename, Skill *skills) {
-
+    printf("here\n");
     // Open json file
     cJSON *json = create_json("skill.json");
-
+    printf("here2\n");
     for (int i = 0; i < MAX_SKILL_IN_GAME; i++) {
 
         // Read skills array
@@ -22,22 +22,29 @@ void load_skill(const char *filename, Skill *skills) {
         skills[i].type = cJSON_GetObjectItem(skill_json, "type")->valueint;
         skills[i].value = cJSON_GetObjectItem(skill_json, "value")->valuedouble;
         skills[i].cooldown = cJSON_GetObjectItem(skill_json, "cooldown")->valueint;
-        
+        printf("%s\n", skills[i].name);
+        printf("%f\n", skills[i].value);
         // Read effect
-        cJSON *effect_json = cJSON_GetObjectItem(skill_json, "effect");
-
+        cJSON *effect_json = cJSON_GetObjectItem(skill_json, "effects");
+        printf("here effect\n");
         skills[i].effect.type = cJSON_GetObjectItem(effect_json, "type")->valueint;
         skills[i].effect.value = cJSON_GetObjectItem(effect_json, "value")->valuedouble;
         skills[i].effect.duration = cJSON_GetObjectItem(effect_json, "duration")->valueint;
     }
-
+    printf("here end\n");
     cJSON_Delete(json);
 }
+
 
 int main(){
     Skill skill_array[MAX_SKILL_IN_GAME];
     load_skill("skill.json", skill_array);
+    //printf("here\n");
+    for (int i = 0; i < MAX_SKILL_IN_GAME; i++){
+        printf("Skill name: %s\n", skill_array[i].name);
+    }
 }
+
 
 /*
 // return description of the skill from json file

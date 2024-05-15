@@ -4,7 +4,7 @@ void run(){
     int option;
     do{
         displayMenu();
-        print("Select an option (%d-%d): ", EXIT_BACK, SAVE_GAME);
+        printf("Select an option (%d-%d): ", EXIT_BACK, SAVE_GAME);
         check_input(EXIT_BACK, SAVE_GAME);
         switch(option){
             case START_GAME:

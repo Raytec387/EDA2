@@ -10,7 +10,7 @@
 #include <assert.h>
 #include <string.h>
 #include "cJSON.h"
-#include "cJSON.c"
+//#include "cJSON.c"
 
 
 #define SIZE_OF_BUFFER 2048
@@ -23,9 +23,10 @@
 #define MAX_SKILL 4
 #define MAX_SKILL_IN_GAME 8
 
-// all skill in the game
-char All_skill[MAX_SKILL_IN_GAME][NAME_LENGTH] = {  {"Defence"},{"Strong Hit"},{"Heal"},{"Concentrate"},
+// all skill in the game THIS BREAKS THE CODE! BAD IDEA
+/*char All_skill[MAX_SKILL_IN_GAME][NAME_LENGTH] = {  {"Defence"},{"Strong Hit"},{"Heal"},{"Concentrate"},
                                                     {"Heal+"},{"Good Swordart"},{"Wind Field"},{"Last Stardust"}};
+*/
 
 // Menu Options
 #define EXIT_BACK 0
@@ -33,7 +34,7 @@ char All_skill[MAX_SKILL_IN_GAME][NAME_LENGTH] = {  {"Defence"},{"Strong Hit"},{
 #define LOAD_GAME 2
 #define SAVE_GAME 3
 
-cJSON *create_json(char file_name[NAME_LENGTH]);
+cJSON *create_json(const char *file_name);
 
 int check_input(int lower,int upper);
 

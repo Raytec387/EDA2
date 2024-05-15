@@ -5,7 +5,7 @@
 #include "common.h"
 
 // Create a json pointer to access to the json file
-cJSON *create_json(char file_name[NAME_LENGTH]){
+cJSON *create_json(const char *file_name){
     // open the file 
     FILE *fp = fopen(file_name, "r"); 
     if (fp == NULL) { 
