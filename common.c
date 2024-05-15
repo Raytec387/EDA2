@@ -30,6 +30,26 @@ cJSON *create_json(char file_name[NAME_LENGTH]){
     return json;
 }
 
+/*
+// Create a json pointer to access to the json file
+cJSON *create_json(char file_name[NAME_LENGTH]) {
+    FILE *file = fopen(file_name, "r");
+
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    char *json_buffer = malloc(file_size + 1);
+
+    fread(json_buffer, 1, file_size, file);
+    fclose(file);
+    json_buffer[file_size] = '\0';
+
+    cJSON *root = cJSON_Parse(json_buffer);
+
+    return root;
+}
+*/
+
 // This function checks if the input is in the interval
 int check_input(int lower,int upper){
     int option;

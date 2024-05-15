@@ -1,10 +1,11 @@
 // Created 08/05/2024
 
-#ifndef _COMBAT_H_
-#define _COMBAT_H_
+#ifndef COMBAT_H
+#define COMBAT_H
 
 #include "common.h"
 #include "skill.h"
+#include "character.h"
 
 #define MAX_TURNS 10
 

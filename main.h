@@ -1,5 +1,5 @@
-#ifndef _MAIN_H_
-#define _MATH_H_
+#ifndef MAIN_H
+#define MAIN_H
 
 #include "common.h"
 #include "character.h"

@@ -1,10 +1,12 @@
 // Created 15/05/2024
 
-#ifndef _SKILL_H_
-#define _SKILL_H_
+#ifndef SKILL_H
+#define SKILL_H
 
 #include "common.h"
-#include "character.h"
+
+// Forward declaration of Character struct
+struct Character;
 
 typedef enum {
     SELF,

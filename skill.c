@@ -1,4 +1,5 @@
 #include "skill.h"
+//#include "character.h"
 
 int damage(int damage,int def){
     return (damage * 100/(100+def));
@@ -9,6 +10,7 @@ void load_skill(const char *filename, Skill *skills) {
 
     // Open json file
     cJSON *json = create_json("skill.json");
+
     for (int i = 0; i < MAX_SKILL_IN_GAME; i++) {
 
         // Read skills array

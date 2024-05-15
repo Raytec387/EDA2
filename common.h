@@ -1,8 +1,8 @@
 // Created on 24/04/2024
 // common.h is for storing the useful head file
 
-#ifndef _COMMON_H_
-#define _COMMON_H_
+#ifndef COMMON_H
+#define COMMON_H
 
 #include <stdio.h>
 #include <stdlib.h>
