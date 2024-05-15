@@ -22,11 +22,9 @@ void load_skill(const char *filename, Skill *skills) {
         skills[i].type = cJSON_GetObjectItem(skill_json, "type")->valueint;
         skills[i].value = cJSON_GetObjectItem(skill_json, "value")->valuedouble;
         skills[i].cooldown = cJSON_GetObjectItem(skill_json, "cooldown")->valueint;
-        printf("%s\n", skills[i].name);
-        printf("%f\n", skills[i].value);
+        
         // Read effect
         cJSON *effect_json = cJSON_GetObjectItem(skill_json, "effects");
-        printf("here effect\n");
         skills[i].effect.type = cJSON_GetObjectItem(effect_json, "type")->valueint;
         skills[i].effect.value = cJSON_GetObjectItem(effect_json, "value")->valuedouble;
         skills[i].effect.duration = cJSON_GetObjectItem(effect_json, "duration")->valueint;
