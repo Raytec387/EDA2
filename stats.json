@@ -1,9 +1,9 @@
-//this file includes the base_stats of the main character and the stats of every enemy you can find in the game.
+
 {
     "Main_Character":{
         "ATK": 10,
         "DEF": 80,
-        "HP": 1000,
+        "HP": 1000
     },
 
     "enemies":{
@@ -11,31 +11,31 @@
             "chapter": 1,
             "ATK": 50,
             "DEF": 30,
-            "HP": 500,
+            "HP": 500
         },
         "rogue": {
             "chapter": 2,
             "ATK": 60,
             "DEF": 40,
-            "HP": 600,
+            "HP": 600
         },
         "master": {
             "chapter": 3,
             "ATK": 70,
             "DEF": 50,
-            "HP": 700,
+            "HP": 700
         },
         "piracy": {
             "chapter": 4,
             "ATK": 80,
             "DEF": 60,
-            "HP": 800,
+            "HP": 800
         },
         "archer ": {
             "chapter": 4,
             "ATK": 90,
             "DEF": 70,
-            "HP": 900,
+            "HP": 900
         }
     }
 }
