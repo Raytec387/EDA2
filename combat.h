@@ -4,14 +4,16 @@
 #define _COMBAT_H_
 
 #include "common.h"
-#include "character.h"
+#include "skill.h"
 
 #define MAX_TURNS 10
 
 // Queue with linkedlists
 // Each node contains a character (Player, Enemy)
+// Keeps track of available Skill
 typedef struct Turn_node {
-    Character character;
+    Character *character;
+    Skill available_Skill[MAX_SKILL];
     bool is_last;
     Turn_node *next;
 } Turn_node;

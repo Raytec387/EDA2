@@ -11,6 +11,6 @@ void displayMenu(){
 // Character Configuration
 void displayCharacter_Configuration(){
     printf("1.-Character Name\n");
-    printf("2.-Character Skills\n");
+    printf("2.-Character Skill\n");
 }
 

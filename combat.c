@@ -4,7 +4,7 @@
 // Returns adress of a node
 Turn_node* create_Tnode(Character *character) {
     Turn_node *new_node = malloc(sizeof(*new_node));
-    new_node->character = *character;
+    new_node->character = character;
     new_node->next = NULL;
     return new_node;
 }
@@ -55,8 +55,14 @@ int combat(Character *player, Character *characters[]) {
     while(!end) {
         Turn_node *current_node = dequeue(queue);
 
-        if (!current_node->character.is_player) {
+        if (!current_node->character->is_player) {
             
         }
     }
+}
+
+// Function that selects random skill
+void enemy_skill_use(Character *enemy, Character *player){
+    int choice = rand() % MAX_SKILL;
+    
 }

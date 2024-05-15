@@ -1,0 +1,25 @@
+{
+    "Defence":"Increase the DEF for 2 turn.  Cooldown: 2 turn",
+    "Increase the DEF for 2 turn.  Cooldown: 2 turn":2200,
+
+    "Concentrate": "Increase the ATK for 2 turn.  Cooldown: 3 turn",
+    "Increase the ATK for 2 turn.  Cooldown: 3 turn":3200,
+
+    "Heal":"Restore 10% of missing. Cooldown: 1 turns",
+    "Restore 10% of missing. Cooldown: 1 turns":1010,
+
+    "Heal+":"Restore 40% of missing. Cooldown: 4 turns",
+    "Restore 40% of missing. Cooldown: 4 turns":4040,
+
+    "Strong Hit":"Deal a unit damage 1.5 times ATK. Cooldown: 1 turn",
+    "Deal a unit damage 1.5 times atk. Cooldown: 1 turn":1151,
+
+    "Good Swordart":"Dear all enemies damage 1.2 times ATK. Cooldown: 2 turns",
+    "Dear all enemies damage 1.2 times atk. Cooldown: 2 turns":2121,
+
+    "Wind Field":"Create a wind field that -10% for every unit. Cooldown: 2 turns",
+    "Create a wind field that -10% for every unit. Cooldown: 2 turns":2012,
+
+    "Last Stardust":"-50% current hp, deal damage to a unit 4 times ATK. Cooldown: 0 turns",
+    "-50% current hp, deal damage to a unit 4 times ATK. Cooldown: 0 turns":5403
+}

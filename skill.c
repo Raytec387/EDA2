@@ -1,11 +1,43 @@
-#include "common.h"
-#include "character.h"
-#include "common.c"
+#include "skill.h"
 
 int damage(int damage,int def){
     return (damage * 100/(100+def));
 }
 
+// Load Skill from Json
+void load_skill(const char *filename, Skill *skills) {
+
+    // Open json file
+    cJSON *json = create_json("skill.json");
+    for (int i = 0; i < MAX_SKILL_IN_GAME; i++) {
+
+        // Read skills array
+        cJSON *skill_json = cJSON_GetArrayItem(json, i);
+
+        // Set each Skill field to file skills
+        strncpy(skills[i].name, cJSON_GetObjectItem(skill_json, "name")->valuestring, NAME_LENGTH);
+        strncpy(skills[i].desc, cJSON_GetObjectItem(skill_json, "description")->valuestring, DESCRITPION_LENGTH);
+        skills[i].type = cJSON_GetObjectItem(skill_json, "type")->valueint;
+        skills[i].value = cJSON_GetObjectItem(skill_json, "value")->valuedouble;
+        skills[i].cooldown = cJSON_GetObjectItem(skill_json, "cooldown")->valueint;
+        
+        // Read effect
+        cJSON *effect_json = cJSON_GetObjectItem(skill_json, "effect");
+
+        skills[i].effect.type = cJSON_GetObjectItem(effect_json, "type")->valueint;
+        skills[i].effect.value = cJSON_GetObjectItem(effect_json, "value")->valuedouble;
+        skills[i].effect.duration = cJSON_GetObjectItem(effect_json, "duration")->valueint;
+    }
+
+    cJSON_Delete(json);
+}
+
+int main(){
+    Skill skill_array[MAX_SKILL_IN_GAME];
+    load_skill("skill.json", skill_array);
+}
+
+/*
 // return description of the skill from json file
 const char *description(char temp_skill[NAME_LENGTH],char temp_description[DESCRITPION_LENGTH]){
 
@@ -35,7 +67,7 @@ int skill_code(char temp_description[DESCRITPION_LENGTH]){
 }
 
 // decode and initialize the data in skill_array
-Skills *decode(Skills skill_array[MAX_SKILL],int code,int i){
+Skill *decode(Skill skill_array[MAX_SKILL],int code,int i){
     skill_array[i].type = code % 10;
     skill_array[i].value = (code/10)%100;
     skill_array[i].cooldown = code/1000;
@@ -43,7 +75,7 @@ Skills *decode(Skills skill_array[MAX_SKILL],int code,int i){
 }
 
 // Initialize the skill from json to the data in the game
-void initialize_skill(Skills skill_array[MAX_SKILL]){
+void initialize_skill(Skill skill_array[MAX_SKILL]){
     char temp_description[DESCRITPION_LENGTH];
     int code;
 
@@ -55,8 +87,8 @@ void initialize_skill(Skills skill_array[MAX_SKILL]){
 }
 
 // This function changes the skill, player can choose at most four skill
-void skill_change(char All_skill[MAX_SKILL_IN_GAME][NAME_LENGTH],Skills skill_array[MAX_SKILL],int current_skill){
-    // Show the skills can be choosed
+void skill_change(char All_skill[MAX_SKILL_IN_GAME][NAME_LENGTH],Skill skill_array[MAX_SKILL],int current_skill){
+    // Show the Skill can be choosed
     char temp_description[DESCRITPION_LENGTH];
     for(int i = 0;i<current_skill;i++){
         strcpy(temp_description,description(All_skill[i],temp_description));
@@ -65,7 +97,7 @@ void skill_change(char All_skill[MAX_SKILL_IN_GAME][NAME_LENGTH],Skills skill_ar
     }
     printf("Please choose a skill that you want to use in the battle:\n");
     int choosen_skill = check_input(1,current_skill);
-    // Show the skills can be changed
+    // Show the Skill can be changed
     for(int i = 0; i<MAX_SKILL;i++){
         printf("%d.%s\nDescription of skill: ",i+1,skill_array[i].name);
         printf("%s",description(skill_array[i].name,temp_description));
@@ -136,7 +168,7 @@ int skill_use(int enemies_number,Character user,Character enemies[enemies_number
 
 int main(){
     // This skill_array is for testing
-    Skills skill_array[MAX_SKILL];
+    Skill skill_array[MAX_SKILL];
     strcpy(skill_array[0].name,All_skill[0]);
     strcpy(skill_array[1].name,All_skill[1]);
     strcpy(skill_array[2].name,All_skill[2]);
@@ -150,3 +182,4 @@ int main(){
     // This function will return 
     // skill_use(All_skill[0]);
 }
+*/
