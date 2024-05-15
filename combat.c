@@ -44,4 +44,19 @@ Turn_node *dequeue(Turn_queue *queue) {
         queue->head = queue->head->next;
     }
     queue->size--;
+    return temp; 
+}
+
+int combat(Character *player, Character *characters[]) {
+    int end = 0;
+
+    Turn_queue *queue = create_Tqueue();
+
+    while(!end) {
+        Turn_node *current_node = dequeue(queue);
+
+        if (!current_node->character.is_player) {
+            
+        }
+    }
 }
