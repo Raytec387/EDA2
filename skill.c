@@ -1,5 +1,10 @@
 #include "common.h"
 #include "character.h"
+#include "common.c"
+
+int damage(int damage,int def){
+    return (damage * 100/(100+def));
+}
 
 // return description of the skill from json file
 const char *description(char temp_skill[NAME_LENGTH],char temp_description[DESCRITPION_LENGTH]){
@@ -86,6 +91,7 @@ int skill_use(int enemies_number,Character user,Character enemies[enemies_number
     int type = user.skill_array->type;
     float value = user.skill_array[skill_choosen].value/10.0;
     int turn = user.skill_array->cooldown;
+    int target;
     // Print the name of the skill
     printf("\n%s uses %s\n",user.name,user.skill_array[skill_choosen].name);
     // Each skill is distinguished by the different turn it has
@@ -102,7 +108,7 @@ int skill_use(int enemies_number,Character user,Character enemies[enemies_number
         case 1:
             // This is atack skill, can choose the target
             if(turn == 1){
-                int target = check_input(1,enemies_number);
+                target = check_input(1,enemies_number);
                 enemies[target-1].hp -= damage(value*user.atk,enemies[target-1].def);
             }
             else{
@@ -120,19 +126,14 @@ int skill_use(int enemies_number,Character user,Character enemies[enemies_number
             break;
         case 3:
             // The unique skill last stardust
-            int target = check_input(1,enemies_number);
-            enemies[target-1].hp -= damage(value*user.atk,enemies[target-1].def);
+            target = check_input(1,enemies_number);
+            enemies[target].hp -= damage(value*user.atk,enemies[target].def);
             user.hp -= value * user.hp;
             break;
     }
     return turn;
 }
 
-int damage(int damage,int def){
-    return (damage * 100/(100+def));
-}
-
-/*
 int main(){
     // This skill_array is for testing
     Skills skill_array[MAX_SKILL];
@@ -147,6 +148,5 @@ int main(){
     skill_change(All_skill,skill_array,current_skill);
 
     // This function will return 
-    //skill_use(All_skill[0]);
+    // skill_use(All_skill[0]);
 }
-*/
