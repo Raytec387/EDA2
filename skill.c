@@ -18,7 +18,7 @@ void apply_active_effect(Character *character){
                 break;
             case HEAL_OVER_TIME:
                 character->hp += current_effect.value;
-                printf("%s heals for %d from ongoing effects\n", character->name, current_effect.value);
+                printf("%s heals for %f from ongoing effects\n", character->name, current_effect.value);
             case DEF_BUFF:
                 /* code */
                 /* How do we implement stuff like this ??*/
@@ -57,10 +57,9 @@ void use_skill(Skill *skill, Character *player, Character *characters, int targe
 
 // Load Skill from Json
 void load_skill(const char *filename, Skill *skills) {
-    printf("here\n");
+
     // Open json file
     cJSON *json = create_json("skill.json");
-    printf("here2\n");
     for (int i = 0; i < MAX_SKILL_IN_GAME; i++) {
 
         // Read skills array
