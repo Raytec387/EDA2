@@ -1,5 +1,6 @@
 #include "skill.h"
 #include "character.h"
+#include "common.c"
 
 // Damage calculation - damage vs defense
 int damage(float damage, int def){

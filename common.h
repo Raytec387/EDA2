@@ -10,7 +10,7 @@
 #include <assert.h>
 #include <string.h>
 #include "cJSON.h"
-//#include "cJSON.c"
+#include "cJSON.c"
 
 
 #define SIZE_OF_BUFFER 8192
