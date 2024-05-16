@@ -14,6 +14,6 @@ int main(){
     // return code
     cJSON_Delete(json);
 
-    printf("Attack: %d\n", atk->valueint);
+    printf("Attack: %f\n", atk->valuedouble);
     printf("Defence: %d\n", def->valueint);
 }

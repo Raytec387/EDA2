@@ -2,15 +2,24 @@
 #include "character.h"
 
 // Damage calculation - damage vs defense
-int damage(int damage,int def){
+int damage(float damage, int def){
     return (damage * 100/(100+def));
+}
+
+// Healing function
+void heal(float value, Character *character) {
+    if (character->hp + value > character->hp_limit) {
+        character->hp = character->hp_limit;
+    } else {
+        character->hp += value;character->hp = character->hp_limit;
+    }
 }
 
 void apply_active_effect(Character *character){
     for (int i = 0; i < MAX_ACTIVE_EFFECTS; i++){
         Effect current_effect = character->active_effects[i];
         if (current_effect.duration > 0){
-            switch (character->active_effects[i].type)
+            switch (current_effect.type)
             {
             case DMG_OVER_TIME:
                 character->hp -= damage(current_effect.value, character->def);
@@ -19,17 +28,36 @@ void apply_active_effect(Character *character){
             case HEAL_OVER_TIME:
                 character->hp += current_effect.value;
                 printf("%s heals for %f from ongoing effects\n", character->name, current_effect.value);
-            case DEF_BUFF:
-                /* code */
-                /* How do we implement stuff like this ??*/
-                /* Need something to keep track of the buff*/
-                /* Then remove the value once it goes away*/
+            case DEF:
                 /* Solution: Apply buff at skill usage*/
                 /* Remove buff here once its duration is 0*/
-            case HP_BUFF:
-                // TO DO
-            case ATK_BUFF:
-                // TO DO
+                if (current_effect.duration <= 0) {
+                    if (current_effect.is_percentile) {
+                        character->def /= current_effect.value;
+                    } else {
+                        character->def -= current_effect.value;
+                    }
+                    printf("Effect affecting %s's defence has worn out!\n", character->name);
+                }
+                break;
+            case HP:
+                if (current_effect.duration <= 0) {
+                    if (current_effect.is_percentile) {
+                        character->hp_limit /= current_effect.value;
+                    } else {
+                        character->hp_limit -= current_effect.value;
+                    }
+                    printf("Effect affecting %s's max hp has worn out!\n", character->name);
+                }
+            case ATK:
+                if (current_effect.duration <= 0) {
+                    if (current_effect.is_percentile) {
+                        character->atk /= current_effect.value;
+                    } else {
+                        character->atk -= current_effect.value;
+                    }
+                    printf("Effect affecting %s's attack has worn out!\n", character->name);
+                }
             default:
                 break;
             }
@@ -37,21 +65,98 @@ void apply_active_effect(Character *character){
     }
 }
 
-void use_skill(Skill *skill, Character *player, Character *characters, int target_index){
+void apply_skill(Skill *skill, Character *user, Character *target) {
+    switch (skill->type) {
+        case HEAL:
+            float heal_amount;
+            if (skill->is_percentile) {
+                heal_amount = skill->value * target->hp_limit;
+            } else {
+                heal_amount = skill->value;
+            }
+            heal(heal_amount, target);
+            prinf("%s healed for %f hp!. \n", target->name, heal_amount);
+            break;
+        case DAMAGE:
+            float damage_amount;
+            if (skill->is_percentile) {
+                damage_amount = skill->value * user->atk;
+            } else {
+                damage_amount = skill->value;
+            }
+            damage_amount = damage(damage_amount, target->def);
+
+            printf("%s dealt %d damage to %s", user->name, damage_amount, target->name);
+            break;
+        case BUFF:
+        case DEBUFF:
+            switch (skill->effect.type) {
+                float buff_amount;
+                case DEF:
+                    if (skill->effect.is_percentile) {
+                        buff_amount = (skill->effect.value * target->def) - target->def;
+                    } else {
+                        buff_amount = skill->effect.value;
+                    }
+                    target->def += buff_amount;
+                    if (skill->type == BUFF) {
+                        printf("%s defence increased by %f!\n", target->name, buff_amount);
+                    } else {
+                        printf("%s defence decreased by %f!\n", target->name, buff_amount);
+                    }
+                    break;
+                case HP:
+                    if (skill->effect.is_percentile) {
+                        buff_amount = (skill->effect.value * target->hp_limit) - target->hp_limit;
+                    } else {
+                        buff_amount = skill->effect.value;
+                    }
+                    target->hp_limit += buff_amount;
+                    if (skill->type == BUFF) {
+                        printf("%s max hp increased by %f!\n", target->name, buff_amount);
+                    } else {
+                        printf("%s max hp decreased by %f!\n", target->name, buff_amount);
+                    }
+                    break;
+                case ATK:
+                    if (skill->effect.is_percentile) {
+                        buff_amount = (skill->effect.value * target->atk) - target->atk;
+                    } else {
+                        buff_amount = skill->effect.value;
+                    }
+                    target->atk += buff_amount;
+                    if (skill->type == BUFF) {
+                        printf("%s attack increased by %f!\n", target->name, buff_amount);
+                    } else {
+                        printf("%s attack decreased by %f!\n", target->name, buff_amount);
+                    }
+                    break;
+            }
+            break;
+    }
+}
+
+int pass_condition(Condition *condition, Character *user) {
+    int pass;
+}
+
+void target_skill(Skill *skill, Character *user, Character *characters, int target_index) {
     if (skill->remaining_cooldown > 0) {
         printf("Skill %s is still in cooldown: %d.\n", skill->name, skill->remaining_cooldown);
         return;
     }
 
-    switch (skill->type)
-    {
-    case SELF:
-        player->hp = skill->value;
-        skill->remaining_cooldown = skill->cooldown;
-        break;
-    
-    default:
-        break;
+    switch (skill->target) {
+        case SELF:
+            break;
+        case TARGET:
+            break;
+        case CROWD_SELF:
+            break;
+        case CROWD_TARGET:
+            break;
+        default:
+            break;
     }
 }
 
@@ -69,7 +174,9 @@ void load_skill(const char *filename, Skill *skills) {
         strncpy(skills[i].name, cJSON_GetObjectItem(skill_json, "name")->valuestring, NAME_LENGTH);
         strncpy(skills[i].desc, cJSON_GetObjectItem(skill_json, "description")->valuestring, DESCRITPION_LENGTH);
         skills[i].type = cJSON_GetObjectItem(skill_json, "type")->valueint;
+        skills[i].target = cJSON_GetObjectItem(skill_json, "target")->valueint;
         skills[i].value = cJSON_GetObjectItem(skill_json, "value")->valuedouble;
+        skills[i].is_percentile = cJSON_GetObjectItem(skill_json, "is_percentile")->valueint;
         skills[i].cooldown = cJSON_GetObjectItem(skill_json, "cooldown")->valueint;
 
         // Read effect
@@ -77,6 +184,17 @@ void load_skill(const char *filename, Skill *skills) {
         skills[i].effect.type = cJSON_GetObjectItem(effect_json, "type")->valueint;
         skills[i].effect.value = cJSON_GetObjectItem(effect_json, "value")->valuedouble;
         skills[i].effect.duration = cJSON_GetObjectItem(effect_json, "duration")->valueint;
+
+        // Read sub skill
+        cJSON *condition = cJSON_GetObjectItem(skill_json, "condition");
+        skills[i].condition.type = cJSON_GetObjectItem(condition, "type")->valueint;
+        skills[i].condition.target = cJSON_GetObjectItem(condition, "target")->valueint;
+        skills[i].condition.value = cJSON_GetObjectItem(condition, "value")->valuedouble;
+        skills[i].condition.is_percentile = cJSON_GetObjectItem(condition, "is_percentile")->valueint;
+        
+        // Read sub skill effect
+        cJSON *condition_effect = cJSON_GetObjectItem(condition, "effects");
+        skills[i].condition.effect.type;
     }
     printf("here end\n");
     cJSON_Delete(json);

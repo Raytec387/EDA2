@@ -2,98 +2,217 @@
     {
         "name": "Defence",
         "description": "Increase the DEF for 2 turn.",
-        "type": 0,
+        "type": 2,
+        "target": 0,
         "value": 0.0,
+        "is_percentile": 0,
         "cooldown": 2,
         "effects": {
             "type": 2,
             "value": 2.0,
+            "is_percentile": 1,
             "duration": 2
-        }
-    },
-
-    {
-        "name": "",
-        "description": "",
-        "type": 0,
-        "value": 0.0,
-        "cooldown": 0,
-        "effects": {
-            "type": 0,
-            "value": 0.0,
-            "duration": 0
-        }
-    },
-    {
-        "name": "",
-        "description": "",
-        "type": 0,
-        "value": 0.0,
-        "cooldown": 0,
-        "effects": {
-            "type": 0,
-            "value": 0.0,
-            "duration": 0
+        },
+        "condition": {
+            "type": null,
+            "target": null,
+            "value": null,
+            "is_percentile": null,
+            "effects": {
+                "type": null,
+                "value": null,
+                "is_percentile": null,
+                "duration": null
+            } 
         }
     },
     {
         "name": "",
         "description": "",
         "type": 0,
+        "target": 0,
         "value": 0.0,
+        "is_percentile": 0,
         "cooldown": 0,
         "effects": {
             "type": 0,
             "value": 0.0,
+            "is_percentile": 0,
             "duration": 0
+        },
+        "condition": {
+            "type": null,
+            "target": null,
+            "value": null,
+            "is_percentile": null,
+            "effects": {
+                "type": null,
+                "value": null,
+                "is_percentile": null,
+                "duration": null
+            } 
         }
     },
     {
         "name": "",
         "description": "",
         "type": 0,
+        "target": 0,
         "value": 0.0,
+        "is_percentile": 0,
         "cooldown": 0,
         "effects": {
             "type": 0,
             "value": 0.0,
+            "is_percentile": 0,
             "duration": 0
+        },
+        "condition": {
+            "type": null,
+            "target": null,
+            "value": null,
+            "is_percentile": null,
+            "effects": {
+                "type": null,
+                "value": null,
+                "is_percentile": null,
+                "duration": null
+            } 
         }
     },
     {
         "name": "",
         "description": "",
         "type": 0,
+        "target": 0,
         "value": 0.0,
+        "is_percentile": 0,
         "cooldown": 0,
         "effects": {
             "type": 0,
             "value": 0.0,
+            "is_percentile": 0,
             "duration": 0
+        },
+        "condition": {
+            "type": null,
+            "target": null,
+            "value": null,
+            "is_percentile": null,
+            "effects": {
+                "type": null,
+                "value": null,
+                "is_percentile": null,
+                "duration": null
+            } 
         }
     },
     {
         "name": "",
         "description": "",
         "type": 0,
+        "target": 0,
         "value": 0.0,
+        "is_percentile": 0,
         "cooldown": 0,
         "effects": {
             "type": 0,
             "value": 0.0,
+            "is_percentile": 0,
             "duration": 0
+        },
+        "condition": {
+            "type": null,
+            "target": null,
+            "value": null,
+            "is_percentile": null,
+            "effects": {
+                "type": null,
+                "value": null,
+                "is_percentile": null,
+                "duration": null
+            } 
         }
     },
     {
         "name": "",
         "description": "",
         "type": 0,
+        "target": 0,
         "value": 0.0,
+        "is_percentile": 0,
         "cooldown": 0,
         "effects": {
             "type": 0,
             "value": 0.0,
+            "is_percentile": 0,
             "duration": 0
+        },
+        "condition": {
+            "type": null,
+            "target": null,
+            "value": null,
+            "is_percentile": null,
+            "effects": {
+                "type": null,
+                "value": null,
+                "is_percentile": null,
+                "duration": null
+            } 
+        }
+    },
+    {
+        "name": "",
+        "description": "",
+        "type": 0,
+        "target": 0,
+        "value": 0.0,
+        "is_percentile": 0,
+        "cooldown": 0,
+        "effects": {
+            "type": 0,
+            "value": 0.0,
+            "is_percentile": 0,
+            "duration": 0
+        },
+        "condition": {
+            "type": null,
+            "target": null,
+            "value": null,
+            "is_percentile": null,
+            "effects": {
+                "type": null,
+                "value": null,
+                "is_percentile": null,
+                "duration": null
+            } 
+        }
+    },
+    {
+        "name": "",
+        "description": "",
+        "type": 0,
+        "target": 0,
+        "value": 0.0,
+        "is_percentile": 0,
+        "cooldown": 0,
+        "effects": {
+            "type": 0,
+            "value": 0.0,
+            "is_percentile": 0,
+            "duration": 0
+        },
+        "condition": {
+            "type": null,
+            "target": null,
+            "value": null,
+            "is_percentile": null,
+            "effects": {
+                "type": null,
+                "value": null,
+                "is_percentile": null,
+                "duration": null
+            } 
         }
     }
 ]
