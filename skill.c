@@ -164,9 +164,8 @@ void target_skill(Skill *skill, Character *user, Character *characters, int targ
 void load_skill(const char *filename, Skill *skills) {
 
     // Open json file
-    printf("Error Here\n");
     cJSON *json = create_json("skill.json");
-    printf("Here\n");
+
     for (int i = 0; i < MAX_SKILL_IN_GAME; i++) {
 
         // Read skills array
