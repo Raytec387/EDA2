@@ -8,7 +8,7 @@
 #include "skill.h"
 
 // Data structure of character it holds the basic datas of the characters
-typedef struct {
+typedef struct Character{
     char name[NAME_LENGTH];
     int atk;
     float hp;

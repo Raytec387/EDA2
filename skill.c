@@ -75,7 +75,7 @@ void apply_skill(Skill *skill, Character *user, Character *target) {
                 heal_amount = skill->value;
             }
             heal(heal_amount, target);
-            prinf("%s healed for %f hp!. \n", target->name, heal_amount);
+            printf("%s healed for %f hp!. \n", target->name, heal_amount);
             break;
         case DAMAGE:
             float damage_amount;
@@ -86,7 +86,7 @@ void apply_skill(Skill *skill, Character *user, Character *target) {
             }
             damage_amount = damage(damage_amount, target->def);
 
-            printf("%s dealt %d damage to %s", user->name, damage_amount, target->name);
+            printf("%s dealt %f damage to %s", user->name, damage_amount, target->name);
             break;
         case BUFF:
         case DEBUFF:
@@ -164,7 +164,9 @@ void target_skill(Skill *skill, Character *user, Character *characters, int targ
 void load_skill(const char *filename, Skill *skills) {
 
     // Open json file
+    printf("Error Here\n");
     cJSON *json = create_json("skill.json");
+    printf("Here\n");
     for (int i = 0; i < MAX_SKILL_IN_GAME; i++) {
 
         // Read skills array
@@ -194,9 +196,8 @@ void load_skill(const char *filename, Skill *skills) {
         
         // Read sub skill effect
         cJSON *condition_effect = cJSON_GetObjectItem(condition, "effects");
-        skills[i].condition.effect.type;
+        skills[i].condition.effect.type = cJSON_GetObjectItem(condition_effect, "type")->valueint;
     }
-    printf("here end\n");
     cJSON_Delete(json);
 }
 

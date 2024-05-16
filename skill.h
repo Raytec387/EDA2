@@ -9,7 +9,7 @@
 #define MAX_SKILL_IN_GAME 8
 
 // Forward declaration of Character struct
-struct Character;
+typedef struct Character Character;
 
 // Type of skill, target self, target others, single or group...
 typedef enum {
