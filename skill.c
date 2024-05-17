@@ -66,6 +66,8 @@ void apply_active_effect(Character *character){
     }
 }
 
+
+// Funtion to apply the actual skill
 void apply_skill(Skill *skill, Character *user, Character *target) {
     switch (skill->type) {
         case HEAL:
@@ -132,15 +134,59 @@ void apply_skill(Skill *skill, Character *user, Character *target) {
                         printf("%s attack decreased by %f!\n", target->name, buff_amount);
                     }
                     break;
+                default:
+                    break;
             }
             break;
     }
 }
 
-int pass_condition(Condition *condition, Character *user) {
-    int pass;
+// Checks and applies the modifiers inside condition struct of skills
+int pass_condition(Condition condition, Character *user) {
+    int pass = 0;
+    switch (condition.type) {
+        case DAMAGE:
+            // Decreases health by an amount, ignore def
+            int damage_amount;
+            if (condition.is_percentile) {
+                damage_amount = (condition.value * user->hp) - user->hp;  
+            } else {
+                damage_amount = condition.value;
+                if (damage_amount >= user->hp) {
+                    printf("Can't use skill, %s's hp is too low to use it.\n");
+                    return 0;
+                }
+            }
+            printf("%s's hp was reduced by %f!. \n", user->name, damage_amount);
+            break;
+        case DEBUFF:
+            Effect current_effect = condition.effect;
+            switch (current_effect.type) {
+                float debuff_amount;
+                case DEF:
+                    if (current_effect.is_percentile) {
+                        debuff_amount = (current_effect.value * user->def) - user->def;
+                    } else {
+                        debuff_amount = current_effect.value;
+                    }
+                    user->def += debuff_amount;
+                    printf("%s's defence was decreased by %f", user->name, debuff_amount);
+                    break;
+                case HP:
+                    break;
+                case ATK:
+                    break;
+                default:
+                    break;
+                }
+                break;
+        default:
+            break;
+    }
+    return pass;
 }
 
+// Function to select the target of the skill
 void target_skill(Skill *skill, Character *user, Character *characters, int target_index) {
     if (skill->remaining_cooldown > 0) {
         printf("Skill %s is still in cooldown: %d.\n", skill->name, skill->remaining_cooldown);
@@ -172,7 +218,7 @@ void load_skill(const char *filename, Skill *skills) {
         // Read skills array
         cJSON *skill_json = cJSON_GetArrayItem(json, i);
 
-        // Set each Skill field to file skills
+        // Read skills
         strncpy(skills[i].name, cJSON_GetObjectItem(skill_json, "name")->valuestring, NAME_LENGTH);
         strncpy(skills[i].desc, cJSON_GetObjectItem(skill_json, "description")->valuestring, DESCRITPION_LENGTH);
         skills[i].type = cJSON_GetObjectItem(skill_json, "type")->valueint;
@@ -194,9 +240,11 @@ void load_skill(const char *filename, Skill *skills) {
         skills[i].condition.value = cJSON_GetObjectItem(condition, "value")->valuedouble;
         skills[i].condition.is_percentile = cJSON_GetObjectItem(condition, "is_percentile")->valueint;
         
-        // Read sub skill effect
+        // Read condition effect
         cJSON *condition_effect = cJSON_GetObjectItem(condition, "effects");
         skills[i].condition.effect.type = cJSON_GetObjectItem(condition_effect, "type")->valueint;
+        skills[i].condition.effect.value = cJSON_GetObjectItem(condition_effect, "value")->valuedouble;
+        skills[i].condition.effect.is_percentile = cJSON_GetObjectItem(condition_effect, "is_percentile")->valueint;
     }
     cJSON_Delete(json);
 }

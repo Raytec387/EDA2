@@ -36,6 +36,7 @@ typedef enum {
 } Effect_type;
 
 // Struct containing effect data
+// If it's a debuff, put value to 0 < x < 1 if percentile or negative if flat
 typedef struct {
     Effect_type type;
     float value;
