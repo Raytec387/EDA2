@@ -2,6 +2,7 @@
 #include "character.h"
 #include "common.c"
 
+
 // Damage calculation - damage vs defense
 int damage(float damage, int def){
     return (damage * 100/(100+def));
@@ -249,6 +250,93 @@ void load_skill(const char *filename, Skill *skills) {
     cJSON_Delete(json);
 }
 
+///////////                                                                                 ///////////
+/////////// Dictionary for counting the number of the skill that main character used.       ///////////
+///////////                                                                                 ///////////
+
+// Hash function for strings
+unsigned int hash(const char *str) {
+    unsigned int hash = 0;
+    while (*str) {
+        hash = (hash << 5) + *str++;
+    }
+    return hash % MAX_SKILL_IN_GAME;
+}
+
+// Create a new tracker
+AbilityTracker* create_tracker() {
+    AbilityTracker *tracker = (AbilityTracker *)malloc(sizeof(AbilityTracker));
+    for (int i = 0; i < MAX_SKILL_IN_GAME; i++) {
+        tracker->table[i] = NULL;
+    }
+    return tracker;
+}
+
+// Use an ability
+void use_ability(AbilityTracker *tracker, const char *name) {
+    unsigned int index = hash(name);
+    Ability *current = tracker->table[index];
+
+    // Check if the ability already exists
+    while (current != NULL) {
+        if (strcmp(current->name, name) == 0) {
+            current->count++;
+            return;
+        }
+        current = current->next;
+    }
+
+    // Ability does not exist, create a new entry
+    Ability *new_ability = (Ability *)malloc(sizeof(Ability));
+    new_ability->name = strdup(name);
+    new_ability->count = 1;
+    new_ability->next = tracker->table[index];
+    tracker->table[index] = new_ability;
+}
+
+// Display all abilities
+void display_abilities(const AbilityTracker *tracker) {
+    for (int i = 0; i < MAX_SKILL_IN_GAME; i++) {
+        Ability *current = tracker->table[i];
+        while (current != NULL) {
+            printf("Ability: %s, Count: %d\n", current->name, current->count);
+            current = current->next;
+        }
+    }
+}
+
+// Free the tracker
+void free_tracker(AbilityTracker *tracker) {
+    for (int i = 0; i < MAX_SKILL_IN_GAME; i++) {
+        Ability *current = tracker->table[i];
+        while (current != NULL) {
+            Ability *to_free = current;
+            current = current->next;
+            free(to_free->name);
+            free(to_free);
+        }
+    }
+    free(tracker);
+}
+
+/* Example to use the dictionary
+int main() {
+    AbilityTracker *tracker = create_tracker();
+
+    use_ability(tracker, "Fireball");
+    use_ability(tracker, "Ice Blast");
+    use_ability(tracker, "Fireball");
+
+    display_abilities(tracker);
+
+    free_tracker(tracker);
+    return 0;
+}
+*/
+
+///////////                                                                                 ///////////
+/////////// Dictionary for counting the number of the skill that main character used.       ///////////
+///////////                                                                                 ///////////
 
 int main(){
     Skill skill_array[MAX_SKILL_IN_GAME];
