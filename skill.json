@@ -27,8 +27,35 @@
         }
     },
     {
-        "name": "",
-        "description": "",
+        "name": "Concentrate",
+        "description": "Increase the ATK for 2 turn.",
+        "type": 0,
+        "target": 0,
+        "value": 0.0,
+        "is_percentile": 0,
+        "cooldown": 0,
+        "effects": {
+            "type": 0,
+            "value": 2.0,
+            "is_percentile": 1,
+            "duration": 2
+        },
+        "condition": {
+            "type": null,
+            "target": null,
+            "value": null,
+            "is_percentile": null,
+            "effects": {
+                "type": null,
+                "value": null,
+                "is_percentile": null,
+                "duration": null
+            } 
+        }
+    },
+    {
+        "name": "Heal",
+        "description": "Restore 10% of missing.",
         "type": 0,
         "target": 0,
         "value": 0.0,
@@ -54,8 +81,8 @@
         }
     },
     {
-        "name": "",
-        "description": "",
+        "name": "Heal+",
+        "description": "Restore 40% of missing",
         "type": 0,
         "target": 0,
         "value": 0.0,
@@ -81,8 +108,8 @@
         }
     },
     {
-        "name": "",
-        "description": "",
+        "name": "Strong hit",
+        "description": "Deal a unit damage 1.5 times ATK.",
         "type": 0,
         "target": 0,
         "value": 0.0,
@@ -108,8 +135,8 @@
         }
     },
     {
-        "name": "",
-        "description": "",
+        "name": "Good swordart",
+        "description": "Dear all enemies damage 1.2 times ATK.",
         "type": 0,
         "target": 0,
         "value": 0.0,
@@ -135,12 +162,12 @@
         }
     },
     {
-        "name": "",
-        "description": "",
+        "name": "Wind field",
+        "description": "Create a wind field that -10% for every unit.",
         "type": 0,
         "target": 0,
         "value": 0.0,
-        "is_percentile": 0,
+        "is_percentile": 1,
         "cooldown": 0,
         "effects": {
             "type": 0,
@@ -162,35 +189,8 @@
         }
     },
     {
-        "name": "",
-        "description": "",
-        "type": 0,
-        "target": 0,
-        "value": 0.0,
-        "is_percentile": 0,
-        "cooldown": 0,
-        "effects": {
-            "type": 0,
-            "value": 0.0,
-            "is_percentile": 0,
-            "duration": 0
-        },
-        "condition": {
-            "type": null,
-            "target": null,
-            "value": null,
-            "is_percentile": null,
-            "effects": {
-                "type": null,
-                "value": null,
-                "is_percentile": null,
-                "duration": null
-            } 
-        }
-    },
-    {
-        "name": "",
-        "description": "",
+        "name": "Last stardust",
+        "description": "-50% current hp, deal damage to a unit 4 times ATK.",
         "type": 0,
         "target": 0,
         "value": 0.0,
