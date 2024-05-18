@@ -73,7 +73,7 @@ void apply_skill(Skill *skill, Character *user, Character *target) {
         case HEAL:
             float heal_amount;
             if (skill->is_percentile) {
-                heal_amount = skill->value * target->hp_limit;
+                heal_amount = skill->value * (target->hp_limit - target->hp); // n% of missing
             } else {
                 heal_amount = skill->value;
             }
