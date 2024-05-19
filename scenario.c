@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <string.h>
-#define MAX_STR_NAME 20
+#include <stdlib.h>
+#include <stdbool.h>
+#define NAME_LENGTH 20
 #define MAX_SCENARIO 5
 
-char scenario_txt(char txt[MAX_STR_NAME]){
+
+char scenario_txt(char txt[NAME_LENGTH]){
     FILE *fp;
 
     fp = fopen(txt, "r");
@@ -52,7 +55,7 @@ char scenario_txt(char txt[MAX_STR_NAME]){
     return choose;
 }
 
-void scenario_end_txt(char txt[MAX_STR_NAME]){
+void scenario_end_txt(char txt[NAME_LENGTH]){
     FILE *fp;
     fp = fopen(txt, "r");
 
@@ -85,12 +88,138 @@ void scenario_end_txt(char txt[MAX_STR_NAME]){
     }
 }
 
+//// Graph part ////
+//// Graph part ////
+
+// Structure to represent a scenario (node)
+typedef struct Scenario {
+    int id;
+    char name[NAME_LENGTH];
+    bool battleWon;
+    struct Scenario* adjacent[MAX_SCENARIO];
+    int adjCount;
+} Scenario;
+
+// Function to create a scenario
+Scenario* createScenario(int id, const char* name) {
+    Scenario* newScenario = (Scenario*)malloc(sizeof(Scenario));
+    newScenario->id = id;
+    snprintf(newScenario->name, sizeof(newScenario->name), "%s", name);
+    newScenario->battleWon = false;
+    newScenario->adjCount = 0;
+    return newScenario;
+}
+
+// Function to add an edge (route) between two scenarios
+void addEdge(Scenario* src, Scenario* dest) {
+    if (src->adjCount < MAX_SCENARIO) {
+        src->adjacent[src->adjCount++] = dest;
+    }
+}
+
+// Function to show adjacent scenarios
+void showAdjacentScenarios(Scenario* scenario) {
+    printf("Adjacent scenarios:\n");
+    for (int i = 0; i < scenario->adjCount; i++) {
+        printf("ID: %d, Name: %s\n", scenario->adjacent[i]->id, scenario->adjacent[i]->name);
+    }
+}
+
+// Function to get a scenario by its ID
+Scenario* getScenarioById(Scenario* scenarios[], int id, int count) {
+    for (int i = 0; i < count; i++) {
+        if (scenarios[i]->id == id) {
+            return scenarios[i];
+        }
+    }
+    return NULL;
+}
+
+// Free scenario pointer
+void freeScenarios(Scenario* scenarios[], int count) {
+    for (int i = 0; i < count; i++) {
+        if (scenarios[i]) {
+            free(scenarios[i]);
+        }
+    }
+}
+//// Graph part ////
+//// Graph part ////
+
 // This is for testing, we need to create a main.c file 
 int main(){
-    char txt[MAX_SCENARIO][MAX_STR_NAME] = {{"1.scenario.txt"},{"2.scenario.txt"},{"3.scenario.txt"},{"4.scenario.txt"},{"4.end.txt"}};
     //scenario_txt(txt["Here put a numebr"]); // return a char type function
     /*
     Battle system here
     */
     //scenario_end_txt(txt["Here put a numebr"]); // return nothing just show the plot
+    // Create scenarios
+    Scenario* scenarios[MAX_SCENARIO];
+
+    
+    scenarios[0] = createScenario(0, "1.scenario.txt");
+    scenarios[1] = createScenario(1, "2.scenario.txt");
+    scenarios[2] = createScenario(2, "3.scenario.txt");
+    scenarios[3] = createScenario(3, "4.scenario.txt");
+    scenarios[4] = createScenario(3, "4.end.txt");
+
+    // Create connections between scenarios
+    // Main character can recall the story but cant modify the option he has chosen
+    addEdge(scenarios[0], scenarios[1]); // 
+    
+    addEdge(scenarios[1], scenarios[0]); // 
+    addEdge(scenarios[1], scenarios[2]); // 
+
+    addEdge(scenarios[2], scenarios[0]); // 
+    addEdge(scenarios[2], scenarios[1]); // 
+    addEdge(scenarios[2], scenarios[3]); // 
+
+    addEdge(scenarios[3], scenarios[0]); // 
+    addEdge(scenarios[3], scenarios[1]); // 
+    addEdge(scenarios[3], scenarios[2]); // 
+    addEdge(scenarios[3], scenarios[4]); // 
+    
+    int currentScenarioId = 0;
+    Scenario* currentScenario = scenarios[currentScenarioId];
+
+    while (true) {
+        printf("\nYou are in the %s.\n", currentScenario->name);
+
+        // Check if battle is needed
+        
+        if (!currentScenario->battleWon) {
+            if (performBattle(currentScenario)) {
+                currentScenario->battleWon = true;
+                printf("You won the battle in the %s!\n", currentScenario->name);
+            } else {
+                printf("You lost the battle in the %s. Try again!\n", currentScenario->name);
+                continue;
+            }
+        }
+
+        // Show adjacent scenarios
+        showAdjacentScenarios(currentScenario);
+
+        // Get user input for navigation
+        int nextScenarioId;
+        printf("Enter the ID of the next scenario you want to navigate to: ");
+        scanf("%d", &nextScenarioId);
+
+        // Go back after finish the scenario
+        addEdge(scenarios[nextScenarioId], scenarios[currentScenarioId]);
+
+        // Find the next scenario
+        Scenario* nextScenario = getScenarioById(scenarios, nextScenarioId, MAX_SCENARIO);
+        if (nextScenario == NULL) {
+            printf("Invalid scenario ID. Try again.\n");
+        } else {
+            currentScenario = nextScenario;
+        }
+    }
+
+    // Free allocated memory (not done here for simplicity)
+    freeScenarios(scenarios, MAX_SCENARIO);
+    return 0;
+    
+
 }
