@@ -69,9 +69,10 @@ void apply_active_effect(Character *character){
 
 // Funtion to apply the actual skill
 void apply_skill(Skill *skill, Character *user, Character *target) {
+    float heal_amount;
+    float damage_amount;
     switch (skill->type) {
         case HEAL:
-            float heal_amount;
             if (skill->is_percentile) {
                 heal_amount = skill->value * (target->hp_limit - target->hp); // n% of missing
             } else {
@@ -81,7 +82,6 @@ void apply_skill(Skill *skill, Character *user, Character *target) {
             printf("%s healed for %f hp!. \n", target->name, heal_amount);
             break;
         case DAMAGE:
-            float damage_amount;
             if (skill->is_percentile) {
                 damage_amount = skill->value * user->atk;
             } else {
@@ -144,10 +144,11 @@ void apply_skill(Skill *skill, Character *user, Character *target) {
 // Checks and applies the modifiers inside condition struct of skills
 int pass_condition(Condition condition, Character *user) {
     int pass = 0;
+    int damage_amount;
+    Effect current_effect = condition.effect;
     switch (condition.type) {
         case DAMAGE:
             // Decreases health by an amount, ignore def
-            int damage_amount;
             if (condition.is_percentile) {
                 damage_amount = (condition.value * user->hp) - user->hp;  
             } else {
@@ -160,7 +161,6 @@ int pass_condition(Condition condition, Character *user) {
             printf("%s's hp was reduced by %f!. \n", user->name, damage_amount);
             break;
         case DEBUFF:
-            Effect current_effect = condition.effect;
             switch (current_effect.type) {
                 float debuff_amount;
                 case DEF:
