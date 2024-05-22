@@ -159,8 +159,8 @@ int main(){
 
     
     scenarios[0] = createScenario(0, "Childhood.txt");
-    scenarios[1] = createScenario(1, "Adult.txt");
-    scenarios[2] = createScenario(2, "Travelling.txt");
+    scenarios[1] = createScenario(1, "Travelling.txt");
+    scenarios[2] = createScenario(2, "Training.txt");
     scenarios[3] = createScenario(3, "Travelling_II.txt");
     scenarios[4] = createScenario(4, "Ending.txt");
 
