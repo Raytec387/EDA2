@@ -186,7 +186,7 @@ int main(){
         printf("\nYou are in the %s.\n", currentScenario->name);
 
         // Check if battle is needed
-        
+        /*
         if (!currentScenario->battleWon) {
             if (performBattle(currentScenario)) {
                 currentScenario->battleWon = true;
@@ -195,7 +195,7 @@ int main(){
                 printf("You lost the battle in the %s. Try again!\n", currentScenario->name);
                 continue;
             }
-        }
+        }*/
 
         // Show adjacent scenarios
         showAdjacentScenarios(currentScenario);
@@ -205,8 +205,6 @@ int main(){
         printf("Enter the ID of the next scenario you want to navigate to: ");
         scanf("%d", &nextScenarioId);
 
-        // Go back after finish the scenario
-        addEdge(scenarios[nextScenarioId], scenarios[currentScenarioId]);
 
         // Find the next scenario
         Scenario* nextScenario = getScenarioById(scenarios, nextScenarioId, MAX_SCENARIO);
