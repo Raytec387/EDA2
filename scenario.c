@@ -6,6 +6,64 @@
 #define MAX_SCENARIO 5
 
 
+//// Graph part ////
+//// Graph part ////
+
+// Structure to represent a scenario (node)
+typedef struct Scenario {
+    int id;
+    char name[NAME_LENGTH];
+    bool battleWon;
+    struct Scenario* adjacent[MAX_SCENARIO];
+    int adjCount;
+} Scenario;
+
+// Function to create a scenario
+Scenario* createScenario(int id, const char* name) {
+    Scenario* newScenario = (Scenario*)malloc(sizeof(Scenario));
+    newScenario->id = id;
+    snprintf(newScenario->name, sizeof(newScenario->name), "%s", name);
+    newScenario->battleWon = false;
+    newScenario->adjCount = 0;
+    return newScenario;
+}
+
+// Function to add an edge (route) between two scenarios
+void addEdge(Scenario* src, Scenario* dest) {
+    if (src->adjCount < MAX_SCENARIO) {
+        src->adjacent[src->adjCount++] = dest;
+    }
+}
+
+// Function to show adjacent scenarios
+void showAdjacentScenarios(Scenario* scenario) {
+    printf("Adjacent scenarios:\n");
+    for (int i = 0; i < scenario->adjCount; i++) {
+        printf("ID: %d, Name: %s\n", scenario->adjacent[i]->id, scenario->adjacent[i]->name);
+    }
+}
+
+// Function to get a scenario by its ID
+Scenario* getScenarioById(Scenario* scenarios[], int id, int count) {
+    for (int i = 0; i < count; i++) {
+        if (scenarios[i]->id == id) {
+            return scenarios[i];
+        }
+    }
+    return NULL;
+}
+
+// Free scenario pointer
+void freeScenarios(Scenario* scenarios[], int count) {
+    for (int i = 0; i < count; i++) {
+        if (scenarios[i]) {
+            free(scenarios[i]);
+        }
+    }
+}
+//// Graph part ////
+//// Graph part ////
+
 char scenario_txt(char txt[NAME_LENGTH]){
     FILE *fp;
 
@@ -88,67 +146,10 @@ void scenario_end_txt(char txt[NAME_LENGTH]){
     }
 }
 
-//// Graph part ////
-//// Graph part ////
-
-// Structure to represent a scenario (node)
-typedef struct Scenario {
-    int id;
-    char name[NAME_LENGTH];
-    bool battleWon;
-    struct Scenario* adjacent[MAX_SCENARIO];
-    int adjCount;
-} Scenario;
-
-// Function to create a scenario
-Scenario* createScenario(int id, const char* name) {
-    Scenario* newScenario = (Scenario*)malloc(sizeof(Scenario));
-    newScenario->id = id;
-    snprintf(newScenario->name, sizeof(newScenario->name), "%s", name);
-    newScenario->battleWon = false;
-    newScenario->adjCount = 0;
-    return newScenario;
-}
-
-// Function to add an edge (route) between two scenarios
-void addEdge(Scenario* src, Scenario* dest) {
-    if (src->adjCount < MAX_SCENARIO) {
-        src->adjacent[src->adjCount++] = dest;
-    }
-}
-
-// Function to show adjacent scenarios
-void showAdjacentScenarios(Scenario* scenario) {
-    printf("Adjacent scenarios:\n");
-    for (int i = 0; i < scenario->adjCount; i++) {
-        printf("ID: %d, Name: %s\n", scenario->adjacent[i]->id, scenario->adjacent[i]->name);
-    }
-}
-
-// Function to get a scenario by its ID
-Scenario* getScenarioById(Scenario* scenarios[], int id, int count) {
-    for (int i = 0; i < count; i++) {
-        if (scenarios[i]->id == id) {
-            return scenarios[i];
-        }
-    }
-    return NULL;
-}
-
-// Free scenario pointer
-void freeScenarios(Scenario* scenarios[], int count) {
-    for (int i = 0; i < count; i++) {
-        if (scenarios[i]) {
-            free(scenarios[i]);
-        }
-    }
-}
-//// Graph part ////
-//// Graph part ////
 
 // This is for testing, we need to create a main.c file 
 int main(){
-    //scenario_txt(txt["Here put a numebr"]); // return a char type function
+    
     /*
     Battle system here
     */
@@ -157,11 +158,11 @@ int main(){
     Scenario* scenarios[MAX_SCENARIO];
 
     
-    scenarios[0] = createScenario(0, "1.scenario.txt");
-    scenarios[1] = createScenario(1, "2.scenario.txt");
-    scenarios[2] = createScenario(2, "3.scenario.txt");
-    scenarios[3] = createScenario(3, "4.scenario.txt");
-    scenarios[4] = createScenario(3, "4.end.txt");
+    scenarios[0] = createScenario(0, "Childhood.txt");
+    scenarios[1] = createScenario(1, "Adult.txt");
+    scenarios[2] = createScenario(2, "Travelling.txt");
+    scenarios[3] = createScenario(3, "Travelling_II.txt");
+    scenarios[4] = createScenario(4, "Ending.txt");
 
     // Create connections between scenarios
     // Main character can recall the story but cant modify the option he has chosen
@@ -184,7 +185,7 @@ int main(){
 
     while (true) {
         printf("\nYou are in the %s.\n", currentScenario->name);
-
+        scenario_txt(currentScenario->name); // return a char type function
         // Check if battle is needed
         /*
         if (!currentScenario->battleWon) {
@@ -196,13 +197,13 @@ int main(){
                 continue;
             }
         }*/
-
+        scenario_end_txt(currentScenario->name);
         // Show adjacent scenarios
         showAdjacentScenarios(currentScenario);
 
         // Get user input for navigation
         int nextScenarioId;
-        printf("Enter the ID of the next scenario you want to navigate to: ");
+        printf("\nRecall memories or keep going:\n(Enter the ID of the next scenario you want to navigate to):\n");
         scanf("%d", &nextScenarioId);
 
 
