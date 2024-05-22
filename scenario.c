@@ -184,7 +184,8 @@ int main(){
     Scenario* currentScenario = scenarios[currentScenarioId];
 
     while (true) {
-        printf("\nYou are in the %s.\n", currentScenario->name);
+        // Ending of the story
+        if (0==strcmp(currentScenario->name,"Ending.txt")){scenario_end_txt(currentScenario->name);printf("Hello");break;}
         scenario_txt(currentScenario->name); // return a char type function
         // Check if battle is needed
         /*
@@ -198,6 +199,8 @@ int main(){
             }
         }*/
         scenario_end_txt(currentScenario->name);
+
+        printf("\nYou are in the %s.\n", currentScenario->name);
         // Show adjacent scenarios
         showAdjacentScenarios(currentScenario);
 
