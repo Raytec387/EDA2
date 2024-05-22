@@ -216,7 +216,7 @@ int main(){
         }
     }
 
-    // Free allocated memory (not done here for simplicity)
+    // Free allocated memory
     freeScenarios(scenarios, MAX_SCENARIO);
     return 0;
     
