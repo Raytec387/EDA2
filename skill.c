@@ -2,7 +2,6 @@
 #include "character.h"
 #include "common.c"
 
-
 // Damage calculation - damage vs defense
 int damage(float damage, int def){
     return (damage * 100/(100+def));

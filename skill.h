@@ -75,4 +75,15 @@ int damage(float damage, int def);
 
 void heal(float value, Character *character);
 
+// Ability tracer
+typedef struct Ability {
+    char *name;
+    int count;
+    struct Ability *next;
+} Ability;
+
+typedef struct AbilityTracker {
+    Ability *table[MAX_SKILL_IN_GAME];
+} AbilityTracker;
+
 #endif
