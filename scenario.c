@@ -86,12 +86,7 @@ char scenario_txt(char txt[NAME_LENGTH]){
 
     }
     while (1){
-        if (choose == '1'){
-            break;
-            printf("Here");
-        }
-        
-        else if (choose == '2'){
+        if (choose == '1' || choose == '2'){
             break;
         }
 
@@ -187,7 +182,7 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO],Game_state current
 
         // Get user input for navigation
         printf("\nRecall memories or keep going:\n(Enter the ID of the next scenario you want to navigate to)\n");
-        printf("\nEnter 0 to change the skill:\n");
+        printf("\nEnter 0 to go to the menu:\n");
         int nextScenarioId = check_input(0,currentState.currentScenarioId+1);
 
         // change skill,go next scenario or before
