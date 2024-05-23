@@ -1,4 +1,5 @@
 #include "main.h"
+#include "scenario.c"
 
 void run(){
     int option;
