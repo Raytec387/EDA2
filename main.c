@@ -4,9 +4,11 @@
 void run(){
     int option;
     do{
+        printf("\033[2J\033[1;1H");
+        printf("Welcome to Red rain,\n");
+        printf("Select an option (%d-%d)to start:\n", EXIT_BACK, SAVE_GAME);
         displayMenu();
-        printf("Select an option (%d-%d): ", EXIT_BACK, SAVE_GAME);
-        check_input(EXIT_BACK, SAVE_GAME);
+        option = check_input(EXIT_BACK, SAVE_GAME);
         switch(option){
             case START_GAME:
                 start_game();
@@ -22,7 +24,19 @@ void run(){
 }
 
 void start_game() {
-    // TO DO
+    /// Initialize the game ///
+    // Create scenarios
+    Scenario* scenarios[MAX_SCENARIO];
+    graph_initialize(scenarios);
+    
+    // Track the scenario
+    Game_state currentState;
+    currentState.currentScenarioId = 1;
+    // Start with the first scenario
+    Scenario* currentScenario = scenarios[currentState.currentScenarioId-1];
+    story_Navi_battleCheck(scenarios,currentState, currentScenario);
+    // Free allocated memory
+    freeScenarios(scenarios, MAX_SCENARIO);
     return;
 }
 

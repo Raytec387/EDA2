@@ -5,7 +5,8 @@
 #include "character.h"
 
 typedef struct {
-    // keep track of current scenario: TO DO
+    // keep track of current scenario
+    int currentScenarioId;
     Character character; // Keeps track of the current character
 } Game_state;
 

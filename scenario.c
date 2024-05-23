@@ -137,13 +137,8 @@ void scenario_end_txt(char txt[NAME_LENGTH]){
     }
 }
 
-
-// This is for testing, we need to create a main.c file 
-int main(){
-    /// Initialize the game ///
-    // Create scenarios
-    Scenario* scenarios[MAX_SCENARIO];
-
+void graph_initialize(Scenario *scenarios[MAX_SCENARIO]){
+    
     scenarios[0] = createScenario(1, "Childhood.txt");
     scenarios[1] = createScenario(2, "Travelling.txt");
     scenarios[2] = createScenario(3, "Training.txt");
@@ -165,19 +160,9 @@ int main(){
     addEdge(scenarios[3], scenarios[1]); // 
     addEdge(scenarios[3], scenarios[2]); // 
     addEdge(scenarios[3], scenarios[4]); // 
-    
-    int currentScenarioId = 1;
-    // Start with the first scenario
-    Scenario* currentScenario = scenarios[currentScenarioId-1];
-    /////////////////////////
+}
 
-
-
-    /// Interactive part ///
-
-    /////////////////////////
-
-
+void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO],Game_state currentState, Scenario* currentScenario){
     /// Story and navigation ///
     while (true) {
         // Ending of the story
@@ -203,7 +188,7 @@ int main(){
         // Get user input for navigation
         printf("\nRecall memories or keep going:\n(Enter the ID of the next scenario you want to navigate to)\n");
         printf("\nEnter 0 to change the skill:\n");
-        int nextScenarioId = check_input(0,currentScenarioId+1);
+        int nextScenarioId = check_input(0,currentState.currentScenarioId+1);
 
         // change skill,go next scenario or before
         if (nextScenarioId == 0){
@@ -211,12 +196,12 @@ int main(){
             printf("\nYou are in the %s.\n", currentScenario->name);
             // Show adjacent scenarios
             showAdjacentScenarios(currentScenario);
-            nextScenarioId = check_input(0,currentScenarioId+1);
+            nextScenarioId = check_input(0,currentState.currentScenarioId+1);
         }
         // Recall memories, save data
-        else if(nextScenarioId <= currentScenarioId){/*save the main character 's data}*/}
+        else if(nextScenarioId <= currentState.currentScenarioId){/*save the main character 's data}*/}
         // Record where main character is
-        else {currentScenarioId = nextScenarioId;/*Loads the main character 's data here*/}
+        else {currentState.currentScenarioId = nextScenarioId;/*Loads the main character 's data here*/}
         // Find the next scenario
         Scenario* nextScenario = getScenarioById(scenarios, nextScenarioId, MAX_SCENARIO);
         if (nextScenario == NULL) {
@@ -225,10 +210,4 @@ int main(){
             currentScenario = nextScenario;
         }
     }
-
-    // Free allocated memory
-    freeScenarios(scenarios, MAX_SCENARIO);
-    return 0;
-    
-
 }
