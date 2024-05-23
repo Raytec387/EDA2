@@ -4,19 +4,10 @@
 #include <stdbool.h>
 #include "common.h"
 #include "common.c"
-
+#include "ui.c"
+#include "main.h"
 
 //// Graph part ////
-//// Graph part ////
-
-// Structure to represent a scenario (node)
-typedef struct Scenario {
-    int id;
-    char name[NAME_LENGTH];
-    bool battleWon;
-    struct Scenario* adjacent[MAX_SCENARIO];
-    int adjCount;
-} Scenario;
 
 // Function to create a scenario
 Scenario* createScenario(int id, const char* name) {
@@ -149,15 +140,15 @@ void scenario_end_txt(char txt[NAME_LENGTH]){
 
 // This is for testing, we need to create a main.c file 
 int main(){
+    /// Initialize the game ///
     // Create scenarios
     Scenario* scenarios[MAX_SCENARIO];
 
-    
-    scenarios[0] = createScenario(0, "Childhood.txt");
-    scenarios[1] = createScenario(1, "Travelling.txt");
-    scenarios[2] = createScenario(2, "Training.txt");
-    scenarios[3] = createScenario(3, "Travelling_II.txt");
-    scenarios[4] = createScenario(4, "Ending.txt");
+    scenarios[0] = createScenario(1, "Childhood.txt");
+    scenarios[1] = createScenario(2, "Travelling.txt");
+    scenarios[2] = createScenario(3, "Training.txt");
+    scenarios[3] = createScenario(4, "Travelling_II.txt");
+    scenarios[4] = createScenario(5, "Ending.txt");
 
     // Create connections between scenarios
     // Main character can recall the story but cant modify the option he has chosen
@@ -175,9 +166,19 @@ int main(){
     addEdge(scenarios[3], scenarios[2]); // 
     addEdge(scenarios[3], scenarios[4]); // 
     
-    int currentScenarioId = 0;
-    Scenario* currentScenario = scenarios[currentScenarioId];
+    int currentScenarioId = 1;
+    // Start with the first scenario
+    Scenario* currentScenario = scenarios[currentScenarioId-1];
+    /////////////////////////
 
+
+
+    /// Interactive part ///
+
+    /////////////////////////
+
+
+    /// Story and navigation ///
     while (true) {
         // Ending of the story
         if (0==strcmp(currentScenario->name,"Ending.txt")){scenario_end_txt(currentScenario->name);printf("Hello");break;}
@@ -200,9 +201,21 @@ int main(){
         showAdjacentScenarios(currentScenario);
 
         // Get user input for navigation
-        printf("\nRecall memories or keep going:\n(Enter the ID of the next scenario you want to navigate to):\n");
+        printf("\nRecall memories or keep going:\n(Enter the ID of the next scenario you want to navigate to)\n");
+        printf("\nEnter 0 to change the skill:\n");
         int nextScenarioId = check_input(0,currentScenarioId+1);
-        if(nextScenarioId <= currentScenarioId){/*save the main character 's data}*/}
+
+        // change skill,go next scenario or before
+        if (nextScenarioId == 0){
+            /// Change skill function here //
+            printf("\nYou are in the %s.\n", currentScenario->name);
+            // Show adjacent scenarios
+            showAdjacentScenarios(currentScenario);
+            nextScenarioId = check_input(0,currentScenarioId+1);
+        }
+        // Recall memories, save data
+        else if(nextScenarioId <= currentScenarioId){/*save the main character 's data}*/}
+        // Record where main character is
         else {currentScenarioId = nextScenarioId;/*Loads the main character 's data here*/}
         // Find the next scenario
         Scenario* nextScenario = getScenarioById(scenarios, nextScenarioId, MAX_SCENARIO);

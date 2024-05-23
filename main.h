@@ -18,6 +18,15 @@ typedef struct {
     Game_state *prev_game_state;
 } Session;
 
+// Structure to represent a scenario (node)
+typedef struct Scenario {
+    int id;
+    char name[NAME_LENGTH];
+    bool battleWon;
+    struct Scenario* adjacent[MAX_SCENARIO];
+    int adjCount;
+} Scenario;
+
 void run();
 void start_game();
 void load_game();
