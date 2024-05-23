@@ -1,6 +1,6 @@
 {
     "Main_Character":{
-        "ATK": 100,
+        "ATK": 200,
         "DEF": 100,
         "HP": 1000.0
     },
