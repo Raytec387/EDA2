@@ -187,6 +187,7 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO],Game_state current
 
         // change skill,go next scenario or before
         if (nextScenarioId == 0){
+            run();
             /// Change skill function here //
             printf("\nYou are in the %s.\n", currentScenario->name);
             // Show adjacent scenarios
