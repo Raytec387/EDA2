@@ -157,7 +157,7 @@ void graph_initialize(Scenario *scenarios[MAX_SCENARIO]){
     addEdge(scenarios[3], scenarios[4]); // 
 }
 
-void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO],Game_state currentState, Scenario* currentScenario){
+void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO],Game_state *currentState, Scenario* currentScenario){
     /// Story and navigation ///
     while (true) {
         // Ending of the story
@@ -183,7 +183,7 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO],Game_state current
         // Get user input for navigation
         printf("\nRecall memories or keep going:\n(Enter the ID of the next scenario you want to navigate to)\n");
         printf("\nEnter 0 to go to the menu:\n");
-        int nextScenarioId = check_input(0,currentState.currentScenarioId+1);
+        int nextScenarioId = check_input(0,currentState->currentScenarioId+1);
 
         // change skill,go next scenario or before
         if (nextScenarioId == 0){
@@ -192,12 +192,12 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO],Game_state current
             printf("\nYou are in the %s.\n", currentScenario->name);
             // Show adjacent scenarios
             showAdjacentScenarios(currentScenario);
-            nextScenarioId = check_input(0,currentState.currentScenarioId+1);
+            nextScenarioId = check_input(0,currentState->currentScenarioId+1);
         }
         // Recall memories, save data
-        else if(nextScenarioId <= currentState.currentScenarioId){/*save the main character 's data}*/}
+        else if(nextScenarioId <= currentState->currentScenarioId) save_game(currentState);
         // Record where main character is
-        else {currentState.currentScenarioId = nextScenarioId;/*Loads the main character 's data here*/}
+        else {currentState->currentScenarioId = nextScenarioId; load_game(currentState);}
         // Find the next scenario
         Scenario* nextScenario = getScenarioById(scenarios, nextScenarioId, MAX_SCENARIO);
         if (nextScenario == NULL) {

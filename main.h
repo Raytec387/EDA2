@@ -3,13 +3,16 @@
 
 #include "common.h"
 #include "character.h"
+#include "skill.h"
 
 typedef struct {
     // keep track of current scenario
     int currentScenarioId;
     Character character; // Keeps track of the current character
+    AbilityTracker *tracker;
 } Game_state;
 
+/* Explain the usage in discord
 typedef struct {
     // Info about current session
     // Keeps track of the game state e.g. character info and scenario info
@@ -17,7 +20,7 @@ typedef struct {
     // WIP
     Game_state *current_game_state;
     Game_state *prev_game_state;
-} Session;
+} Session;*/
 
 // Structure to represent a scenario (node)
 typedef struct Scenario {

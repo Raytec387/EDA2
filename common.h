@@ -21,6 +21,7 @@
 #define NAME_LENGTH 20
 #define DESCRITPION_LENGTH 100
 #define MAX_ACTIVE_EFFECTS 8
+#define TRACKER_FILE "ability.txt"
 
 // all skill in the game THIS BREAKS THE CODE! BAD IDEA
 /*char All_skill[MAX_SKILL_IN_GAME][NAME_LENGTH] = {  {"Defence"},{"Strong Hit"},{"Heal"},{"Concentrate"},
@@ -32,6 +33,8 @@
 #define START_GAME 1
 #define LOAD_GAME 2
 #define SAVE_GAME 3
+#define SKILL_CHANGE 4
+#define SHOW_SKILL_TIMES 5
 
 cJSON *create_json(const char *file_name);
 

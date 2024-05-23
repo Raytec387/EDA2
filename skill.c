@@ -318,6 +318,53 @@ void free_tracker(AbilityTracker *tracker) {
     free(tracker);
 }
 
+// Save the tracker to a file
+void save_tracker(const AbilityTracker *tracker, const char *filename) {
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("Failed to open file");
+        return;
+    }
+
+    for (int i = 0; i < MAX_SKILL_IN_GAME; i++) {
+        Ability *current = tracker->table[i];
+        while (current != NULL) {
+            fprintf(file, "%s %d\n", current->name, current->count);
+            current = current->next;
+        }
+    }
+
+    fclose(file);
+}
+
+// Load the tracker from a file
+AbilityTracker* load_tracker(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        perror("Failed to open file");
+        return NULL;
+    }
+
+    AbilityTracker *tracker = create_tracker();
+    char name[NAME_LENGTH];
+    int count;
+
+    while (fscanf(file, "%s %d", name, &count) == 2) {
+        
+        unsigned int index = hash(name);
+        Ability *new_ability = (Ability *)malloc(sizeof(Ability));
+        new_ability->name = strdup(name);
+        new_ability->count = count;
+        new_ability->next = tracker->table[index];
+        tracker->table[index] = new_ability;
+    }
+
+    fclose(file);
+    return tracker;
+
+}
+
+
 /* Example to use the dictionary
 int main() {
     AbilityTracker *tracker = create_tracker();
