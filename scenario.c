@@ -187,7 +187,7 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO],Game_state *curren
 
         // change skill,go next scenario or before
         if (nextScenarioId == 0){
-            run();
+            run(currentState);
             /// Change skill function here //
             printf("\nYou are in the %s.\n", currentScenario->name);
             // Show adjacent scenarios
@@ -195,9 +195,9 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO],Game_state *curren
             nextScenarioId = check_input(0,currentState->currentScenarioId+1);
         }
         // Recall memories, save data
-        else if(nextScenarioId <= currentState->currentScenarioId) save_game(currentState);
+        else if(nextScenarioId <= currentState->currentScenarioId);
         // Record where main character is
-        else {currentState->currentScenarioId = nextScenarioId; load_game(currentState);}
+        else {currentState->currentScenarioId = nextScenarioId;}
         // Find the next scenario
         Scenario* nextScenario = getScenarioById(scenarios, nextScenarioId, MAX_SCENARIO);
         if (nextScenario == NULL) {

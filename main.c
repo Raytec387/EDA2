@@ -131,14 +131,61 @@ void free_game_state(Game_state *game_state) {
     }
 }
 
-void run(){
-    int option;
-    // Track the scenario
+/// @brief save and load ///
+// Create a JSON object from the Game_state
+cJSON *create_json_from_game_state(Game_state *state) {
+    cJSON *json = cJSON_CreateObject();
+    cJSON_AddNumberToObject(json, "currentScenarioId", state->currentScenarioId);
+
+    cJSON *character = cJSON_CreateObject();
+    cJSON_AddNumberToObject(character, "ATK", state->character.atk);
+    cJSON_AddNumberToObject(character, "DEF", state->character.def);
+    cJSON_AddNumberToObject(character, "HP", state->character.hp_limit);
+    cJSON_AddNumberToObject(character, "SKILL_ID1", state->character.skill_array[0].id);
+    cJSON_AddNumberToObject(character, "SKILL_ID2", state->character.skill_array[1].id);
+    cJSON_AddNumberToObject(character, "SKILL_ID3", state->character.skill_array[2].id);
+    cJSON_AddNumberToObject(character, "SKILL_ID4", state->character.skill_array[3].id);
+    cJSON_AddItemToObject(json, "character", character);
+
+    return json;
+}
+// Parse Game_state from a JSON object
+void parse_game_state_from_json(Game_state *state, cJSON *json) {
+    state->currentScenarioId = cJSON_GetObjectItemCaseSensitive(json, "currentScenarioId")->valueint;
+
+    cJSON *character = cJSON_GetObjectItemCaseSensitive(json, "character");
+    state->character.atk = cJSON_GetObjectItemCaseSensitive(character, "ATK")->valueint;
+    state->character.def = cJSON_GetObjectItemCaseSensitive(character, "DEF")->valueint;
+    state->character.hp = (float)cJSON_GetObjectItemCaseSensitive(character, "HP")->valuedouble;
+    state->character.skill_array[0].id = cJSON_GetObjectItemCaseSensitive(character, "SKILL_ID1")->valueint;
+    state->character.skill_array[1].id = cJSON_GetObjectItemCaseSensitive(character, "SKILL_ID2")->valueint;
+    state->character.skill_array[2].id = cJSON_GetObjectItemCaseSensitive(character, "SKILL_ID3")->valueint;
+    state->character.skill_array[3].id = cJSON_GetObjectItemCaseSensitive(character, "SKILL_ID4")->valueint;
+}
+
+/// @brief save and load ///
+
+Game_state *initialize_Game(){
     Game_state *currentState = make_game_state();
     currentState->currentScenarioId = 1;
     currentState->tracker = create_tracker();
+    // Initialize character part
+    currentState->character.atk = 150;
+    currentState->character.def = 300;
+    currentState->character.hp_limit = 1000.0;
+    currentState->character.skill_array[0].id = 0;
+    currentState->character.skill_array[1].id = 1;
+    currentState->character.skill_array[2].id = 2;
+    currentState->character.skill_array[3].id = 3;
+    return currentState;
+}
+
+void run(Game_state *currentState){
+    int option;
+    // Track the scenario
 
     printf("\033[2J\033[1;1H");
+    printf("%d\n",currentState->currentScenarioId);
     printf("Welcome to Red rain,");
     do{
         printf("\n\n");
@@ -147,13 +194,13 @@ void run(){
         option = check_input(EXIT_BACK, SHOW_SKILL_TIMES);
         switch(option){
             case START_GAME:
-                start_game(currentState);
+                start_game(initialize_Game());
                 break;
             case LOAD_GAME:
-                load_game(currentState);
+                load_game(SAVE_FILE,currentState);
                 break;
             case SAVE_GAME:
-                save_game(currentState);
+                save_game(SAVE_FILE,currentState);
                 break;
             case SKILL_CHANGE:
                 // A change skill function to do
@@ -180,13 +227,52 @@ void start_game(Game_state *currentState) {
     return;
 }
 
-void load_game(Game_state *currentState){
+void load_game(const char *file_name, Game_state *currentState){
     currentState->tracker = load_tracker(TRACKER_FILE);
+    FILE *fp = fopen(file_name, "r");
+    if (fp == NULL) {
+        printf("Error: Unable to open file for reading.\n");
+        return;
+    }
+
+    char buffer[SIZE_OF_BUFFER];
+    fread(buffer, 1, SIZE_OF_BUFFER, fp);
+    fclose(fp);
+
+    cJSON *json = cJSON_Parse(buffer);
+    if (json == NULL) {
+        const char *error_ptr = cJSON_GetErrorPtr();
+        if (error_ptr != NULL) {
+            printf("Error: %s\n", error_ptr);
+        }
+        cJSON_Delete(json);
+        return;
+    }
+
+    parse_game_state_from_json(currentState, json);
+    cJSON_Delete(json);
+    start_game(currentState);
     return;
 }
 
-void save_game(Game_state *currentState){
+void save_game(const char *file_name,Game_state *currentState){
     save_tracker(currentState->tracker,TRACKER_FILE);
+    cJSON *json = create_json_from_game_state(currentState);
+    char *json_string = cJSON_Print(json);
+
+    FILE *fp = fopen(file_name, "w");
+    if (fp == NULL) {
+        printf("Error: Unable to open file for writing.\n");
+        cJSON_Delete(json);
+        free(json_string);
+        return;
+    }
+
+    fprintf(fp, "%s", json_string);
+    fclose(fp);
+
+    cJSON_Delete(json);
+    free(json_string);
     return;
 }
 
@@ -206,5 +292,5 @@ void restart_session(Session *session) {
 */
 
 int main(){
-    run();
+    run(initialize_Game());
 }
