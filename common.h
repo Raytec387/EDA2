@@ -22,6 +22,7 @@
 #define DESCRITPION_LENGTH 100
 #define MAX_ACTIVE_EFFECTS 8
 #define TRACKER_FILE "ability.txt"
+#define SAVE_FILE "save.json"
 
 // all skill in the game THIS BREAKS THE CODE! BAD IDEA
 /*char All_skill[MAX_SKILL_IN_GAME][NAME_LENGTH] = {  {"Defence"},{"Strong Hit"},{"Heal"},{"Concentrate"},
