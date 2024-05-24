@@ -1,30 +1,41 @@
 {
-    "Main_Character":{
-        "ATK": 200,
-        "DEF": 100,
-        "HP": 1000.0
-    },
-
     "enemies":{
         "bullier":{
             "ATK": 50,
             "DEF": 30,
-            "HP": 500.0
+            "HP": 500.0,
+            "SKILL_ID1": 0,
+            "SKILL_ID2": 1,
+            "SKILL_ID3": 2,
+            "SKILL_ID4": 3
+            
         },
         "rogue": {
             "ATK": 60,
             "DEF": 40,
-            "HP": 600.0
+            "HP": 600.0,
+            "SKILL_ID1": 1,
+            "SKILL_ID2": 2,
+            "SKILL_ID3": 3,
+            "SKILL_ID4": 4
         },
         "master": {
             "ATK": 70,
             "DEF": 50,
-            "HP": 700.0
+            "HP": 700.0,
+            "SKILL_ID1": 0,
+            "SKILL_ID2": 3,
+            "SKILL_ID3": 4,
+            "SKILL_ID4": 7
         },
         "piracy": {
             "ATK": 80,
             "DEF": 60,
-            "HP": 800.0
+            "HP": 800.0,
+            "SKILL_ID1": 0,
+            "SKILL_ID2": 1,
+            "SKILL_ID3": 3,
+            "SKILL_ID4": 7
         }
     }
 }
