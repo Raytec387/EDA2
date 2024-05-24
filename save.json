@@ -1,0 +1,12 @@
+{
+	"currentScenarioId":	1,
+	"character":	{
+		"ATK":	150,
+		"DEF":	300,
+		"HP":	1000,
+		"SKILL_ID1":	0,
+		"SKILL_ID2":	1,
+		"SKILL_ID3":	2,
+		"SKILL_ID4":	3
+	}
+}
