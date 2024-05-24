@@ -68,6 +68,9 @@ typedef struct {
     int remaining_cooldown;
     Effect effect;
     Condition condition;
+
+    // adding int to track the skill
+    int id;
 } Skill;
 
 // Function defnitions

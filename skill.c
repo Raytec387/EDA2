@@ -212,9 +212,9 @@ void load_skill(const char *filename, Skill *skills) {
 
     // Open json file
     cJSON *json = create_json("skill.json");
-
-    for (int i = 0; i < MAX_SKILL_IN_GAME; i++) {
-
+    int i;
+    for (int j = 0; j < MAX_SKILL; j++) {
+        i = skills[j].id;
         // Read skills array
         cJSON *skill_json = cJSON_GetArrayItem(json, i);
 
@@ -386,9 +386,13 @@ int main() {
 
 int main(){
     Skill skill_array[MAX_SKILL_IN_GAME];
+    skill_array[0].id = 0;
+    skill_array[1].id = 1;
+    skill_array[2].id = 2;
+    skill_array[3].id = 3;
     load_skill("skill.json", skill_array);
     //printf("here\n");
-    for (int i = 0; i < MAX_SKILL_IN_GAME; i++){
+    for (int i = 0; i < MAX_SKILL; i++){
         printf("Skill name: %s\n", skill_array[i].name);
     }
 }
