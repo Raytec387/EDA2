@@ -7,7 +7,8 @@
             "SKILL_ID1": 0,
             "SKILL_ID2": 1,
             "SKILL_ID3": 2,
-            "SKILL_ID4": 3
+            "SKILL_ID4": 3,
+            "SCENAIRO" :0
         },
         "rogue": {
             "ATK": 60,
@@ -16,7 +17,8 @@
             "SKILL_ID1": 1,
             "SKILL_ID2": 2,
             "SKILL_ID3": 3,
-            "SKILL_ID4": 4
+            "SKILL_ID4": 4,
+            "SCENAIRO": 1
         },
         "master": {
             "ATK": 70,
@@ -25,7 +27,8 @@
             "SKILL_ID1": 0,
             "SKILL_ID2": 3,
             "SKILL_ID3": 4,
-            "SKILL_ID4": 7
+            "SKILL_ID4": 7,
+            "SCENAIRO": 2
         },
         "piracy": {
             "ATK": 80,
@@ -34,7 +37,8 @@
             "SKILL_ID1": 0,
             "SKILL_ID2": 1,
             "SKILL_ID3": 3,
-            "SKILL_ID4": 7
+            "SKILL_ID4": 7,
+            "SCENAIRO": 3
         }
     }
 }
