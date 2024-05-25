@@ -1,6 +1,7 @@
 #include "skill.h"
 #include "character.h"
 #include "common.c"
+#include "main.h"
 
 // Damage calculation - damage vs defense
 int damage(float damage, int def){
@@ -68,9 +69,14 @@ void apply_active_effect(Character *character){
 
 
 // Funtion to apply the actual skill
-void apply_skill(Skill *skill, Character *user, Character *target) {
+void apply_skill(Skill *skill, Character *user, Character *target, Game_state* currentState) {
     float heal_amount;
     float damage_amount;
+    // For dictionary and Timestrike(with stack)
+    if(user->is_player) {
+        use_ability(currentState->tracker, skill->name);   
+        push(skill->id);
+    }
     switch (skill->type) {
         case HEAL:
             if (skill->is_percentile) {
@@ -384,6 +390,119 @@ int main() {
 /////////// Dictionary for counting the number of the skill that main character used.       ///////////
 ///////////                                                                                 ///////////
 
+///////////                                                                                 ///////////
+///////////                     Stack for Time Strike                                       ///////////
+///////////                                                                                 ///////////
+/* Check if the stack is empty */
+int isempty(){
+   if(top == -1)
+      return 1;
+   else
+      return 0;
+}
+
+/* Check if the stack is full */
+int isfull(){
+   if(top == MAX_STACK_SIZE)
+      return 1;
+   else
+      return 0;
+}
+
+/* Function to return the topmost element in the stack */
+int peek(){
+   return stack[top];
+}
+
+/* Function to delete from the stack */
+int pop(){
+   int data;
+   if(!isempty()) {
+      data = stack[top];
+      top = top - 1;
+      return data;
+   } else {
+      printf("Could not retrieve data, Stack is empty.\n");
+      return 0;
+   }
+}
+
+/* Function to insert into the stack */
+void push(int data){
+   if(!isfull()) {
+      top = top + 1;
+      stack[top] = data;
+   } else {
+      printf("Could not insert data, Stack is full.\n");
+   }
+}
+
+/* Function to choose a random skill in the stack*/
+int random_Time_Strike(){
+    int k_th = rand() % top;
+    int id;
+    for(int i = 0; i < k_th;i++) {
+        id = pop();
+    }
+    return id;
+}
+/*  Allows access to the history of moves executed by the player (which is a stack) 
+    and randomly selects the k-th move executed counting from the last one          */
+void TimeStrike(int id,Character *user, Character *target){
+    
+    if (!isempty()&&time_strike_use == 1){
+        Skill TimeStrike;
+        TimeStrike.id = id;
+        // Open json file
+        cJSON *json = create_json("skill.json");
+        // Read skills array
+        cJSON *skill_json = cJSON_GetArrayItem(json, TimeStrike.id);
+
+        // Read skills
+        strncpy(TimeStrike.name, cJSON_GetObjectItem(skill_json, "name")->valuestring, NAME_LENGTH);
+        strncpy(TimeStrike.desc, cJSON_GetObjectItem(skill_json, "description")->valuestring, DESCRITPION_LENGTH);
+        TimeStrike.type = cJSON_GetObjectItem(skill_json, "type")->valueint;
+        TimeStrike.target = cJSON_GetObjectItem(skill_json, "target")->valueint;
+        TimeStrike.value = cJSON_GetObjectItem(skill_json, "value")->valuedouble;
+        TimeStrike.is_percentile = cJSON_GetObjectItem(skill_json, "is_percentile")->valueint;
+        TimeStrike.cooldown = cJSON_GetObjectItem(skill_json, "cooldown")->valueint;
+
+        // Read effect
+        cJSON *effect_json = cJSON_GetObjectItem(skill_json, "effects");
+        TimeStrike.effect.type = cJSON_GetObjectItem(effect_json, "type")->valueint;
+        TimeStrike.effect.value = cJSON_GetObjectItem(effect_json, "value")->valuedouble;
+        TimeStrike.effect.duration = cJSON_GetObjectItem(effect_json, "duration")->valueint;
+
+        // Read sub skill
+        cJSON *condition = cJSON_GetObjectItem(skill_json, "condition");
+        TimeStrike.condition.type = cJSON_GetObjectItem(condition, "type")->valueint;
+        TimeStrike.condition.target = cJSON_GetObjectItem(condition, "target")->valueint;
+        TimeStrike.condition.value = cJSON_GetObjectItem(condition, "value")->valuedouble;
+        TimeStrike.condition.is_percentile = cJSON_GetObjectItem(condition, "is_percentile")->valueint;
+        
+        // Read condition effect
+        cJSON *condition_effect = cJSON_GetObjectItem(condition, "effects");
+        TimeStrike.condition.effect.type = cJSON_GetObjectItem(condition_effect, "type")->valueint;
+        TimeStrike.condition.effect.value = cJSON_GetObjectItem(condition_effect, "value")->valuedouble;
+        TimeStrike.condition.effect.is_percentile = cJSON_GetObjectItem(condition_effect, "is_percentile")->valueint;
+    
+        cJSON_Delete(json);
+        // Use only one time every battle
+        time_strike_use = 0;
+        // TimeStrike has 2 times of original value
+        TimeStrike.value *= 2;
+        TimeStrike.effect.value *= 2;
+
+        // Need to apply skill
+    }
+    else{
+        printf("Cant use TimeStrike!\n");
+        return;
+    }
+}
+///////////                                                                                 ///////////
+///////////                     Stack for Time Strike                                       ///////////
+///////////                                                                                 ///////////
 int main(){
     Skill skill_array[MAX_SKILL_IN_GAME];
     skill_array[0].id = 0;

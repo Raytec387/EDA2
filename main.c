@@ -1,5 +1,11 @@
 #include "main.h"
 #include "scenario.c"
+
+///////////                                                                                 ///////////
+/////////// Dictionary for counting the number of the skill that main character used.       ///////////
+///////////                                                                                 ///////////
+
+
 // Hash function for strings
 unsigned int hash(const char *str) {
     unsigned int hash = 0;
@@ -110,6 +116,10 @@ AbilityTracker* load_tracker(const char *filename) {
     return tracker;
 
 }
+///////////                                                                                 ///////////
+/////////// Dictionary for counting the number of the skill that main character used.       ///////////
+///////////                                                                                 ///////////
+
 // Game state functions ------------------------------------------------------
 
 Game_state* make_game_state() {
