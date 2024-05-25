@@ -161,7 +161,7 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO],Game_state *curren
     /// Story and navigation ///
     while (true) {
         // Ending of the story
-        if (0==strcmp(currentScenario->name,"Ending.txt")){scenario_end_txt(currentScenario->name);printf("Hello");break;}
+        if (0==strcmp(currentScenario->name,"Ending.txt")){scenario_end_txt(currentScenario->name);break;}
         scenario_txt(currentScenario->name); // return a char type function
         // Check if battle is needed
         /*
