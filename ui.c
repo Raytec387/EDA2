@@ -12,8 +12,9 @@ void displayMenu(){
 }
 
 // Character Configuration
-void displayCharacter_Configuration(){
-    printf("1.-Character Name\n");
-    printf("2.-Character Skill\n");
+void displayBattleOption(){
+    printf("1.-Basic atack\n");
+    printf("2.-Use a skill\n");
+    printf("3.-Time Stirke\n");
 }
 
