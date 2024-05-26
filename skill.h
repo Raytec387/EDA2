@@ -9,9 +9,15 @@
 #define MAX_SKILL_IN_GAME 8
 #define MAX_STACK_SIZE 20
 #define SKILL_FILE "skill.json"
-int time_strike_use = 0;
-int stack[MAX_STACK_SIZE];
-int top = -1;
+
+extern int time_strike_use;
+extern int stack[MAX_STACK_SIZE];
+extern int top;
+
+typedef struct {
+    int stack[MAX_STACK_SIZE];
+    int top;
+} ability_stack;
 
 // Type of skill, target self, target others, single or group...
 typedef enum {
@@ -72,5 +78,29 @@ typedef struct Ability {
 typedef struct AbilityTracker {
     Ability *table[MAX_SKILL_IN_GAME];
 } AbilityTracker;
+
+// Function definitions
+
+void load_skill(const char *filename, Skill *skills);
+
+unsigned int hash(const char *str);
+
+AbilityTracker* create_tracker();
+
+void use_ability(AbilityTracker *tracker, const char *name);
+
+void display_abilities(const AbilityTracker *tracker);
+
+void free_tracker(AbilityTracker *tracker);
+
+void save_tracker(const AbilityTracker *tracker, const char *filename);
+
+AbilityTracker* load_tracker(const char *filename);
+
+int isempty();
+int isfull();
+int peek();
+int pop();
+void push(int data);
 
 #endif

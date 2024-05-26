@@ -153,15 +153,26 @@ void apply_skill(Skill *skill, Character *user, Character *target) {
         if (target->active_effects[i].duration <= 0) {
             switch (skill->effect.type) {
             case DMG_OVER_TIME:
-                /* code */
+                target->active_effects[i].type = skill->effect.type;
+                target->active_effects[i].duration = skill->effect.duration;
+                target->active_effects[i].value = skill->effect.value;
+                target->active_effects[i].is_percentile = skill->effect.is_percentile;
+                printf("%s is being afflicted with ongoing damage!", target->name);
                 break;
             case HEAL_OVER_TIME:
+                target->active_effects[i].type = skill->effect.type;
+                target->active_effects[i].duration = skill->effect.duration;
+                target->active_effects[i].value = skill->effect.value;
+                target->active_effects[i].is_percentile = skill->effect.is_percentile;
+                printf("%s is being afflicted with ongoing healing!", target->name);
                 break;
             case DEF:
-                break;
             case HP:
-                break;
             case ATK:
+                target->active_effects[i].type = skill->effect.type;
+                target->active_effects[i].duration = skill->effect.duration;
+                target->active_effects[i].value = skill->effect.value;
+                target->active_effects[i].is_percentile = skill->effect.is_percentile;
                 break;
             default:
                 break;
@@ -233,6 +244,16 @@ void TimeStrike(int id, Character *user, Character *target){
     }
 }
 
+// Function to choose a random skill in the stack
+int random_Time_Strike(){
+    int k_th = rand() % top;
+    int id;
+    for(int i = 0; i < k_th;i++) {
+        id = pop();
+    }
+    return id;
+}
+
 // Function to initialize a node struct
 // Returns adress of a node
 Turn_node* create_Tnode(Character *character) {
@@ -271,8 +292,8 @@ void enqueue(Turn_queue *queue, Turn_node *node) {
 Turn_node *dequeue(Turn_queue *queue) {
     Turn_node *temp = queue->head;
     if (queue->head == queue->head) {
-        queue->head == NULL;
-        queue->tail == NULL;
+        queue->head = NULL;
+        queue->tail = NULL;
     } else {
         queue->head = queue->head->next;
     }

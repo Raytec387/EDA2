@@ -17,7 +17,7 @@ void run(Game_state *currentState){
                 start_game(initialize_Game());
                 break;
             case LOAD_GAME:
-                load_game(SAVE_FILE,currentState);
+                load_game(SAVE_FILE, currentState);
                 break;
             case SAVE_GAME:
                 save_game(SAVE_FILE,currentState);
@@ -75,7 +75,7 @@ void load_game(const char *file_name, Game_state *currentState){
     return;
 }
 
-void save_game(const char *file_name,Game_state *currentState){
+void save_game(const char *file_name, Game_state *currentState){
     save_tracker(currentState->tracker,TRACKER_FILE);
     cJSON *json = create_json_from_game_state(currentState);
     char *json_string = cJSON_Print(json);

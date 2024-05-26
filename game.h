@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "character.h"
+#include "skill.h"
 
 typedef struct {
     // keep track of current scenario
