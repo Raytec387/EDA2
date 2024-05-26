@@ -9,13 +9,15 @@
 #include "game.h"
 
 #define MAX_TURNS 10
+#define MAX_ENEMIES 5
 
 // Queue with linkedlists
 // Each node contains a character (Player, Enemy)
 // Keeps track of available Skill
 typedef struct Turn_node {
     Character *character;
-    Skill available_Skill[MAX_SKILL];
+    Skill *available_Skill[MAX_SKILL];
+    int num_skill; 
     bool is_last;
     struct Turn_node *next;
 } Turn_node;
@@ -24,6 +26,8 @@ typedef struct Turn_node {
 typedef struct Turn_queue {  
     Turn_node *head;
     Turn_node *tail;
+    Character *player;
+    Character *enemies[MAX_ENEMIES];
     int size;
     int num_turns;
 } Turn_queue;

@@ -212,6 +212,22 @@ void target_skill(Skill *skill, Character *user, Character *characters[], int ta
     }
 }
 
+void update_skills(Turn_node *node) {
+    // TO DO
+}
+
+void update_cooldowns (Turn_node *node) {
+    for (int i = node->num_skill; i < MAX_SKILL; i++) {
+        node->available_Skill[i]->remaining_cooldown--;
+        if (node->available_Skill[i]->remaining_cooldown <= 0) {
+            node->num_skill++;
+            Skill *temp = node->available_Skill[i];
+            node->available_Skill[i] = node->available_Skill[node->num_skill - 1];
+            node->available_Skill[node->num_skill - 1] = temp; 
+        }
+    }
+}
+
 /*  Allows access to the history of moves executed by the player (which is a stack) 
     and randomly selects the k-th move executed counting from the last one          */
 void TimeStrike(int id, Character *user, Character *target, Game_state *current_state) {
@@ -313,11 +329,19 @@ void push(Game_state *current_state, int data) {
 
 // Function to initialize a node struct
 // Returns adress of a node
-Turn_node* create_Tnode(Character *character) {
+Turn_node* create_Tnode() {
     Turn_node *new_node = malloc(sizeof(*new_node));
-    new_node->character = character;
-    new_node->next = NULL;
     return new_node;
+}
+
+void init_Tnode(Turn_node *node, Character *character) {
+    node->character = character;
+    node->next = NULL;
+    node->num_skill = MAX_SKILL;
+    for (int i = 0; i < MAX_SKILL; i++) {
+        node->available_Skill[i] = &character->skill_array[i];
+    }
+    node->is_last = false;
 }
 
 // Function to initialize a queue
@@ -329,6 +353,51 @@ Turn_queue* create_Tqueue() {
     new_queue->num_turns = 0;
     new_queue->size = 0;
     return new_queue;
+}
+
+void init_Tqueue(Turn_queue *queue, Character *player, Character *enemies[]) {
+    queue->size = 1;
+    queue->player = player;
+
+    for (int i = 0; i < MAX_ENEMIES; i++) {
+        if (enemies[i] != NULL) {
+            queue->enemies[i] = enemies[i];
+            queue->size++;
+        }
+    }
+
+    //Randomize queue
+    int random_queue[queue->size];
+    int count = 0;
+    for (int i = queue->size; i > 0; i--) {
+        random_queue[count] = rand() % i;
+    }
+
+    //Assign character to respective turns
+    for (int i = 0; i < queue->size; i++) {
+        int idx = -1;
+        //Find index of the corresponding character
+        for (int j = 0; j < queue->size; j++) {
+            if (i == random_queue[j]) {
+                idx = j;
+                break;
+            }
+        }
+
+        //Index 0 is the player
+        Turn_node *new_node = create_Tnode();
+        if (idx == 0) { 
+            init_Tnode(new_node, player);
+            enqueue(queue, new_node);
+        } else {
+            init_Tnode(new_node, enemies[idx - 1]);
+            enqueue(queue, new_node);
+        } 
+
+        if (i == queue->size - 1) {
+            new_node->is_last = true;
+        }
+    }
 }
 
 // Function to enqueue node to a queue
@@ -358,7 +427,7 @@ Turn_node *dequeue(Turn_queue *queue) {
     return temp; 
 }
 
-int combat(Character *player, Character *characters[]) {
+int combat(Character *player, Character *enemeis[]) {
     int end = 0;
 
     Turn_queue *queue = create_Tqueue();
@@ -373,23 +442,13 @@ int combat(Character *player, Character *characters[]) {
 }
 
 // Function that selects random skill
-void enemy_skill_use(Character *enemy, Character *player, Game_state *current_state) {
-    Skill *available_skills[MAX_SKILL];
-    memset(NULL, available_skills, MAX_SKILL);
-    int num_skill = 0;
-
-    for (int i = 0; i < MAX_SKILL; i++) {
-        if (enemy->skill_array[i].remaining_cooldown <= 0) {
-            available_skills[num_skill] = &enemy->skill_array[i];
-            num_skill++;
-        }
-    }
-
-    int choice = rand() % num_skill;
-
-    if (num_skill == 0) {
-        printf("%s skips its turn\n", enemy->name);
-    } else {
-        apply_skill(&enemy->skill_array[choice], enemy, player, current_state);
-    }
+void enemy_skill_use(Turn_node *node, Character *player, Game_state *current_state) {
+    int choice = rand() % node->num_skill;
+    target_skill(node->available_Skill[choice], node->character, player, 0, current_state);
+    
+    // Remove current skill in available skills
+    node->num_skill--;
+    Skill *temp = node->available_Skill[choice];
+    node->available_Skill[choice] = node->available_Skill[node->num_skill - 1];
+    node->available_Skill[node->num_skill - 1] = temp;
 }
