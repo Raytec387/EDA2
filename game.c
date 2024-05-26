@@ -3,7 +3,7 @@
 // Game state functions ------------------------------------------------------
 
 Game_state* make_game_state() {
-    Game_state *new_game_state = malloc(sizeof(*new_game_state));
+    Game_state* new_game_state = malloc(sizeof(*new_game_state));
     return new_game_state;
 }
 
@@ -55,8 +55,7 @@ void parse_game_state_from_json(Game_state *state, cJSON *json) {
 
 /// @brief save and load ///
 
-Game_state *initialize_Game(){
-    Game_state *currentState = make_game_state();
+void initialize_Game(Game_state *currentState) {
     currentState->currentScenarioId = 1;
     currentState->tracker = create_tracker();
     // Initialize character part
@@ -66,6 +65,7 @@ Game_state *initialize_Game(){
     currentState->character.skill_array[0].id = 0;
     currentState->character.skill_array[1].id = 1;
     currentState->character.skill_array[2].id = 2;
-    currentState->character.skill_array[3].id = 3;
-    return currentState;
+    currentState->character.skill_array[3].id = 3; 
+    currentState->ability_stack.top = -1;
+    currentState->ability_stack.time_strike_use = 0;
 }

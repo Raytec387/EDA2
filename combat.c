@@ -15,7 +15,7 @@ void heal(float value, Character *character) {
     }
 }
 
-void apply_active_effect(Character *character){
+void apply_active_effect(Character *character) {
     for (int i = 0; i < MAX_ACTIVE_EFFECTS; i++){
         Effect current_effect = character->active_effects[i];
         if (current_effect.duration > 0){
@@ -67,17 +67,16 @@ void apply_active_effect(Character *character){
 
 
 // Function to apply the actual skill
-void apply_skill(Skill *skill, Character *user, Character *target) {
+void apply_skill(Skill *skill, Character *user, Character *target, Game_state *currentState) {
     float heal_amount;
     float damage_amount;
 
-    /*
+    
     // For dictionary and Timestrike(with stack)
     if(user->is_player) {
         use_ability(currentState->tracker, skill->name);   
-        push(skill->id);
+        push(currentState, skill->id);
     }
-    */
 
     switch (skill->type) {
         case HEAL:
@@ -182,20 +181,31 @@ void apply_skill(Skill *skill, Character *user, Character *target) {
 }
 
 // Function to select the target of the skill
-void target_skill(Skill *skill, Character *user, Character *characters, int target_index) {
+void target_skill(Skill *skill, Character *user, Character *characters[], int target_index, Game_state *current_state) {
     if (skill->remaining_cooldown > 0) {
         printf("Skill %s is still in cooldown: %d.\n", skill->name, skill->remaining_cooldown);
         return;
     }
+    int n_targets = sizeof(characters)/sizeof(user);
 
     switch (skill->target) {
         case SELF:
+            apply_skill(skill, user, user, current_state);
             break;
         case TARGET:
+            apply_skill(skill, user, characters[target_index], current_state);
             break;
         case CROWD_SELF:
+            // TO DO
+            // Since player is always alone, target everyone except player
+            // Only enemies would have this type of ability
             break;
         case CROWD_TARGET:
+            for (int i = 0; i < n_targets; i++) {
+                if (characters[i] != NULL) {
+                    apply_skill(skill, user, characters[i], current_state);
+                }
+            }
             break;
         default:
             break;
@@ -204,9 +214,9 @@ void target_skill(Skill *skill, Character *user, Character *characters, int targ
 
 /*  Allows access to the history of moves executed by the player (which is a stack) 
     and randomly selects the k-th move executed counting from the last one          */
-void TimeStrike(int id, Character *user, Character *target){
+void TimeStrike(int id, Character *user, Character *target, Game_state *current_state) {
     
-    if (!isempty()&&time_strike_use == 1){
+    if (!isempty(current_state) && current_state->ability_stack.time_strike_use == 1){
         Skill TimeStrike;
         TimeStrike.id = id;
         // Open json file
@@ -231,7 +241,7 @@ void TimeStrike(int id, Character *user, Character *target){
     
         cJSON_Delete(json);
         // Use only one time every battle
-        time_strike_use = 0;
+        current_state->ability_stack.time_strike_use = 0;
         // TimeStrike has 2 times of original value
         TimeStrike.value *= 2;
         TimeStrike.effect.value *= 2;
@@ -239,19 +249,66 @@ void TimeStrike(int id, Character *user, Character *target){
         // Need to apply skill
     }
     else{
-        printf("Cant use TimeStrike!\n");
+        printf("Can't use TimeStrike!\n");
         return;
     }
 }
 
 // Function to choose a random skill in the stack
-int random_Time_Strike(){
-    int k_th = rand() % top;
+int random_Time_Strike(Game_state *current_state) {
+    int k_th = rand() % current_state->ability_stack.time_strike_use;
     int id;
     for(int i = 0; i < k_th;i++) {
-        id = pop();
+        id = pop(current_state);
     }
     return id;
+}
+
+///////////                                                                                 ///////////
+///////////                     Stack for Time Strike                                       ///////////
+///////////                                                                                 ///////////
+/* Check if the stack is empty */
+int isempty(Game_state *current_state) {
+   if (current_state->ability_stack.top == -1)
+      return 1;
+   else
+      return 0;
+}
+
+/* Check if the stack is full */
+int isfull(Game_state *current_state) {
+   if(current_state->ability_stack.top == MAX_STACK_SIZE)
+      return 1;
+   else
+      return 0;
+}
+
+/* Function to return the topmost element in the stack */
+int peek(Game_state *current_state) {
+   return current_state->ability_stack.stack[current_state->ability_stack.top];
+}
+
+/* Function to delete from the stack */
+int pop(Game_state *current_state) {
+   int data;
+   if(!isempty(current_state)) {
+      data = current_state->ability_stack.stack[current_state->ability_stack.top];
+      current_state->ability_stack.top--;
+      return data;
+   } else {
+      printf("Could not retrieve data, Stack is empty.\n");
+      return 0;
+   }
+}
+
+/* Function to insert into the stack */
+void push(Game_state *current_state, int data) {
+   if(!isfull(current_state)) {
+      current_state->ability_stack.top++;
+      current_state->ability_stack.stack[current_state->ability_stack.top] = data;
+   } else {
+      printf("Could not insert data, Stack is full.\n");
+   }
 }
 
 // Function to initialize a node struct
@@ -291,7 +348,7 @@ void enqueue(Turn_queue *queue, Turn_node *node) {
 // Returns the address of the dequeued node
 Turn_node *dequeue(Turn_queue *queue) {
     Turn_node *temp = queue->head;
-    if (queue->head == queue->head) {
+    if (queue->head == queue->tail) {
         queue->head = NULL;
         queue->tail = NULL;
     } else {
@@ -316,7 +373,23 @@ int combat(Character *player, Character *characters[]) {
 }
 
 // Function that selects random skill
-void enemy_skill_use(Character *enemy, Character *player){
-    int choice = rand() % MAX_SKILL;
-    
+void enemy_skill_use(Character *enemy, Character *player, Game_state *current_state) {
+    Skill *available_skills[MAX_SKILL];
+    memset(NULL, available_skills, MAX_SKILL);
+    int num_skill = 0;
+
+    for (int i = 0; i < MAX_SKILL; i++) {
+        if (enemy->skill_array[i].remaining_cooldown <= 0) {
+            available_skills[num_skill] = &enemy->skill_array[i];
+            num_skill++;
+        }
+    }
+
+    int choice = rand() % num_skill;
+
+    if (num_skill == 0) {
+        printf("%s skips its turn\n", enemy->name);
+    } else {
+        apply_skill(&enemy->skill_array[choice], enemy, player, current_state);
+    }
 }

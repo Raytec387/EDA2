@@ -1,11 +1,10 @@
 #include "main.h"                                                                              ///////////
 
-void run(Game_state *currentState){
+void run(Game_state *currentState) {
     int option;
     // Track the scenario
-
     printf("\033[2J\033[1;1H");
-    printf("%d\n",currentState->currentScenarioId);
+    printf("%d\n", currentState->currentScenarioId);
     printf("Welcome to Red rain,");
     do{
         printf("\n\n");
@@ -14,7 +13,7 @@ void run(Game_state *currentState){
         option = check_input(EXIT_BACK, SHOW_SKILL_TIMES);
         switch(option){
             case START_GAME:
-                start_game(initialize_Game());
+                start_game(currentState);
                 break;
             case LOAD_GAME:
                 load_game(SAVE_FILE, currentState);
@@ -112,5 +111,8 @@ void restart_session(Session *session) {
 */
 
 int main(){
-    run(initialize_Game());
+    Game_state *game = make_game_state();
+    initialize_Game(game);
+    printf("%p", game);
+    run(game);
 }

@@ -10,10 +10,6 @@
 #define MAX_STACK_SIZE 20
 #define SKILL_FILE "skill.json"
 
-extern int time_strike_use;
-extern int stack[MAX_STACK_SIZE];
-extern int top;
-
 typedef struct {
     int stack[MAX_STACK_SIZE];
     int top;
@@ -96,11 +92,5 @@ void free_tracker(AbilityTracker *tracker);
 void save_tracker(const AbilityTracker *tracker, const char *filename);
 
 AbilityTracker* load_tracker(const char *filename);
-
-int isempty();
-int isfull();
-int peek();
-int pop();
-void push(int data);
 
 #endif
