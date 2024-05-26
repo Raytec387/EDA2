@@ -15,6 +15,6 @@ void displayMenu(){
 void displayBattleOption(){
     printf("1.-Basic atack\n");
     printf("2.-Use a skill\n");
-    printf("3.-Time Stirke\n");
+    printf("3.-Time Strike\n");
 }
 

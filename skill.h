@@ -12,8 +12,6 @@
 int time_strike_use = 0;
 int stack[MAX_STACK_SIZE];
 int top = -1;
-// Forward declaration of Character struct
-typedef struct Character Character;
 
 // Type of skill, target self, target others, single or group...
 typedef enum {
@@ -48,18 +46,6 @@ typedef struct {
     int duration;
 } Effect;
 
-// Struct for condtions, skills that have certain condition
-// E.g. activation the skill will decrease hp by 50%
-// E.g. activating skill will apply a def debuff on user
-// Reuse some of skill functions
-typedef struct {
-    Skill_type type;
-    Target target;
-    float value;
-    int is_percentile;
-    Effect effect;
-} Condition;
-
 // Main struct for skills
 typedef struct {
     char name[NAME_LENGTH];
@@ -71,16 +57,10 @@ typedef struct {
     int cooldown;
     int remaining_cooldown;
     Effect effect;
-    Condition condition;
 
     // adding int to track the skill
     int id;
 } Skill;
-
-// Function defnitions
-int damage(float damage, int def);
-
-void heal(float value, Character *character);
 
 // Ability tracer
 typedef struct Ability {

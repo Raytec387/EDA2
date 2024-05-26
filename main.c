@@ -1,5 +1,4 @@
 #include "main.h"
-#include "scenario.c"
 
 ///////////                                                                                 ///////////
 /////////// Dictionary for counting the number of the skill that main character used.       ///////////
