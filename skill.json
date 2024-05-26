@@ -12,18 +12,6 @@
             "value": 2.0,
             "is_percentile": 1,
             "duration": 2
-        },
-        "condition": {
-            "type": null,
-            "target": null,
-            "value": null,
-            "is_percentile": null,
-            "effects": {
-                "type": null,
-                "value": null,
-                "is_percentile": null,
-                "duration": null
-            } 
         }
     },
     {

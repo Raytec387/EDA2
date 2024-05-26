@@ -2,15 +2,9 @@
 #define MAIN_H
 
 #include "common.h"
-#include "character.h"
 #include "scenario.h"
-
-typedef struct {
-    // keep track of current scenario
-    int currentScenarioId;
-    Character character; // Keeps track of the current character
-    AbilityTracker *tracker;
-} Game_state;
+#include "game.h"
+#include "ui.c"
 
 /* Explain the usage in discord
 typedef struct {
@@ -21,10 +15,5 @@ typedef struct {
     Game_state *current_game_state;
     Game_state *prev_game_state;
 } Session;*/
-
-void run();
-void start_game();
-void load_game();
-void save_game();
 
 #endif

@@ -1,6 +1,4 @@
-#include "common.h"
-#include "ui.c"
-#include "main.h"
+#include "scenario.h"
 
 //// Graph part ////
 
@@ -152,7 +150,7 @@ void graph_initialize(Scenario *scenarios[MAX_SCENARIO]){
     addEdge(scenarios[3], scenarios[4]); // 
 }
 
-void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO],Game_state *currentState, Scenario* currentScenario){
+void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO], Game_state *currentState, Scenario* currentScenario){
     /// Story and navigation ///
     while (true) {
         // Ending of the story

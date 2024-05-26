@@ -2,6 +2,7 @@
 #define SCENARIO_H
 
 #include "common.h"
+#include "game.h"
 
 // Structure to represent a scenario (node)
 typedef struct Scenario {
