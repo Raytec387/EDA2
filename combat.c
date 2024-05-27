@@ -425,41 +425,6 @@ Turn_node *dequeue(Turn_queue *queue) {
     return temp; 
 }
 
-void player_turn(Turn_queue *node, Turn_queue *queue, Game_state *current_state) {
-    int choice;
-    Character *player = node->player;
-    Character *enemies[MAX_ENEMIES] = node->enemies;
-    do {
-        displayBattleOption();
-        int choice = check_input(USE_ATTACK, USE_TIME_STRIKE);
-        switch (choice) {
-        case USE_ATTACK:
-            printf("Who do you want to attack? Enter 0 to go back\n");
-            display_enemies(queue);
-            int choice = check_input(0, queue->size);
-            if (choice != 0) {
-                float damage_amount = damage(node->player->atk, enemies[choice - 1]->def);
-                enemies[choice - 1]->hp -= damage_amount;
-                if (enemies[choice - 1]->hp < 0) {
-                    enemies[choice - 1]->hp = 0;
-                    printf("%s was defeated by %s!\n", enemies[choice - 1]->name, player->name);
-                    // Function to remove character from lits and queue
-                } else {
-                    printf("%s dealt %.2f damage to %s!\n", player->name, damage_amount, enemies[choice - 1]->name);
-                }
-            }
-            break;
-        case USE_SKILL:
-            break;
-        case USE_TIME_STRIKE:
-            break;
-        default:
-            break;
-        }
-    } while(choice != 0);
-    
-}
-
 void display_enemies(Turn_queue *queue) {
     Character *enemies[MAX_ENEMIES] = queue->enemies;
     printf("\nEnemies:\n");
@@ -476,10 +441,69 @@ void display_battle(Turn_queue *queue) {
     display_enemies(queue);
 }
 
+void display_skills(Turn_node *node) {
+    printf("\nAvailable skills: \n");
+    for (int i = 0; i < node->num_skill; i++) {
+        printf("%d. %s\n", (i + 1), node->available_Skill[i]->name);
+        printf("\"%s\"\n", node->available_Skill[i]->desc);
+        printf("\n");
+    }
+    printf("Abilities on cooldown: \n");
+    for (int i = node->num_skill; i < MAX_SKILL; i++) {
+        printf("%d. %s. Cooldown: %d turns\n", (i + 1), node->available_Skill[i]->name, node->available_Skill[i]->remaining_cooldown);
+        printf("\"%s\"\n", node->available_Skill[i]->desc);
+        printf("\n");
+    }
+}
+
+void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) {
+    int choice;
+    Character *player = queue->player;
+    Character *enemies[MAX_ENEMIES] = queue->enemies;
+    do {
+        displayBattleOption();
+        int choice = check_input(USE_ATTACK, USE_TIME_STRIKE);
+        switch (choice) {
+        case USE_ATTACK:
+            printf("Who do you want to attack? Enter 0 to go back\n");
+            display_enemies(queue);
+            int choice = check_input(0, queue->size);
+            if (choice != 0) {
+                float damage_amount = damage(player->->atk, enemies[choice - 1]->def);
+                enemies[choice - 1]->hp -= damage_amount;
+                if (enemies[choice - 1]->hp < 0) {
+                    enemies[choice - 1]->hp = 0;
+                    printf("%s was defeated by %s!\n", enemies[choice - 1]->name, player->name);
+                    // Function to remove character from lits and queue
+                } else {
+                    printf("%s dealt %.2f damage to %s!\n", player->name, damage_amount, enemies[choice - 1]->name);
+                }
+            }
+            break;
+        case USE_SKILL:
+            printf("Which skill do you want to use? Enter 0 to go back\n");
+            display_skills(node);
+            int choice = check_input(0, node->size);
+            if (choice != 0) {
+                Skill *selected_skill = node->available_Skill[i]
+            }
+            break;
+        case USE_TIME_STRIKE:
+            break;
+        default:
+            break;
+        }
+    } while(choice != 0);
+    
+}
+
 int combat(Character *player, Character *enemies[], Game_state *current_state) {
     int end = 0;
     
     Turn_queue *queue = create_Tqueue();
+    init_Tqueue(queue, player, enemies);
+
+
 
     while(!end) {
         Turn_node *current_node = dequeue(queue);
@@ -487,7 +511,7 @@ int combat(Character *player, Character *enemies[], Game_state *current_state) {
         if (!current_node->character->is_player) {
             enemy_skill_use(current_node, player, current_state);
         } else {
-
+            player_turn(current_node, queue, current_state);
         }
     }
 }
