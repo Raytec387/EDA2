@@ -49,6 +49,7 @@ void initialize_main_character(Game_state *currentState){
     currentState->character.skill_array[2].id = 2;
     currentState->character.skill_array[3].id = 3; 
     currentState->character.is_player = true;
+    strcpy(currentState->character.name,"David");
     currentState->ability_stack.top = -1;
     currentState->ability_stack.time_strike_use = 0;
 }

@@ -72,6 +72,8 @@ void load_game(const char *file_name, Game_state *currentState){
     parse_game_state_from_json(currentState, json);
     cJSON_Delete(json);
     load_skill(SKILL_FILE,currentState->character.skill_array);
+    currentState->character.is_player = true;
+    strcpy(currentState->character.name,"David");
     start_game(currentState);
     return;
 }
