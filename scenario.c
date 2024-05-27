@@ -48,7 +48,7 @@ void freeScenarios(Scenario* scenarios[], int count) {
 //// Graph part ////
 //// Graph part ////
 
-char scenario_txt(char txt[NAME_LENGTH]){
+int scenario_txt(char txt[NAME_LENGTH]){
     FILE *fp;
 
     fp = fopen(txt, "r");
@@ -79,17 +79,22 @@ char scenario_txt(char txt[NAME_LENGTH]){
 
     }
     while (1){
-        if (choose == '1' || choose == '2'){
+        if (choose == '1'){
+            return 1;
             break;
         }
-
+        else if(choose == '2'){
+            // It returns the number of enemies
+            return 3;
+        }
         else{
             printf("\n(Please choose 1 or 2.)\n");
             scanf("%c", &choose);
             printf("\033[2J\033[1;1H");
         }
     }
-    return choose;
+    printf("\nError here!\n");
+    return -1;
 }
 
 void scenario_end_txt(char txt[NAME_LENGTH]){
@@ -152,23 +157,27 @@ void graph_initialize(Scenario *scenarios[MAX_SCENARIO]){
 
 void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO], Game_state *currentState, Scenario* currentScenario){
     /// Story and navigation ///
-    // option '1' is easier, '2' is harder
-    char option;
     while (true) {
         // Ending of the story
         if (0==strcmp(currentScenario->name,"Ending.txt")){scenario_end_txt(currentScenario->name);break;}
-        option = scenario_txt(currentScenario->name); // return a char type function
-        // up grade
-        currentState->character.atk += 50;
-        currentState->character.def += 50;
-        currentState->character.hp += 100;
+        // option '1' is easier, '2' is harder, option '1' will return the integer 1, option '2' will return the integer 3
+        int number_of_enemies = scenario_txt(currentScenario->name);// return a int type function
+        Character *enemies[number_of_enemies];
+        initialize_enemies_array(currentScenario,enemies,number_of_enemies);
         // Check if battle is needed
         /*
         if (!currentScenario->battleWon) {
             if ("//win here//") {
                 currentScenario->battleWon = true;
                 printf("You won the battle in the %s!\n", currentScenario->name);
-            } else {
+                // rewarding if he choose harder one
+                if(number_of_enemies == 3){
+                    currentState->character.atk += 50;
+                    currentState->character.def += 50;
+                    currentState->character.hp += 100;
+                }
+            } 
+            else {
                 printf("You lost the battle in the %s. Try again!\n", currentScenario->name);
                 continue;
             }

@@ -22,6 +22,8 @@ Character* create_new_enemy();
 
 void initialize_enemy(Game_state *currentState,Character *enemy);
 
+void initialize_enemies_array(Game_state *currentState,Character *enemy[],int number_of_enemies);
+
 void initialize_main_character(Game_state *currentState);
 #endif
 

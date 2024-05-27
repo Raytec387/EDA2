@@ -14,10 +14,10 @@ void initialize_enemy(Game_state *currentState,Character *enemy){
     cJSON *json = create_json("stats.json");
     // First scenario is 1, and in the stats.json, the first enemy's id is 0,therefore -1
     int i = currentState->currentScenarioId - 1;
-    // Read skills array
+    // Read stats(enemy) array
     cJSON *character_json = cJSON_GetArrayItem(json, i);
 
-    // Read skills
+    // Read an enemy
     strncpy(enemy->name, cJSON_GetObjectItem(character_json, "name")->valuestring, NAME_LENGTH);
     enemy->atk = cJSON_GetObjectItem(character_json, "ATK")->valueint;
     enemy->def = cJSON_GetObjectItem(character_json, "DEF")->valueint;
@@ -29,6 +29,13 @@ void initialize_enemy(Game_state *currentState,Character *enemy){
     enemy->is_player = false;
 
     cJSON_Delete(json);
+}
+
+void initialize_enemies_array(Game_state *currentState,Character *enemy[],int number_of_enemies){
+    for(int i = 0; i<number_of_enemies;i++){
+        enemy[i] = create_new_enemy();
+        initialize_enemy(currentState,enemy[i]);
+    }
 }
 
 void initialize_main_character(Game_state *currentState){
@@ -44,3 +51,4 @@ void initialize_main_character(Game_state *currentState){
     currentState->ability_stack.top = -1;
     currentState->ability_stack.time_strike_use = 0;
 }
+

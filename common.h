@@ -13,7 +13,6 @@
 
 
 #define SIZE_OF_BUFFER 8192
-#define MAX_STR_NAME 20
 #define MAX_SCENARIO 5
 
 // Character Macros
