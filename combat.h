@@ -7,9 +7,13 @@
 #include "skill.h"
 #include "character.h"
 #include "game.h"
+#include "ui.c"
 
 #define MAX_TURNS 10
 #define MAX_ENEMIES 5
+#define USE_ATTACK 0
+#define USE_SKILL 1
+#define USE_TIME_STRIKE 2
 
 // Queue with linkedlists
 // Each node contains a character (Player, Enemy)
