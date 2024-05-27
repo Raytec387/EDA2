@@ -58,14 +58,6 @@ void parse_game_state_from_json(Game_state *state, cJSON *json) {
 void initialize_Game(Game_state *currentState) {
     currentState->currentScenarioId = 1;
     currentState->tracker = create_tracker();
-    // Initialize character part
-    currentState->character.atk = 150;
-    currentState->character.def = 300;
-    currentState->character.hp_limit = 1000.0;
-    currentState->character.skill_array[0].id = 0;
-    currentState->character.skill_array[1].id = 1;
-    currentState->character.skill_array[2].id = 2;
-    currentState->character.skill_array[3].id = 3; 
-    currentState->ability_stack.top = -1;
-    currentState->ability_stack.time_strike_use = 0;
+    // function from character.h
+    initialize_main_character(currentState);
 }

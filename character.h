@@ -4,8 +4,7 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
-#include "common.h"
-#include "skill.h"
+#include "game.h"
 
 // Data structure of character it holds the basic datas of the characters
 typedef struct Character{
@@ -19,5 +18,10 @@ typedef struct Character{
     Effect active_effects[MAX_ACTIVE_EFFECTS];
 } Character;
 
+Character* create_new_enemy();
+
+void initialize_enemy(Game_state *currentState,Character *enemy);
+
+void initialize_main_character(Game_state *currentState);
 #endif
 

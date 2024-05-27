@@ -152,10 +152,16 @@ void graph_initialize(Scenario *scenarios[MAX_SCENARIO]){
 
 void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO], Game_state *currentState, Scenario* currentScenario){
     /// Story and navigation ///
+    // option '1' is easier, '2' is harder
+    char option;
     while (true) {
         // Ending of the story
         if (0==strcmp(currentScenario->name,"Ending.txt")){scenario_end_txt(currentScenario->name);break;}
-        scenario_txt(currentScenario->name); // return a char type function
+        option = scenario_txt(currentScenario->name); // return a char type function
+        // up grade
+        currentState->character.atk += 50;
+        currentState->character.def += 50;
+        currentState->character.hp += 100;
         // Check if battle is needed
         /*
         if (!currentScenario->battleWon) {
@@ -187,9 +193,6 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO], Game_state *curre
             showAdjacentScenarios(currentScenario);
             nextScenarioId = check_input(0,currentState->currentScenarioId+1);
         }
-        // Recall memories, save data
-        else if(nextScenarioId <= currentState->currentScenarioId);
-        // Record where main character is
         else {currentState->currentScenarioId = nextScenarioId;}
         // Find the next scenario
         Scenario* nextScenario = getScenarioById(scenarios, nextScenarioId, MAX_SCENARIO);
