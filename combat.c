@@ -212,18 +212,16 @@ void target_skill(Skill *skill, Character *user, Character *characters[], int ta
     }
 }
 
-void update_skills(Turn_node *node) {
-    // TO DO
-}
-
 void update_cooldowns (Turn_node *node) {
     for (int i = node->num_skill; i < MAX_SKILL; i++) {
-        node->available_Skill[i]->remaining_cooldown--;
-        if (node->available_Skill[i]->remaining_cooldown <= 0) {
-            node->num_skill++;
-            Skill *temp = node->available_Skill[i];
-            node->available_Skill[i] = node->available_Skill[node->num_skill - 1];
-            node->available_Skill[node->num_skill - 1] = temp; 
+        if (node->available_Skill[i]->remaining_cooldown > 0) {
+            node->available_Skill[i]->remaining_cooldown--;
+            if (node->available_Skill[i]->remaining_cooldown <= 0) {
+                node->num_skill++;
+                Skill *temp = node->available_Skill[i];
+                node->available_Skill[i] = node->available_Skill[node->num_skill - 1];
+                node->available_Skill[node->num_skill - 1] = temp; 
+            }
         }
     }
 }
@@ -427,9 +425,9 @@ Turn_node *dequeue(Turn_queue *queue) {
     return temp; 
 }
 
-int combat(Character *player, Character *enemeis[]) {
+int combat(Character *player, Character *enemies[], Game_state *current_state) {
     int end = 0;
-
+    
     Turn_queue *queue = create_Tqueue();
 
     while(!end) {
