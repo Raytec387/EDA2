@@ -22,7 +22,8 @@ void run(Game_state *currentState) {
                 save_game(SAVE_FILE,currentState);
                 break;
             case SKILL_CHANGE:
-                // A change skill function to do
+                change_skill(SKILL_FILE,currentState->character.skill_array);
+                load_skill(SKILL_FILE,currentState->character.skill_array);
                 break;
             case SHOW_SKILL_TIMES:
                 display_abilities(currentState->tracker);
@@ -70,6 +71,7 @@ void load_game(const char *file_name, Game_state *currentState){
 
     parse_game_state_from_json(currentState, json);
     cJSON_Delete(json);
+    load_skill(SKILL_FILE,currentState->character.skill_array);
     start_game(currentState);
     return;
 }

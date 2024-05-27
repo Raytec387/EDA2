@@ -7,7 +7,7 @@ int top = -1;
 void load_skill(const char *filename, Skill *skills) {
 
     // Open json file
-    cJSON *json = create_json("skill.json");
+    cJSON *json = create_json(filename);
     int i;
     for (int j = 0; j < MAX_SKILL; j++) {
         i = skills[j].id;
@@ -32,6 +32,38 @@ void load_skill(const char *filename, Skill *skills) {
     cJSON_Delete(json);
 }
 
+void change_skill(const char *filename, Skill *skills) {
+
+    // Open json file
+    cJSON *json = create_json(filename);
+    Skill temp_skill;
+    printf("\nAll skills and descriptions\n");
+    // Show the option
+    for (int i = 0; i < MAX_SKILL_IN_GAME; i++) {
+        // Read skills array
+        cJSON *skill_json = cJSON_GetArrayItem(json, i);
+
+        // Read skills
+        strncpy(temp_skill.name, cJSON_GetObjectItem(skill_json, "name")->valuestring, NAME_LENGTH);
+        strncpy(temp_skill.desc, cJSON_GetObjectItem(skill_json, "description")->valuestring, DESCRITPION_LENGTH);
+        temp_skill.id = cJSON_GetObjectItem(skill_json, "name")->valueint;
+        printf("ID: %d\t%s:\n%s",temp_skill.id+1,temp_skill.name,temp_skill.desc);
+    }
+    printf("\nChoose a skill you want to change\n(type 0 to exit):\n");
+    int wanted_skill = check_input(0,MAX_SKILL_IN_GAME);
+    if (wanted_skill == 0) return;
+    // Id in skill.json start with 0, output is 1
+    wanted_skill -=1;
+    printf("\nChoose a skill that you want to substitute:\n");
+    for (int i=0; i< MAX_SKILL;i++){
+        printf("ID: %d\t%s:\n%s",i+1,skills[i].name,skills[i].desc);
+    }
+    int chosen_skill = check_input(1,MAX_SKILL);
+    chosen_skill -=1;
+
+    skills[chosen_skill].id = wanted_skill;
+    cJSON_Delete(json);
+}
 ///////////                                                                                 ///////////
 /////////// Dictionary for counting the number of the skill that main character used.       ///////////
 ///////////                                                                                 ///////////

@@ -79,6 +79,8 @@ typedef struct AbilityTracker {
 
 void load_skill(const char *filename, Skill *skills);
 
+void change_skill(const char *filename, Skill *skills);
+
 unsigned int hash(const char *str);
 
 AbilityTracker* create_tracker();
