@@ -469,7 +469,7 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
             display_enemies(queue);
             int choice = check_input(0, queue->size);
             if (choice != 0) {
-                float damage_amount = damage(player->->atk, enemies[choice - 1]->def);
+                float damage_amount = damage(player->atk, enemies[choice - 1]->def);
                 enemies[choice - 1]->hp -= damage_amount;
                 if (enemies[choice - 1]->hp < 0) {
                     enemies[choice - 1]->hp = 0;
@@ -483,9 +483,9 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
         case USE_SKILL:
             printf("Which skill do you want to use? Enter 0 to go back\n");
             display_skills(node);
-            int choice = check_input(0, node->size);
+            int choice = check_input(0, queue->size);
             if (choice != 0) {
-                Skill *selected_skill = node->available_Skill[i]
+                Skill *selected_skill = node->available_Skill[choice - 1];
             }
             break;
         case USE_TIME_STRIKE:
