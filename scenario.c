@@ -171,7 +171,7 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO], Game_state *curre
         initialize_enemies_array(currentScenario->id, enemies, number_of_enemies);
         // Check if battle is needed
         if (!currentScenario->battleWon) {
-            if (combat(&currentState->character, enemies, currentState)) {
+            if (combat(&currentState->character, enemies, currentState, number_of_enemies)) {
                 currentScenario->battleWon = true;
                 printf("You won the battle in the %s!\n", currentScenario->name);
                 // rewarding if he choose harder one

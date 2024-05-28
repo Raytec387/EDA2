@@ -9,6 +9,15 @@ Character* create_new_enemy(){
     return new_enemy;
 }
 
+void reset_active_effects(Character *character) {
+    for (int i = 0; i < MAX_ACTIVE_EFFECTS; i++) {
+        character->active_effects[i].duration = 0;
+        character->active_effects[i].type = 0;
+        character->active_effects[i].is_percentile = 0;
+        character->active_effects[i].value = 0.0;
+    }
+}
+
 void initialize_enemy(int i, Character *enemy){
     // Open json file
     cJSON *json = create_json("stats.json");
@@ -29,7 +38,7 @@ void initialize_enemy(int i, Character *enemy){
     enemy->skill_array[3].id = cJSON_GetObjectItem(character_json, "SKILL_ID4")->valueint;
     load_skill(SKILL_FILE,enemy->skill_array);
     enemy->is_player = false;
-
+    reset_active_effects(enemy);
     cJSON_Delete(json);
 }
 
@@ -55,5 +64,6 @@ void initialize_main_character(Character *player){
     strcpy(player->name,"David");
     player->ability_stack.top = -1;
     player->ability_stack.time_strike_use = 0;
+    reset_active_effects(player);
 }
 

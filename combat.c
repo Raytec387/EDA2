@@ -23,51 +23,51 @@ void heal(float value, Character *character) {
 
 void apply_active_effect(Character *character) {
     for (int i = 0; i < MAX_ACTIVE_EFFECTS; i++){
-        Effect current_effect = character->active_effects[i];
-        if (current_effect.duration > 0){
-            current_effect.duration--;
-            switch (current_effect.type)
-            {
-            case DMG_OVER_TIME:
-                character->hp -= damage(current_effect.value, character->def);
-                printf("%s suffers %.2f of damage from ongoing effects\n", character->name, damage(current_effect.value, character->def));
-                break;
-            case HEAL_OVER_TIME:
-                character->hp += current_effect.value;
-                printf("%s heals for %.2f from ongoing effects\n", character->name, current_effect.value);
-            case DEF:
-                /* Solution: Apply buff at skill usage*/
-                /* Remove buff here once its duration is 0*/
-                if (current_effect.duration <= 0) {
-                    if (current_effect.is_percentile) {
-                        character->def /= current_effect.value;
-                    } else {
-                        character->def -= current_effect.value;
+        Effect *current_effect = &character->active_effects[i];
+        if (current_effect->duration > 0){
+            printf("N: %s, E: %d, D: %d\n", character->name, current_effect->type, current_effect->duration);
+            current_effect->duration--;
+            switch (current_effect->type) {
+                case DMG_OVER_TIME:
+                    character->hp -= damage(current_effect->value, character->def);
+                    printf("%s suffers %.2f of damage from ongoing effects\n", character->name, damage(current_effect->value, character->def));
+                    break;
+                case HEAL_OVER_TIME:
+                    character->hp += current_effect->value;
+                    printf("%s heals for %.2f from ongoing effects\n", character->name, current_effect->value);
+                case DEF:
+                    /* Solution: Apply buff at skill usage*/
+                    /* Remove buff here once its duration is 0*/
+                    if (current_effect->duration <= 0) {
+                        if (current_effect->is_percentile) {
+                            character->def /= current_effect->value;
+                        } else {
+                            character->def -= current_effect->value;
+                        }
+                        printf("Effect affecting %s's defence has worn out!\n", character->name);
                     }
-                    printf("Effect affecting %s's defence has worn out!\n", character->name);
-                }
-                break;
-            case HP:
-                if (current_effect.duration <= 0) {
-                    if (current_effect.is_percentile) {
-                        character->hp_limit /= current_effect.value;
-                    } else {
-                        character->hp_limit -= current_effect.value;
+                    break;
+                case HP:
+                    if (current_effect->duration <= 0) {
+                        if (current_effect->is_percentile) {
+                            character->hp_limit /= current_effect->value;
+                        } else {
+                            character->hp_limit -= current_effect->value;
+                        }
+                        printf("Effect affecting %s's max hp has worn out!\n", character->name);
                     }
-                    printf("Effect affecting %s's max hp has worn out!\n", character->name);
-                }
-            case ATK:
-                if (current_effect.duration <= 0) {
-                    if (current_effect.is_percentile) {
-                        character->atk /= current_effect.value;
-                    } else {
-                        character->atk -= current_effect.value;
+                case ATK:
+                    if (current_effect->duration <= 0) {
+                        if (current_effect->is_percentile) {
+                            character->atk /= current_effect->value;
+                        } else {
+                            character->atk -= current_effect->value;
+                        }
+                        printf("Effect affecting %s's attack has worn out!\n", character->name);
                     }
-                    printf("Effect affecting %s's attack has worn out!\n", character->name);
+                default:
+                    break;
                 }
-            default:
-                break;
-            }
         }
     }
 }
@@ -185,6 +185,7 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
                     default:
                         break;
                 }
+                break;
             }
         }   
     }
@@ -201,7 +202,6 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
 void update_cooldowns (Turn_node *node) {
     for (int i = 0; i < MAX_SKILL; i++) {
         if (node->available_Skill[i]->remaining_cooldown > 0) {
-            printf("%s: skill in cooldown: %s\n", node->character->name, node->available_Skill[i]->name);
             node->available_Skill[i]->remaining_cooldown--;
             if (node->available_Skill[i]->remaining_cooldown <= 0) {
                 node->num_skill++;
@@ -340,17 +340,16 @@ Turn_queue* create_Tqueue() {
     return new_queue;
 }
 
-void init_Tqueue(Turn_queue *queue, Character *player, Character *enemies[]) {
-    int size = 0;
-    queue->size = 1;
+void init_Tqueue(Turn_queue *queue, Character *player, Character *enemies[], int n_enemies) {
+    int size = n_enemies + 1;
     queue->player = player;
 
-    for (int i = 0; i < MAX_ENEMIES; i++) {
+    for (int i = 0; i < n_enemies; i++) {
         if (enemies[i] != NULL) {
             queue->enemies[i] = enemies[i];
-            size++;
         }
     }
+    
     //Randomize queue
     int random_queue[size];
     
@@ -368,13 +367,12 @@ void init_Tqueue(Turn_queue *queue, Character *player, Character *enemies[]) {
 
     //Assign character to respective turns
     for (int i = 0; i < size; i++) {
-        //printf("Queue size: %d\n", queue->size);
+        
         int idx = -1;
         //Find index of the corresponding character
         for (int j = 0; j < size; j++) {
             if (i == random_queue[j]) {
                 idx = j;
-                //printf("%d\n", j);
                 break;
             }
         }
@@ -393,6 +391,7 @@ void init_Tqueue(Turn_queue *queue, Character *player, Character *enemies[]) {
             new_node->is_last = true;
         }
     }
+    printf("queue size: %d\n", queue->size);
 }
 
 // Function to enqueue node to a queue
@@ -476,7 +475,7 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
                     queue->enemies[target - 1]->hp -= damage_amount;
 
                     if (queue->enemies[target - 1]->hp < 0) {
-                        queue->enemies[target - 1]->hp = 0;
+                        queue->enemies[target - 1]->hp = 0.0;
                         printf("%s was defeated by %s!\n", queue->enemies[target - 1]->name, player->name);
                         // Function to remove character from lits and queue
                     } else {
@@ -535,10 +534,10 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
     
 }
 
-bool combat(Character *player, Character *enemies[], Game_state *current_state) {
+bool combat(Character *player, Character *enemies[], Game_state *current_state, int n_enemies) {
     bool end = false;
     Turn_queue *queue = create_Tqueue();
-    init_Tqueue(queue, player, enemies);
+    init_Tqueue(queue, player, enemies, n_enemies);
 
     while(!end) {
         bool end_turn = false;
@@ -548,11 +547,10 @@ bool combat(Character *player, Character *enemies[], Game_state *current_state) 
             update_cooldowns(current_node);
             apply_active_effect(current_node->character);
             current_node = current_node->next;
-        } while (current_node->next != NULL);
+        } while (current_node != NULL);
 
         while (!end_turn) {
             current_node = queue->head;
-            dequeue(queue);
 
             if (current_node->is_last == true) {
                 end_turn = true;
@@ -564,6 +562,8 @@ bool combat(Character *player, Character *enemies[], Game_state *current_state) 
                 display_battle(queue);
                 player_turn(current_node, queue, current_state);
             }
+            // Move node at the end of the queue
+            dequeue(queue);
             enqueue(queue, current_node);
         }
     }
@@ -577,12 +577,7 @@ void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_sta
     Skill *skill = node->available_Skill[choice - 1];
     Character *enemy = node->character;
     Character *player = queue->player;
-    // target_skill(node->available_Skill[choice], node->character, player, 0, current_state);
-    /*
-    for (int i = 0; i < MAX_SKILL; i++) {
-        printf("%s\n", node->available_Skill[i]->name);
-    }
-    */
+
     switch (skill->target) {
         case SELF:
             apply_skill(choice, node, enemy);
