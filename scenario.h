@@ -5,7 +5,7 @@
 #include "game.h"
 #include "combat.h"
 
-// Structure to represent a scenario (node)
+// Structure to represent a scenario (The node in the graph)
 typedef struct Scenario {
     int id;
     char name[NAME_LENGTH];

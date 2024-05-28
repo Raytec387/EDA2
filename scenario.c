@@ -48,6 +48,8 @@ void freeScenarios(Scenario* scenarios[], int count) {
 //// Graph part ////
 //// Graph part ////
 
+// a part of scenario story, it will return number of enemy
+// option '1' return 1 enemy, option '2' return 3 enemies.
 int scenario_txt(char txt[NAME_LENGTH]){
     FILE *fp;
 
@@ -97,6 +99,7 @@ int scenario_txt(char txt[NAME_LENGTH]){
     return -1;
 }
 
+// part of scenario story(after combat)
 void scenario_end_txt(char txt[NAME_LENGTH]){
     FILE *fp;
     fp = fopen(txt, "r");
@@ -130,6 +133,7 @@ void scenario_end_txt(char txt[NAME_LENGTH]){
     }
 }
 
+// Initialize the adjacent list
 void graph_initialize(Scenario *scenarios[MAX_SCENARIO]){
     
     scenarios[0] = createScenario(1, "Childhood.txt");
@@ -155,6 +159,7 @@ void graph_initialize(Scenario *scenarios[MAX_SCENARIO]){
     addEdge(scenarios[3], scenarios[4]); // 
 }
 
+// Battle check and navigation(open world)
 void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO], Game_state *currentState, Scenario* currentScenario){
     /// Story and navigation ///
     while (true) {
