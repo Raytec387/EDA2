@@ -155,37 +155,38 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
     }
 
     // Apply skill effects
-    for (int i = 0; i < MAX_ACTIVE_EFFECTS; i++) {
-        if (target->active_effects[i].duration <= 0) {
-            switch (skill->effect.type) {
-            case DMG_OVER_TIME:
-                target->active_effects[i].type = skill->effect.type;
-                target->active_effects[i].duration = skill->effect.duration;
-                target->active_effects[i].value = skill->effect.value;
-                target->active_effects[i].is_percentile = skill->effect.is_percentile;
-                printf("%s is being afflicted with ongoing damage!", target->name);
-                break;
-            case HEAL_OVER_TIME:
-                target->active_effects[i].type = skill->effect.type;
-                target->active_effects[i].duration = skill->effect.duration;
-                target->active_effects[i].value = skill->effect.value;
-                target->active_effects[i].is_percentile = skill->effect.is_percentile;
-                printf("%s is being afflicted with ongoing healing!", target->name);
-                break;
-            case DEF:
-            case HP:
-            case ATK:
-                target->active_effects[i].type = skill->effect.type;
-                target->active_effects[i].duration = skill->effect.duration;
-                target->active_effects[i].value = skill->effect.value;
-                target->active_effects[i].is_percentile = skill->effect.is_percentile;
-                break;
-            default:
-                break;
+    if (skill->effect.duration > 0) {
+        for (int i = 0; i < MAX_ACTIVE_EFFECTS; i++) {
+            if (target->active_effects[i].duration <= 0) {
+                switch (skill->effect.type) {
+                    case DMG_OVER_TIME:
+                        target->active_effects[i].type = skill->effect.type;
+                        target->active_effects[i].duration = skill->effect.duration;
+                        target->active_effects[i].value = skill->effect.value;
+                        target->active_effects[i].is_percentile = skill->effect.is_percentile;
+                        printf("%s is being afflicted with ongoing damage!\n", target->name);
+                        break;
+                    case HEAL_OVER_TIME:
+                        target->active_effects[i].type = skill->effect.type;
+                        target->active_effects[i].duration = skill->effect.duration;
+                        target->active_effects[i].value = skill->effect.value;
+                        target->active_effects[i].is_percentile = skill->effect.is_percentile;
+                        printf("%s is being afflicted with ongoing healing!\n", target->name);
+                        break;
+                    case DEF:
+                    case HP:
+                    case ATK:
+                        target->active_effects[i].type = skill->effect.type;
+                        target->active_effects[i].duration = skill->effect.duration;
+                        target->active_effects[i].value = skill->effect.value;
+                        target->active_effects[i].is_percentile = skill->effect.is_percentile;
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
+        }   
     }
-
     // Remove current skill in available skills (moves it outside of num_skill)
     node->num_skill--;
     Skill *temp = node->available_Skill[idx_skill];
@@ -336,30 +337,40 @@ Turn_queue* create_Tqueue() {
 }
 
 void init_Tqueue(Turn_queue *queue, Character *player, Character *enemies[]) {
+    int size = 0;
     queue->size = 1;
     queue->player = player;
 
     for (int i = 0; i < MAX_ENEMIES; i++) {
         if (enemies[i] != NULL) {
-            queue->enemies[i] = enemies[i];
-            queue->size++;
+            queue->enemies[i] = &enemies[i];
+            size++;
         }
     }
-
     //Randomize queue
     int random_queue[queue->size];
-    int count = 0;
-    for (int i = queue->size; i > 0; i--) {
-        random_queue[count] = rand() % i;
+    
+    for (int i = 0; i < queue->size; i++) {
+        random_queue[i] = i;
+    }
+
+    for (int i = 0; i < size * 2; i++) {
+        int a = rand() % size;
+        int b = rand() % size;
+        int temp = random_queue[a];
+        random_queue[a] = random_queue[b];
+        random_queue[b] = temp;
     }
 
     //Assign character to respective turns
-    for (int i = 0; i < queue->size; i++) {
+    for (int i = 0; i < size; i++) {
+        //printf("Queue size: %d\n", queue->size);
         int idx = -1;
         //Find index of the corresponding character
-        for (int j = 0; j < queue->size; j++) {
+        for (int j = 0; j < size; j++) {
             if (i == random_queue[j]) {
                 idx = j;
+                //printf("%d\n", j);
                 break;
             }
         }
@@ -374,7 +385,7 @@ void init_Tqueue(Turn_queue *queue, Character *player, Character *enemies[]) {
             enqueue(queue, new_node);
         } 
 
-        if (i == queue->size - 1) {
+        if (i == size - 1) {
             new_node->is_last = true;
         }
     }
@@ -521,7 +532,6 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
 
 bool combat(Character *player, Character *enemies[], Game_state *current_state) {
     bool end = false;
-    
     Turn_queue *queue = create_Tqueue();
     init_Tqueue(queue, player, enemies);
 
@@ -546,6 +556,7 @@ void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_sta
     Character *player = queue->player;
     // target_skill(node->available_Skill[choice], node->character, player, 0, current_state);
 
+    printf("HERE1\n");
     switch (skill->target) {
         case SELF:
             apply_skill(choice, node, enemy);

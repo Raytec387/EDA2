@@ -162,11 +162,14 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO], Game_state *curre
         if (0==strcmp(currentScenario->name,"Ending.txt")){scenario_end_txt(currentScenario->name);break;}
         // option '1' is easier, '2' is harder, option '1' will return the integer 1, option '2' will return the integer 3
         int number_of_enemies = scenario_txt(currentScenario->name);// return a int type function
-        Character enemies[number_of_enemies];
-        initialize_enemies_array(currentScenario->id, &enemies, number_of_enemies);
+        Character *enemies[number_of_enemies];
+        initialize_enemies_array(currentScenario->id, enemies, number_of_enemies);
         // Check if battle is needed
         if (!currentScenario->battleWon) {
-            if (combat(currentState->character), &enemies, currentState) {
+            for (int i = 0; i < number_of_enemies; i++) {
+                printf("%s\n", enemies[i]->name);
+            }
+            if (combat(&currentState->character, enemies, currentState)) {
                 currentScenario->battleWon = true;
                 printf("You won the battle in the %s!\n", currentScenario->name);
                 // rewarding if he choose harder one
