@@ -85,7 +85,7 @@ int scenario_txt(char txt[NAME_LENGTH]){
         }
         else if(choose == '2'){
             // It returns the number of enemies
-            return 3;
+            return MAX_ENEMIES;
         }
         else{
             printf("\n(Please choose 1 or 2.)\n");
@@ -166,9 +166,6 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO], Game_state *curre
         initialize_enemies_array(currentScenario->id, enemies, number_of_enemies);
         // Check if battle is needed
         if (!currentScenario->battleWon) {
-            for (int i = 0; i < number_of_enemies; i++) {
-                printf("%s\n", enemies[i]->name);
-            }
             if (combat(&currentState->character, enemies, currentState)) {
                 currentScenario->battleWon = true;
                 printf("You won the battle in the %s!\n", currentScenario->name);

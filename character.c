@@ -22,6 +22,7 @@ void initialize_enemy(int i, Character *enemy){
     enemy->atk = cJSON_GetObjectItem(character_json, "ATK")->valueint;
     enemy->def = cJSON_GetObjectItem(character_json, "DEF")->valueint;
     enemy->hp_limit = cJSON_GetObjectItem(character_json, "HP")->valuedouble;
+    enemy->hp = enemy->hp_limit;
     enemy->skill_array[0].id = cJSON_GetObjectItem(character_json, "SKILL_ID1")->valueint;
     enemy->skill_array[1].id = cJSON_GetObjectItem(character_json, "SKILL_ID2")->valueint;
     enemy->skill_array[2].id = cJSON_GetObjectItem(character_json, "SKILL_ID3")->valueint;
@@ -44,6 +45,7 @@ void initialize_main_character(Character *player){
     player->atk = 150;
     player->def = 300;
     player->hp_limit = 1000.0;
+    player->hp = player->hp_limit;
     player->skill_array[0].id = 0;
     player->skill_array[1].id = 1;
     player->skill_array[2].id = 2;

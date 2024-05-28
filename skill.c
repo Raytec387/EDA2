@@ -26,6 +26,7 @@ void load_skill(const char *filename, Skill *skills) {
         cJSON *effect_json = cJSON_GetObjectItem(skill_json, "effects");
         skills[j].effect.type = cJSON_GetObjectItem(effect_json, "type")->valueint;
         skills[j].effect.value = cJSON_GetObjectItem(effect_json, "value")->valuedouble;
+        skills[j].effect.is_percentile = cJSON_GetObjectItem(effect_json, "is_percentile")->valueint;
         skills[j].effect.duration = cJSON_GetObjectItem(effect_json, "duration")->valueint;
     }
     cJSON_Delete(json);

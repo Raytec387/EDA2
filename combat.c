@@ -17,7 +17,7 @@ void heal(float value, Character *character) {
     if (character->hp + value > character->hp_limit) {
         character->hp = character->hp_limit;
     } else {
-        character->hp += value;character->hp = character->hp_limit;
+        character->hp += value;
     }
 }
 
@@ -25,6 +25,7 @@ void apply_active_effect(Character *character) {
     for (int i = 0; i < MAX_ACTIVE_EFFECTS; i++){
         Effect current_effect = character->active_effects[i];
         if (current_effect.duration > 0){
+            current_effect.duration--;
             switch (current_effect.type)
             {
             case DMG_OVER_TIME:
@@ -93,7 +94,7 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
                 heal_amount = skill->value;
             }
             heal(heal_amount, target);
-            printf("%s healed for %f hp!. \n", target->name, heal_amount);
+            printf("%s healed for %.2f hp!. \n", target->name, heal_amount);
             break;
         case DAMAGE:
             if (skill->is_percentile) {
@@ -103,7 +104,7 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
             }
             damage_amount = damage(damage_amount, target->def);
 
-            printf("%s dealt %f damage to %s", user->name, damage_amount, target->name);
+            printf("%s dealt %.2f damage to %s", user->name, damage_amount, target->name);
             break;
         case BUFF:
         case DEBUFF:
@@ -117,9 +118,9 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
                     }
                     target->def += buff_amount;
                     if (skill->type == BUFF) {
-                        printf("%s defence increased by %f!\n", target->name, buff_amount);
+                        printf("%s defence increased by %.2f!\n", target->name, buff_amount);
                     } else {
-                        printf("%s defence decreased by %f!\n", target->name, buff_amount);
+                        printf("%s defence decreased by %.2f!\n", target->name, buff_amount);
                     }
                     break;
                 case HP:
@@ -130,9 +131,9 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
                     }
                     target->hp_limit += buff_amount;
                     if (skill->type == BUFF) {
-                        printf("%s max hp increased by %f!\n", target->name, buff_amount);
+                        printf("%s max hp increased by %.2f!\n", target->name, buff_amount);
                     } else {
-                        printf("%s max hp decreased by %f!\n", target->name, buff_amount);
+                        printf("%s max hp decreased by %.2f!\n", target->name, buff_amount);
                     }
                     break;
                 case ATK:
@@ -143,9 +144,9 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
                     }
                     target->atk += buff_amount;
                     if (skill->type == BUFF) {
-                        printf("%s attack increased by %f!\n", target->name, buff_amount);
+                        printf("%s attack increased by %.2f!\n", target->name, buff_amount);
                     } else {
-                        printf("%s attack decreased by %f!\n", target->name, buff_amount);
+                        printf("%s attack decreased by %.2f!\n", target->name, buff_amount);
                     }
                     break;
                 default:
@@ -188,6 +189,8 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
         }   
     }
     // Remove current skill in available skills (moves it outside of num_skill)
+    skill->remaining_cooldown = skill->cooldown;
+
     node->num_skill--;
     Skill *temp = node->available_Skill[idx_skill];
     node->available_Skill[idx_skill] = node->available_Skill[node->num_skill];
@@ -196,8 +199,9 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
 }
 
 void update_cooldowns (Turn_node *node) {
-    for (int i = node->num_skill; i < MAX_SKILL; i++) {
+    for (int i = 0; i < MAX_SKILL; i++) {
         if (node->available_Skill[i]->remaining_cooldown > 0) {
+            printf("%s: skill in cooldown: %s\n", node->character->name, node->available_Skill[i]->name);
             node->available_Skill[i]->remaining_cooldown--;
             if (node->available_Skill[i]->remaining_cooldown <= 0) {
                 node->num_skill++;
@@ -343,14 +347,14 @@ void init_Tqueue(Turn_queue *queue, Character *player, Character *enemies[]) {
 
     for (int i = 0; i < MAX_ENEMIES; i++) {
         if (enemies[i] != NULL) {
-            queue->enemies[i] = &enemies[i];
+            queue->enemies[i] = enemies[i];
             size++;
         }
     }
     //Randomize queue
-    int random_queue[queue->size];
+    int random_queue[size];
     
-    for (int i = 0; i < queue->size; i++) {
+    for (int i = 0; i < size; i++) {
         random_queue[i] = i;
     }
 
@@ -406,7 +410,7 @@ void enqueue(Turn_queue *queue, Turn_node *node) {
 
 // Function to dequeue node from a queue
 // Returns the address of the dequeued node
-Turn_node *dequeue(Turn_queue *queue) {
+void dequeue(Turn_queue *queue) {
     Turn_node *temp = queue->head;
     if (queue->head == queue->tail) {
         queue->head = NULL;
@@ -414,8 +418,8 @@ Turn_node *dequeue(Turn_queue *queue) {
     } else {
         queue->head = queue->head->next;
     }
+    temp->next = NULL;
     queue->size--;
-    return temp; 
 }
 
 void display_enemies(Turn_queue *queue) {
@@ -425,6 +429,7 @@ void display_enemies(Turn_queue *queue) {
             printf("%d. %s: HP [%.2f/%.2f]\n", (i + 1), queue->enemies[i]->name, queue->enemies[i]->hp, queue->enemies[i]->hp_limit);
         }
     }
+    printf("\n");
 }
 
 void display_battle(Turn_queue *queue) {
@@ -536,12 +541,30 @@ bool combat(Character *player, Character *enemies[], Game_state *current_state) 
     init_Tqueue(queue, player, enemies);
 
     while(!end) {
-        Turn_node *current_node = dequeue(queue);
+        bool end_turn = false;
+        Turn_node *current_node = queue->head;
 
-        if (!current_node->character->is_player) {
-            enemy_skill_use(current_node, player, current_state);
-        } else {
-            player_turn(current_node, queue, current_state);
+        do {
+            update_cooldowns(current_node);
+            apply_active_effect(current_node->character);
+            current_node = current_node->next;
+        } while (current_node->next != NULL);
+
+        while (!end_turn) {
+            current_node = queue->head;
+            dequeue(queue);
+
+            if (current_node->is_last == true) {
+                end_turn = true;
+            }
+
+            if (!current_node->character->is_player) {
+                enemy_skill_use(current_node, queue, current_state);
+            } else {
+                display_battle(queue);
+                player_turn(current_node, queue, current_state);
+            }
+            enqueue(queue, current_node);
         }
     }
 
@@ -555,8 +578,11 @@ void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_sta
     Character *enemy = node->character;
     Character *player = queue->player;
     // target_skill(node->available_Skill[choice], node->character, player, 0, current_state);
-
-    printf("HERE1\n");
+    /*
+    for (int i = 0; i < MAX_SKILL; i++) {
+        printf("%s\n", node->available_Skill[i]->name);
+    }
+    */
     switch (skill->target) {
         case SELF:
             apply_skill(choice, node, enemy);

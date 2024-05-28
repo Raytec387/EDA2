@@ -59,9 +59,9 @@ void init_Tnode(Turn_node *node, Character *character);
 
 // Return adress of a queue
 Turn_queue* create_Tqueue();
-void init_Tqueue(Turn_queue *queue, Character *player, Character enemies[]);
+void init_Tqueue(Turn_queue *queue, Character *player, Character *enemies[]);
 void enqueue(Turn_queue *queue, Turn_node *node);
-Turn_node *dequeue(Turn_queue *queue);
+void dequeue(Turn_queue *queue);
 
 void display_enemies(Turn_queue *queue); 
 void display_battle(Turn_queue *queue);
@@ -69,6 +69,6 @@ void display_battle(Turn_queue *queue);
 void display_skills(Turn_node *node);
 void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state);
 
-bool combat(Character *player, Character enemies[], Game_state *current_state);
+bool combat(Character *player, Character *enemies[], Game_state *current_state);
 void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_state);
 #endif
