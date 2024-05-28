@@ -67,10 +67,11 @@ void apply_active_effect(Character *character) {
 
 
 // Function to apply the actual skill
-void apply_skill(Skill *skill, Character *user, Character *target, Game_state *currentState) {
+void apply_skill(int idx_skill, Turn_node *node, Character *target, Game_state *currentState) {
     float heal_amount;
     float damage_amount;
-
+    Character *user = node->character;
+    Skill *skill = node->available_Skill[idx_skill];
     
     // For dictionary and Timestrike(with stack)
     if(user->is_player) {
@@ -178,38 +179,13 @@ void apply_skill(Skill *skill, Character *user, Character *target, Game_state *c
             }
         }
     }
-}
 
-// Function to select the target of the skill
-void target_skill(Skill *skill, Character *user, Character *characters[], int target_index, Game_state *current_state) {
-    if (skill->remaining_cooldown > 0) {
-        printf("Skill %s is still in cooldown: %d.\n", skill->name, skill->remaining_cooldown);
-        return;
-    }
-    int n_targets = sizeof(characters)/sizeof(user);
+    // Remove current skill in available skills (moves it outside of num_skill)
+    node->num_skill--;
+    Skill *temp = node->available_Skill[idx_skill];
+    node->available_Skill[idx_skill] = node->available_Skill[node->num_skill];
+    node->available_Skill[node->num_skill] = temp;
 
-    switch (skill->target) {
-        case SELF:
-            apply_skill(skill, user, user, current_state);
-            break;
-        case TARGET:
-            apply_skill(skill, user, characters[target_index], current_state);
-            break;
-        case CROWD_SELF:
-            // TO DO
-            // Since player is always alone, target everyone except player
-            // Only enemies would have this type of ability
-            break;
-        case CROWD_TARGET:
-            for (int i = 0; i < n_targets; i++) {
-                if (characters[i] != NULL) {
-                    apply_skill(skill, user, characters[i], current_state);
-                }
-            }
-            break;
-        default:
-            break;
-    }
 }
 
 void update_cooldowns (Turn_node *node) {
@@ -485,7 +461,24 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
             display_skills(node);
             int choice = check_input(0, queue->size);
             if (choice != 0) {
-                Skill *selected_skill = node->available_Skill[choice - 1];
+                Skill *skill = node->available_Skill[choice - 1];
+                int target;
+                do {
+                    switch (skill->target) {
+                    case SELF:
+                        apply_skill(choice - 1, player, player, current_state);
+                        break;
+                    case TARGET:
+                        break;
+                    case CROWD_SELF:
+                        break;
+                    case CROWD_TARGET:
+                        break;
+                    default:
+                        break;
+                    }
+                } while (target != 0);
+
             }
             break;
         case USE_TIME_STRIKE:
@@ -503,8 +496,6 @@ int combat(Character *player, Character *enemies[], Game_state *current_state) {
     Turn_queue *queue = create_Tqueue();
     init_Tqueue(queue, player, enemies);
 
-
-
     while(!end) {
         Turn_node *current_node = dequeue(queue);
 
@@ -517,14 +508,29 @@ int combat(Character *player, Character *enemies[], Game_state *current_state) {
 }
 
 // Function that selects random skill
-void enemy_skill_use(Turn_node *node, Character *player, Game_state *current_state) {
+void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_state) {
     int choice = rand() % node->num_skill;
-    Skill *selected_skill = node->available_Skill[choice - 1];
+    Skill *skill = node->available_Skill[choice - 1];
+    Character *enemy = node->character;
+    Character *player = queue->player;
     // target_skill(node->available_Skill[choice], node->character, player, 0, current_state);
-    
-    // Remove current skill in available skills
-    node->num_skill--;
-    Skill *temp = node->available_Skill[choice];
-    node->available_Skill[choice] = node->available_Skill[node->num_skill];
-    node->available_Skill[node->num_skill] = temp;
+
+    switch (skill->target) {
+        case SELF:
+            apply_skill(choice, enemy, enemy, current_state);
+            break;
+        case TARGET:
+            apply_skill(choice, enemy, player, current_state);
+            break;
+        case CROWD_SELF:
+            for (int i = 0; i < queue->size - 1; i++) {
+                apply_skill(choice, enemy, queue->enemies[i], current_state);
+            }
+            break;
+        case CROWD_TARGET:
+            // Player character is alone
+            break;
+        default:
+            break;
+    }
 }
