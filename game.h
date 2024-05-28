@@ -6,17 +6,9 @@
 #include "skill.h"
 
 typedef struct {
-    int top;
-    int stack[MAX_STACK_SIZE];
-    int time_strike_use;
-} Time_strike_stack;
-
-typedef struct {
     // keep track of current scenario
     int currentScenarioId;
     Character character; // Keeps track of the current character
-    AbilityTracker *tracker;
-    Time_strike_stack ability_stack;
 } Game_state;
 
 Game_state* make_game_state();

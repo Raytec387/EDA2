@@ -57,7 +57,7 @@ void parse_game_state_from_json(Game_state *state, cJSON *json) {
 
 void initialize_Game(Game_state *currentState) {
     currentState->currentScenarioId = 1;
-    currentState->tracker = create_tracker();
+    currentState->character.tracker = create_tracker();
     // function from character.h
-    initialize_main_character(currentState);
+    initialize_main_character(&currentState->character);
 }

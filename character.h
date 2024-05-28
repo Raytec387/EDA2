@@ -7,6 +7,12 @@
 #include "skill.h"
 #include "common.h"
 
+typedef struct {
+    int top;
+    int stack[MAX_STACK_SIZE];
+    int time_strike_use;
+} Time_strike_stack;
+
 // Data structure of character it holds the basic datas of the characters
 typedef struct Character{
     char name[NAME_LENGTH];
@@ -17,14 +23,16 @@ typedef struct Character{
     Skill skill_array[MAX_SKILL];
     bool is_player;
     Effect active_effects[MAX_ACTIVE_EFFECTS];
+    AbilityTracker *tracker;
+    Time_strike_stack ability_stack;
 } Character;
 
 Character* create_new_enemy();
 
-void initialize_enemy(Game_state *currentState,Character *enemy);
+void initialize_enemy(int i, Character *enemy);
 
-void initialize_enemies_array(Game_state *currentState,Character *enemy[],int number_of_enemies);
+void initialize_enemies_array(int id_enemy,Character *enemy[],int number_of_enemies);
 
-void initialize_main_character(Game_state *currentState);
+void initialize_main_character(Character *player);
 #endif
 

@@ -26,7 +26,7 @@ void run(Game_state *currentState) {
                 load_skill(SKILL_FILE,currentState->character.skill_array);
                 break;
             case SHOW_SKILL_TIMES:
-                display_abilities(currentState->tracker);
+                display_abilities(currentState->character.tracker);
                 break;
                 
         }
@@ -48,7 +48,7 @@ void start_game(Game_state *currentState) {
 }
 
 void load_game(const char *file_name, Game_state *currentState){
-    currentState->tracker = load_tracker(TRACKER_FILE);
+    currentState->character.tracker = load_tracker(TRACKER_FILE);
     FILE *fp = fopen(file_name, "r");
     if (fp == NULL) {
         printf("Error: Unable to open file for reading.\n");
@@ -79,7 +79,7 @@ void load_game(const char *file_name, Game_state *currentState){
 }
 
 void save_game(const char *file_name, Game_state *currentState){
-    save_tracker(currentState->tracker,TRACKER_FILE);
+    save_tracker(currentState->character.tracker,TRACKER_FILE);
     cJSON *json = create_json_from_game_state(currentState);
     char *json_string = cJSON_Print(json);
 

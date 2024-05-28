@@ -9,11 +9,11 @@ Character* create_new_enemy(){
     return new_enemy;
 }
 
-void initialize_enemy(Game_state *currentState, Character *enemy){
+void initialize_enemy(int i, Character *enemy){
     // Open json file
     cJSON *json = create_json("stats.json");
     // First scenario is 1, and in the stats.json, the first enemy's id is 0,therefore -1
-    int i = currentState->currentScenarioId - 1;
+    i--;
     // Read stats(enemy) array
     cJSON *character_json = cJSON_GetArrayItem(json, i);
 
@@ -32,25 +32,25 @@ void initialize_enemy(Game_state *currentState, Character *enemy){
     cJSON_Delete(json);
 }
 
-void initialize_enemies_array(Game_state *currentState,Character *enemy[],int number_of_enemies){
+void initialize_enemies_array(int id_enemy,Character *enemy[],int number_of_enemies){
     for(int i = 0; i<number_of_enemies;i++){
         enemy[i] = create_new_enemy();
-        initialize_enemy(currentState,enemy[i]);
+        initialize_enemy(id_enemy,enemy[i]);
     }
 }
 
 void initialize_main_character(Character *player){
     // Initialize character part
     player->atk = 150;
-    currentState->character.def = 300;
-    currentState->character.hp_limit = 1000.0;
-    currentState->character.skill_array[0].id = 0;
-    currentState->character.skill_array[1].id = 1;
-    currentState->character.skill_array[2].id = 2;
-    currentState->character.skill_array[3].id = 3; 
-    currentState->character.is_player = true;
-    strcpy(currentState->character.name,"David");
-    currentState->ability_stack.top = -1;
-    currentState->ability_stack.time_strike_use = 0;
+    player->def = 300;
+    player->hp_limit = 1000.0;
+    player->skill_array[0].id = 0;
+    player->skill_array[1].id = 1;
+    player->skill_array[2].id = 2;
+    player->skill_array[3].id = 3; 
+    player->is_player = true;
+    strcpy(player->name,"David");
+    player->ability_stack.top = -1;
+    player->ability_stack.time_strike_use = 0;
 }
 
