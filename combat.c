@@ -503,8 +503,8 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
     
 }
 
-int combat(Character *player, Character *enemies[], Game_state *current_state) {
-    int end = 0;
+bool combat(Character *player, Character *enemies[], Game_state *current_state) {
+    bool end = false;
     
     Turn_queue *queue = create_Tqueue();
     init_Tqueue(queue, player, enemies);
@@ -518,6 +518,8 @@ int combat(Character *player, Character *enemies[], Game_state *current_state) {
             player_turn(current_node, queue, current_state);
         }
     }
+
+    return end;
 }
 
 // Function that selects random skill
