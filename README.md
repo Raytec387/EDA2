@@ -11,7 +11,9 @@ Open world: The game world is structured as a Scenario Graph. Using the console 
 
 Scenario: Each scenario shows a main text that presents part of the story and asks the player to make a decision. This decision will decide how many enemies there are(1 or 3) during the battle, the player will face in battle immediately after.
 
-Battle system: Turn-based combat system, queue-based combat system, each character's turn will be stored in the queue. Once the character’s turn reaches, character can do a manipulation, for user he can use a skill or basic atk, for enemies they will apply skill randomly.
+Battle system: Turn-based combat system, queue-based combat system, each character's turn will be stored in the queue. Once the character’s turn reaches, character can do a manipulation, for user he can use a skill or basic atk, for enemies they will apply the skill randomly.
+
+Exit game: Enter Ctrl + c in the terminator.
 
 The library used in the project: cJSON.h and cJSON.c, 
 the original author:	Dave Gamble         URL of the cJSON: https://github.com/DaveGamble/cJSON
