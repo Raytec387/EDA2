@@ -23,7 +23,7 @@ typedef struct Character{
     int def;
     Skill skill_array[MAX_SKILL];
     bool is_player;
-    Effect active_effects[MAX_ACTIVE_EFFECTS];
+    Effect active_effects[MAX_ACTIVE_EFFECTS]; // increasing ATK/DEF for 2 turn
     AbilityTracker *tracker;
     Time_strike_stack ability_stack;
 } Character;
