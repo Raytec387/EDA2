@@ -9,7 +9,7 @@
 #define MAX_SKILL_IN_GAME 8
 #define MAX_STACK_SIZE 20
 
-
+// stack structure for Time_Strike
 typedef struct {
     int stack[MAX_STACK_SIZE];
     int top;
@@ -70,7 +70,7 @@ typedef struct Ability {
     int count;
     struct Ability *next;
 } Ability;
-
+// Dictionary to record the number of used skill
 typedef struct AbilityTracker {
     Ability *table[MAX_SKILL_IN_GAME];
 } AbilityTracker;
@@ -81,18 +81,13 @@ void load_skill(const char *filename, Skill *skills);
 
 void change_skill(const char *filename, Skill *skills);
 
-unsigned int hash(const char *str);
-
-AbilityTracker* create_tracker();
-
-void use_ability(AbilityTracker *tracker, const char *name);
-
-void display_abilities(const AbilityTracker *tracker);
-
-void free_tracker(AbilityTracker *tracker);
-
-void save_tracker(const AbilityTracker *tracker, const char *filename);
-
-AbilityTracker* load_tracker(const char *filename);
+// Dictionary part
+unsigned int hash(const char *str);                                     // Avoid overflow
+AbilityTracker* create_tracker();                                       // Create a tracker
+void use_ability(AbilityTracker *tracker, const char *name);            // Add ability to the dicctionary
+void display_abilities(const AbilityTracker *tracker);                  // Show used skill, and times used in the terminal
+void free_tracker(AbilityTracker *tracker);                             // Free the tracker
+void save_tracker(const AbilityTracker *tracker, const char *filename); // Save to ability.txt, if file is missing, create one
+AbilityTracker* load_tracker(const char *filename);                     // Load from ability.txt
 
 #endif

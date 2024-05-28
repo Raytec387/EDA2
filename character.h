@@ -7,6 +7,7 @@
 #include "skill.h"
 #include "common.h"
 
+// Times strike stack, record the used skill in the stack, randomly choose one
 typedef struct {
     int top;
     int stack[MAX_STACK_SIZE];
@@ -27,12 +28,16 @@ typedef struct Character{
     Time_strike_stack ability_stack;
 } Character;
 
+// Create a new enemy
 Character* create_new_enemy();
 
+// initialize the enemy's data
 void initialize_enemy(int i, Character *enemy);
 
+// initialize the enemy's array(number of enemy in the battle)
 void initialize_enemies_array(int id_enemy,Character *enemy[],int number_of_enemies);
 
+// initialize the main character's data
 void initialize_main_character(Character *player);
 
 #endif

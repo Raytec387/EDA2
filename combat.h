@@ -38,22 +38,26 @@ typedef struct Turn_queue {
 // Combat Functions
 void displayBattleOption();
 
+// damage dealt and heal hp
 float damage(float damage, int def);
 void heal(float value, Character *character);
 
-
+// skill,TimeStrike, and logic for cooldown of the skill
 void apply_skill(int idx_skill, Turn_node *node, Character *target); 
 void update_cooldowns (Turn_node *node); 
 void TimeStrike(int id, Character *user, Character *target);
 
+// Randomly choose from the stack
 int random_Time_Strike(Character *character);
 
+// stack
 int isempty(Character *character);
 int isfull(Character *character);
 int peek(Character *character);
 int pop(Character *character);
 void push(Character *character, int data);
 
+// Queue
 Turn_node* create_Tnode();
 void init_Tnode(Turn_node *node, Character *character);
 
@@ -63,12 +67,15 @@ void init_Tqueue(Turn_queue *queue, Character *player, Character *enemies[]);
 void enqueue(Turn_queue *queue, Turn_node *node);
 void dequeue(Turn_queue *queue);
 
+// Display the necessary elements in the battle
 void display_enemies(Turn_queue *queue); 
 void display_battle(Turn_queue *queue);
-
 void display_skills(Turn_node *node);
-void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state);
 
-bool combat(Character *player, Character *enemies[], Game_state *current_state);
+// Action in the trun
+void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state);
 void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_state);
+
+// Enter combat, return false if lost return true if won
+bool combat(Character *player, Character *enemies[], Game_state *current_state);
 #endif

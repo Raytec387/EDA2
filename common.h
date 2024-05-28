@@ -19,14 +19,11 @@
 #define NAME_LENGTH 20
 #define DESCRITPION_LENGTH 100
 #define MAX_ACTIVE_EFFECTS 8
+
+// File Macros
 #define TRACKER_FILE "ability.txt"
 #define SAVE_FILE "save.json"
 #define SKILL_FILE "skill.json"
-
-// all skill in the game THIS BREAKS THE CODE! BAD IDEA
-/*char All_skill[MAX_SKILL_IN_GAME][NAME_LENGTH] = {  {"Defence"},{"Strong Hit"},{"Heal"},{"Concentrate"},
-                                                    {"Heal+"},{"Good Swordart"},{"Wind Field"},{"Last Stardust"}};
-*/
 
 // Menu Options
 #define EXIT_BACK 0
@@ -36,8 +33,10 @@
 #define SKILL_CHANGE 4
 #define SHOW_SKILL_TIMES 5
 
+// Read json file, create and return a address 
 cJSON *create_json(const char *file_name);
 
+// Check if the input is in the range(lower - upper), both end included
 int check_input(int lower,int upper);
 
 #endif
