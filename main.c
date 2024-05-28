@@ -14,7 +14,6 @@ void displayMenu(){
 void run(Game_state *currentState) {
     int option;
     // Track the scenario
-    printf("\033[2J\033[1;1H");
     printf("%d\n", currentState->currentScenarioId);
     printf("Welcome to Red rain,");
     do{
@@ -34,7 +33,6 @@ void run(Game_state *currentState) {
                 break;
             case SKILL_CHANGE:
                 change_skill(SKILL_FILE,currentState->character.skill_array);
-                load_skill(SKILL_FILE,currentState->character.skill_array);
                 break;
             case SHOW_SKILL_TIMES:
                 display_abilities(currentState->character.tracker);

@@ -8,7 +8,7 @@
 #define MAX_SKILL 4
 #define MAX_SKILL_IN_GAME 8
 #define MAX_STACK_SIZE 20
-#define SKILL_FILE "skill.json"
+
 
 typedef struct {
     int stack[MAX_STACK_SIZE];

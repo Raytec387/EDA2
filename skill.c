@@ -5,7 +5,6 @@ int top = -1;
 
 // Load Skill from Json
 void load_skill(const char *filename, Skill *skills) {
-
     // Open json file
     cJSON *json = create_json(filename);
     int i;
@@ -15,19 +14,19 @@ void load_skill(const char *filename, Skill *skills) {
         cJSON *skill_json = cJSON_GetArrayItem(json, i);
 
         // Read skills
-        strncpy(skills[i].name, cJSON_GetObjectItem(skill_json, "name")->valuestring, NAME_LENGTH);
-        strncpy(skills[i].desc, cJSON_GetObjectItem(skill_json, "description")->valuestring, DESCRITPION_LENGTH);
-        skills[i].type = cJSON_GetObjectItem(skill_json, "type")->valueint;
-        skills[i].target = cJSON_GetObjectItem(skill_json, "target")->valueint;
-        skills[i].value = cJSON_GetObjectItem(skill_json, "value")->valuedouble;
-        skills[i].is_percentile = cJSON_GetObjectItem(skill_json, "is_percentile")->valueint;
-        skills[i].cooldown = cJSON_GetObjectItem(skill_json, "cooldown")->valueint;
+        strncpy(skills[j].name, cJSON_GetObjectItem(skill_json, "name")->valuestring, NAME_LENGTH);
+        strncpy(skills[j].desc, cJSON_GetObjectItem(skill_json, "description")->valuestring, DESCRITPION_LENGTH);
+        skills[j].type = cJSON_GetObjectItem(skill_json, "type")->valueint;
+        skills[j].target = cJSON_GetObjectItem(skill_json, "target")->valueint;
+        skills[j].value = cJSON_GetObjectItem(skill_json, "value")->valuedouble;
+        skills[j].is_percentile = cJSON_GetObjectItem(skill_json, "is_percentile")->valueint;
+        skills[j].cooldown = cJSON_GetObjectItem(skill_json, "cooldown")->valueint;
 
         // Read effect
         cJSON *effect_json = cJSON_GetObjectItem(skill_json, "effects");
-        skills[i].effect.type = cJSON_GetObjectItem(effect_json, "type")->valueint;
-        skills[i].effect.value = cJSON_GetObjectItem(effect_json, "value")->valuedouble;
-        skills[i].effect.duration = cJSON_GetObjectItem(effect_json, "duration")->valueint;
+        skills[j].effect.type = cJSON_GetObjectItem(effect_json, "type")->valueint;
+        skills[j].effect.value = cJSON_GetObjectItem(effect_json, "value")->valuedouble;
+        skills[j].effect.duration = cJSON_GetObjectItem(effect_json, "duration")->valueint;
     }
     cJSON_Delete(json);
 }
@@ -59,8 +58,8 @@ void change_skill(const char *filename, Skill *skills) {
     }
     int chosen_skill = check_input(1,MAX_SKILL);
     chosen_skill -=1;
-
     skills[chosen_skill].id = wanted_skill;
+    load_skill(SKILL_FILE,skills);
     cJSON_Delete(json);
 }
 ///////////                                                                                 ///////////
