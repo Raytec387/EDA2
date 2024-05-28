@@ -104,7 +104,9 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
             }
             damage_amount = damage(damage_amount, target->def);
 
-            printf("%s dealt %.2f damage to %s", user->name, damage_amount, target->name);
+            printf("%s dealt %.2f damage to %s\n", user->name, damage_amount, target->name);
+            target->hp -= damage_amount;
+            if(target->hp < 0) {target->hp = 0; printf("%s was defeated by %s!\n", target->name, user->name);}
             break;
         case BUFF:
         case DEBUFF:
