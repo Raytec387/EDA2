@@ -10,9 +10,9 @@
 
 #define MAX_TURNS 10
 #define MAX_ENEMIES 3
-#define USE_ATTACK 0
-#define USE_SKILL 1
-#define USE_TIME_STRIKE 2
+#define USE_ATTACK 1
+#define USE_SKILL 2
+#define USE_TIME_STRIKE 3
 
 // Queue with linkedlists
 // Each node contains a character (Player, Enemy)

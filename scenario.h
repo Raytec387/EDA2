@@ -3,7 +3,7 @@
 
 #include "common.h"
 #include "game.h"
-// #include "combat.h"
+#include "combat.h"
 
 // Structure to represent a scenario (node)
 typedef struct Scenario {
