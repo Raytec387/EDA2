@@ -71,7 +71,18 @@ void apply_active_effect(Character *character) {
     }
 }
 
+void apply_cooldown (int idx_skill, Turn_node *node) {
+    Skill *skill = node->available_Skill[idx_skill];
 
+    // Remove current skill in available skills (moves it outside of num_skill)
+    skill->remaining_cooldown = skill->cooldown;
+
+    node->num_skill--;
+    Skill *temp = node->available_Skill[idx_skill];
+    node->available_Skill[idx_skill] = node->available_Skill[node->num_skill];
+    node->available_Skill[node->num_skill] = temp;
+}
+ 
 // Function to apply the actual skill
 void apply_skill(int idx_skill, Turn_node *node, Character *target) {
     float heal_amount;
@@ -193,13 +204,6 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
             }
         }   
     }
-    // Remove current skill in available skills (moves it outside of num_skill)
-    skill->remaining_cooldown = skill->cooldown;
-
-    node->num_skill--;
-    Skill *temp = node->available_Skill[idx_skill];
-    node->available_Skill[idx_skill] = node->available_Skill[node->num_skill];
-    node->available_Skill[node->num_skill] = temp;
 
 }
 
@@ -549,7 +553,6 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
 
                         case CROWD_TARGET:
                             for (int i = 0; i < queue->size - 1; i++) {
-                                printf("CROWD: %d\n", i);
                                 apply_skill(skill_idx - 1, node, queue->enemies[i]);
                             }
                             break;
@@ -557,6 +560,7 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
                         default:
                             break;
                     }
+                    apply_cooldown(skill_idx - 1, node);
                     turn_done = true;
                 }
                 break;
@@ -608,6 +612,7 @@ void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_sta
             default:
                 break;
         }
+        apply_cooldown(choice, node);
     }
 }
 
