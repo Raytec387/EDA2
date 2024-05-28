@@ -34,9 +34,7 @@ void initialize_enemy(int i, Character *enemy){
 
 void initialize_enemies_array(int id_enemy, Character *enemy[], int number_of_enemies){
     for(int i = 0; i<number_of_enemies;i++){
-        printf("HERE1\n");
         enemy[i] = create_new_enemy();
-        printf("HERE2\n");
         initialize_enemy(id_enemy,enemy[i]);
     }
 }
