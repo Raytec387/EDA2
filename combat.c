@@ -102,12 +102,6 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
                 damage_amount = skill->value;
             }
             damage_amount = damage(damage_amount, target->def);
-<<<<<<< HEAD
-
-            printf("%s dealt %.2f damage to %s\n", user->name, damage_amount, target->name);
-            target->hp -= damage_amount;
-            if(target->hp < 0) {target->hp = 0; printf("%s was defeated by %s!\n", target->name, user->name);}
-=======
             if (damage_amount > target->hp) {
                 printf("%s deafeted %s\n", user->name, target->name);
                 target->hp = 0;
@@ -115,7 +109,6 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
                 printf("%s dealt %.2f damage to %s\n", user->name, damage_amount, target->name);
                 target->hp -= damage_amount;
             }
->>>>>>> 5bcf0f3 (Updated combat.c)
             break;
         case BUFF:
         case DEBUFF:
