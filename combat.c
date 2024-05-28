@@ -73,7 +73,7 @@ void apply_active_effect(Character *character) {
 
 
 // Function to apply the actual skill
-void apply_skill(int idx_skill, Turn_node *node, Character *target, Game_state *currentState) {
+void apply_skill(int idx_skill, Turn_node *node, Character *target) {
     float heal_amount;
     float damage_amount;
     Character *user = node->character;
@@ -81,8 +81,8 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target, Game_state *
     
     // For dictionary and Timestrike(with stack)
     if(user->is_player) {
-        use_ability(currentState->tracker, skill->name);   
-        push(currentState, skill->id);
+        use_ability(user->tracker, skill->name);   
+        push(user, skill->id);
     }
 
     switch (skill->type) {
@@ -210,9 +210,9 @@ void update_cooldowns (Turn_node *node) {
 
 /*  Allows access to the history of moves executed by the player (which is a stack) 
     and randomly selects the k-th move executed counting from the last one          */
-void TimeStrike(int id, Character *user, Character *target, Game_state *current_state) {
+void TimeStrike(int id, Character *user, Character *target) {
     
-    if (!isempty(current_state) && current_state->ability_stack.time_strike_use == 1){
+    if (!isempty(user) && user->ability_stack.time_strike_use == 1){
         Skill TimeStrike;
         TimeStrike.id = id;
         // Open json file
@@ -237,7 +237,7 @@ void TimeStrike(int id, Character *user, Character *target, Game_state *current_
     
         cJSON_Delete(json);
         // Use only one time every battle
-        current_state->ability_stack.time_strike_use = 0;
+        user->ability_stack.time_strike_use = 0;
         // TimeStrike has 2 times of original value
         TimeStrike.value *= 2;
         TimeStrike.effect.value *= 2;
@@ -251,11 +251,11 @@ void TimeStrike(int id, Character *user, Character *target, Game_state *current_
 }
 
 // Function to choose a random skill in the stack
-int random_Time_Strike(Game_state *current_state) {
-    int k_th = rand() % current_state->ability_stack.time_strike_use;
+int random_Time_Strike(Character *character) {
+    int k_th = rand() % character->ability_stack.time_strike_use;
     int id;
     for(int i = 0; i < k_th;i++) {
-        id = pop(current_state);
+        id = pop(character);
     }
     return id;
 }
@@ -264,32 +264,32 @@ int random_Time_Strike(Game_state *current_state) {
 ///////////                     Stack for Time Strike                                       ///////////
 ///////////                                                                                 ///////////
 /* Check if the stack is empty */
-int isempty(Game_state *current_state) {
-   if (current_state->ability_stack.top == -1)
+int isempty(Character *character) {
+   if (character->ability_stack.top == -1)
       return 1;
    else
       return 0;
 }
 
 /* Check if the stack is full */
-int isfull(Game_state *current_state) {
-   if(current_state->ability_stack.top == MAX_STACK_SIZE)
+int isfull(Character *character) {
+   if(character->ability_stack.top == MAX_STACK_SIZE)
       return 1;
    else
       return 0;
 }
 
 /* Function to return the topmost element in the stack */
-int peek(Game_state *current_state) {
-   return current_state->ability_stack.stack[current_state->ability_stack.top];
+int peek(Character *character) {
+   return character->ability_stack.stack[character->ability_stack.top];
 }
 
 /* Function to delete from the stack */
-int pop(Game_state *current_state) {
+int pop(Character *character) {
    int data;
-   if(!isempty(current_state)) {
-      data = current_state->ability_stack.stack[current_state->ability_stack.top];
-      current_state->ability_stack.top--;
+   if(!isempty(character)) {
+      data = character->ability_stack.stack[character->ability_stack.top];
+      character->ability_stack.top--;
       return data;
    } else {
       printf("Could not retrieve data, Stack is empty.\n");
@@ -298,10 +298,10 @@ int pop(Game_state *current_state) {
 }
 
 /* Function to insert into the stack */
-void push(Game_state *current_state, int data) {
-   if(!isfull(current_state)) {
-      current_state->ability_stack.top++;
-      current_state->ability_stack.stack[current_state->ability_stack.top] = data;
+void push(Character *character, int data) {
+   if(!isfull(character)) {
+      character->ability_stack.top++;
+      character->ability_stack.stack[character->ability_stack.top] = data;
    } else {
       printf("Could not insert data, Stack is full.\n");
    }
@@ -447,7 +447,8 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
         int choice = check_input(USE_ATTACK, USE_TIME_STRIKE);
         switch (choice) {
         case USE_ATTACK:
-            printf("Who do you want to attack? Enter 0 to go back\n");
+            printf("Who do you want to attack?\n");
+            printf("0.-Exit\n");
             display_enemies(queue);
             int choice = check_input(0, queue->size);
             if (choice != 0) {
@@ -463,28 +464,34 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
             }
             break;
         case USE_SKILL:
-            printf("Which skill do you want to use? Enter 0 to go back\n");
+            printf("Which skill do you want to use?\n");
+            printf("0.-Exit\n");
             display_skills(node);
-            int choice = check_input(0, queue->size);
+            int choice = check_input(0, node->num_skill);
             if (choice != 0) {
                 Skill *skill = node->available_Skill[choice - 1];
                 int target;
-                do {
-                    switch (skill->target) {
+                switch (skill->target) {
                     case SELF:
-                        apply_skill(choice - 1, player, player, current_state);
+                        apply_skill(choice - 1, player, player);
                         break;
                     case TARGET:
+                        printf("Please select an enemy to use the skill on.\n");
+                        display_enemies(queue);
+                        target = check_input(1, queue->size - 1);
+                        apply_skill(choice - 1, node, queue->enemies[target - 1]);
                         break;
                     case CROWD_SELF:
+                        // Player character is always alone :(
                         break;
                     case CROWD_TARGET:
+                        for (int i = 0; i < queue->size - 1; i++) {
+                            apply_skill(choice - 1, node, queue->enemies[i]);
+                        }
                         break;
                     default:
                         break;
-                    }
-                } while (target != 0);
-
+                }
             }
             break;
         case USE_TIME_STRIKE:
@@ -523,14 +530,14 @@ void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_sta
 
     switch (skill->target) {
         case SELF:
-            apply_skill(choice, enemy, enemy, current_state);
+            apply_skill(choice, enemy, enemy);
             break;
         case TARGET:
-            apply_skill(choice, enemy, player, current_state);
+            apply_skill(choice, enemy, player);
             break;
         case CROWD_SELF:
             for (int i = 0; i < queue->size - 1; i++) {
-                apply_skill(choice, enemy, queue->enemies[i], current_state);
+                apply_skill(choice, enemy, queue->enemies[i]);
             }
             break;
         case CROWD_TARGET:
