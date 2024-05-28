@@ -519,7 +519,8 @@ int combat(Character *player, Character *enemies[], Game_state *current_state) {
 // Function that selects random skill
 void enemy_skill_use(Turn_node *node, Character *player, Game_state *current_state) {
     int choice = rand() % node->num_skill;
-    target_skill(node->available_Skill[choice], node->character, player, 0, current_state);
+    Skill *selected_skill = node->available_Skill[choice - 1];
+    // target_skill(node->available_Skill[choice], node->character, player, 0, current_state);
     
     // Remove current skill in available skills
     node->num_skill--;

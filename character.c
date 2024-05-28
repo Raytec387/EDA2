@@ -9,7 +9,7 @@ Character* create_new_enemy(){
     return new_enemy;
 }
 
-void initialize_enemy(Game_state *currentState,Character *enemy){
+void initialize_enemy(Game_state *currentState, Character *enemy){
     // Open json file
     cJSON *json = create_json("stats.json");
     // First scenario is 1, and in the stats.json, the first enemy's id is 0,therefore -1
@@ -39,9 +39,9 @@ void initialize_enemies_array(Game_state *currentState,Character *enemy[],int nu
     }
 }
 
-void initialize_main_character(Game_state *currentState){
+void initialize_main_character(Character *player){
     // Initialize character part
-    currentState->character.atk = 150;
+    player->atk = 150;
     currentState->character.def = 300;
     currentState->character.hp_limit = 1000.0;
     currentState->character.skill_array[0].id = 0;

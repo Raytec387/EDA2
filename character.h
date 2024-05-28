@@ -4,7 +4,8 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
-#include "game.h"
+#include "skill.h"
+#include "common.h"
 
 // Data structure of character it holds the basic datas of the characters
 typedef struct Character{

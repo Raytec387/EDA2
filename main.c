@@ -117,6 +117,5 @@ void restart_session(Session *session) {
 int main(){
     Game_state *game = make_game_state();
     initialize_Game(game);
-    printf("%p", game);
     run(game);
 }
