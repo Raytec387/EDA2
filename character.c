@@ -36,7 +36,7 @@ void initialize_enemy(int i, Character *enemy){
     enemy->skill_array[1].id = cJSON_GetObjectItem(character_json, "SKILL_ID2")->valueint;
     enemy->skill_array[2].id = cJSON_GetObjectItem(character_json, "SKILL_ID3")->valueint;
     enemy->skill_array[3].id = cJSON_GetObjectItem(character_json, "SKILL_ID4")->valueint;
-    load_skill(SKILL_FILE,enemy->skill_array);
+    load_skill(SKILL_FILE, enemy->skill_array);
     enemy->is_player = false;
     reset_active_effects(enemy);
     cJSON_Delete(json);

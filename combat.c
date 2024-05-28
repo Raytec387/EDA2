@@ -66,7 +66,7 @@ void apply_active_effect(Character *character) {
                     }
                 default:
                     break;
-                }
+            }
         }
     }
 }
@@ -89,6 +89,8 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
     float damage_amount;
     Character *user = node->character;
     Skill *skill = node->available_Skill[idx_skill];
+
+    printf("%s uses %s on %s\n", user->name, skill->name, target->name);
     
     // For dictionary and Timestrike(with stack)
     if(user->is_player) {
@@ -114,7 +116,7 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
             }
             damage_amount = damage(damage_amount, target->def);
             if (damage_amount > target->hp) {
-                printf("%s deafeted %s\n", user->name, target->name);
+                printf("%s defeated %s\n", user->name, target->name);
                 target->hp = 0;
             } else {
                 printf("%s dealt %.2f damage to %s\n", user->name, damage_amount, target->name);
@@ -462,32 +464,34 @@ void display_skills(Turn_node *node) {
     }
 }
 
-void remove_enemy(Turn_queue *queue, Turn_node *node, int index) {
+void remove_enemy(Turn_queue *queue, Character *enemy, int index) {
     Turn_node *current_node = queue->head;
     Turn_node *temp;
 
     // Remove node from queue
-    if (current_node = node) {
+    if (current_node->character == enemy) {
         temp = current_node;
         dequeue(queue);
     } else {
         while (current_node->next != NULL) {
-            if (current_node->next == node) {
+            if (current_node->next->character == enemy) {
                 temp = current_node->next;
-                if (current_node->next == queue->tail) {
+                current_node->next = temp->next;
+                if (temp == queue->tail) {
                     queue->tail = current_node;
                 }
-                current_node->next = current_node->next->next;
                 queue->size--;
+                break;
+            } else {
+                current_node = current_node->next;
             }
         }
     }
 
     for (int i = index; i < queue->size; i++) {
         // Move enemies down one index
-        queue->enemies[i - 1] = queue->enemies[i];
+        queue->enemies[i] = queue->enemies[i + 1];
     }
-
     free(temp->character);
     free(temp);
 }
@@ -517,7 +521,6 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
                     if (queue->enemies[target - 1]->hp < 0) {
                         queue->enemies[target - 1]->hp = 0.0;
                         printf("%s was defeated by %s!\n", queue->enemies[target - 1]->name, player->name);
-                        remove_node(queue, queue->enemies[target - 1]);
                     } else {
                         printf("%s dealt %.2f damage to %s!\n", player->name, damage_amount, queue->enemies[target - 1]->name);
                     }
@@ -585,15 +588,16 @@ void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_sta
         float damage_amount = damage(enemy->atk, player->def);
         player->hp -= damage_amount;
 
-        if (player->hp < 0) {
+        if (player->hp <= 0.0) {
             player->hp = 0.0;
             printf("%s was defeated by %s!\n", player->name, enemy->name);
         } else {
             printf("%s dealt %.2f damage to %s!\n", enemy->name, damage_amount, player->name);
         }
+
     } else {
         int choice = rand() % node->num_skill;
-        Skill *skill = node->available_Skill[choice - 1];
+        Skill *skill = node->available_Skill[choice];
         switch (skill->target) {
             case SELF:
                 apply_skill(choice, node, enemy);
@@ -607,7 +611,7 @@ void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_sta
                 }
                 break;
             case CROWD_TARGET:
-                // Player character is alone
+                apply_skill(choice, node, player);
                 break;
             default:
                 break;
@@ -616,7 +620,56 @@ void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_sta
     }
 }
 
+void reset_player(Character *player) {
+    player->hp = player->hp_limit;
+
+    // Reset active effects
+    for (int i = 0; i < MAX_ACTIVE_EFFECTS; i++) {
+        Effect *current_effect = &player->active_effects[i];
+        if (current_effect->duration > 0) {
+            current_effect->duration = 0;
+            switch (current_effect->type) {
+                case DEF:
+                    if (current_effect->duration <= 0) {
+                        if (current_effect->is_percentile) {
+                            player->def /= current_effect->value;
+                        } else {
+                            player->def -= current_effect->value;
+                        }
+                    }
+                    break;
+                case HP:
+                    if (current_effect->duration <= 0) {
+                        if (current_effect->is_percentile) {
+                            player->hp_limit /= current_effect->value;
+                        } else {
+                            player->hp_limit -= current_effect->value;
+                        }
+                    }
+                case ATK:
+                    if (current_effect->duration <= 0) {
+                        if (current_effect->is_percentile) {
+                            player->atk /= current_effect->value;
+                        } else {
+                            player->atk -= current_effect->value;
+                        }
+                    }
+                default:
+                    break;
+            }
+        }
+    }
+
+    // Reset coolodwns
+    for (int i = 0; i < MAX_SKILL; i++) {
+        if (player->skill_array[i].remaining_cooldown > 0) {
+            player->skill_array[i].remaining_cooldown = 0;
+        }
+    }
+}
+
 bool combat(Character *player, Character *enemies[], Game_state *current_state, int n_enemies) {
+    bool outcome = false;
     bool end = false;
     Turn_queue *queue = create_Tqueue();
     init_Tqueue(queue, player, enemies, n_enemies);
@@ -638,18 +691,50 @@ bool combat(Character *player, Character *enemies[], Game_state *current_state, 
                 end_turn = true;
             }
 
+            printf("\n");
             if (!current_node->character->is_player) {
                 enemy_skill_use(current_node, queue, current_state);
             } else {
                 display_battle(queue);
                 player_turn(current_node, queue, current_state);
             }
+
             // Move node at the end of the queue
             dequeue(queue);
             enqueue(queue, current_node);
+
+            // Remove any enemy who got defeated
+            for (int i = 0; i < queue->size - 1; i++) {
+                if (queue->enemies[i]->hp <= 0) {
+                    remove_enemy(queue, queue->enemies[i], i);
+                }
+            }
+
+            if (player->hp <= 0) {
+                end = true;
+                outcome = false; // player lost
+                end_turn = true;
+            } else if (queue->size == 1) {
+                end = true;
+                outcome = true; // player won
+                end_turn = true;
+            }
         }
         queue->num_turns++;
+        if (queue->num_turns > MAX_TURNS) {
+            printf("\nYou have run out of turns.\n");
+            end = true;
+            outcome = false;
+        }
     }
 
-    return end;
+    // remove all enemies
+    for (int i = 0; i < queue->size - 1; i++) {
+        remove_enemy(queue, queue->enemies[i], i);
+    }
+    reset_player(player);
+    free(queue->head); // Free player node
+    free(queue);
+
+    return outcome;
 }
