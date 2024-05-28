@@ -46,8 +46,7 @@ void change_skill(const char *filename, Skill *skills) {
         // Read skills
         strncpy(temp_skill.name, cJSON_GetObjectItem(skill_json, "name")->valuestring, NAME_LENGTH);
         strncpy(temp_skill.desc, cJSON_GetObjectItem(skill_json, "description")->valuestring, DESCRITPION_LENGTH);
-        temp_skill.id = cJSON_GetObjectItem(skill_json, "name")->valueint;
-        printf("ID: %d\t%s:\n%s",temp_skill.id+1,temp_skill.name,temp_skill.desc);
+        printf("ID: %d\t%s:\n%s\n",i+1,temp_skill.name,temp_skill.desc);
     }
     printf("\nChoose a skill you want to change\n(type 0 to exit):\n");
     int wanted_skill = check_input(0,MAX_SKILL_IN_GAME);
@@ -56,7 +55,7 @@ void change_skill(const char *filename, Skill *skills) {
     wanted_skill -=1;
     printf("\nChoose a skill that you want to substitute:\n");
     for (int i=0; i< MAX_SKILL;i++){
-        printf("ID: %d\t%s:\n%s",i+1,skills[i].name,skills[i].desc);
+        printf("ID: %d\t%s:\n%s\n",i+1,skills[i].name,skills[i].desc);
     }
     int chosen_skill = check_input(1,MAX_SKILL);
     chosen_skill -=1;

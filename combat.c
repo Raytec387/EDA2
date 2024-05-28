@@ -1,5 +1,11 @@
 #include "combat.h"
 
+// Combat menu
+void displayBattleOption(){
+    printf("1.-Basic atack\n");
+    printf("2.-Use a skill\n");
+    printf("3.-Time Strike\n");
+}
 
 // Damage calculation - damage vs defense
 float damage(float damage, int def){

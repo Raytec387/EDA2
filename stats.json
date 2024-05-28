@@ -1,5 +1,6 @@
-{
-    "bullier":{
+[
+    {
+        "NAME": "bully",
         "ATK": 50,
         "DEF": 30,
         "HP": 500.0,
@@ -8,7 +9,8 @@
         "SKILL_ID3": 2,
         "SKILL_ID4": 3
     },
-    "rogue": {
+    {
+        "NAME": "rogue",
         "ATK": 60,
         "DEF": 40,
         "HP": 600.0,
@@ -17,7 +19,8 @@
         "SKILL_ID3": 3,
         "SKILL_ID4": 4
     },
-    "master": {
+    {
+        "NAME": "master",
         "ATK": 70,
         "DEF": 50,
         "HP": 700.0,
@@ -26,7 +29,8 @@
         "SKILL_ID3": 4,
         "SKILL_ID4": 7
     },
-    "piracy": {
+    {
+        "NAME": "pirate",
         "ATK": 80,
         "DEF": 60,
         "HP": 800.0,
@@ -35,4 +39,4 @@
         "SKILL_ID3": 3,
         "SKILL_ID4": 7
     }
-}
+]

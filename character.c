@@ -18,7 +18,7 @@ void initialize_enemy(int i, Character *enemy){
     cJSON *character_json = cJSON_GetArrayItem(json, i);
 
     // Read an enemy
-    strncpy(enemy->name, cJSON_GetObjectItem(character_json, "name")->valuestring, NAME_LENGTH);
+    strncpy(enemy->name, cJSON_GetObjectItem(character_json, "NAME")->valuestring, NAME_LENGTH);
     enemy->atk = cJSON_GetObjectItem(character_json, "ATK")->valueint;
     enemy->def = cJSON_GetObjectItem(character_json, "DEF")->valueint;
     enemy->hp_limit = cJSON_GetObjectItem(character_json, "HP")->valuedouble;
@@ -32,9 +32,11 @@ void initialize_enemy(int i, Character *enemy){
     cJSON_Delete(json);
 }
 
-void initialize_enemies_array(int id_enemy,Character *enemy[],int number_of_enemies){
+void initialize_enemies_array(int id_enemy, Character *enemy[], int number_of_enemies){
     for(int i = 0; i<number_of_enemies;i++){
+        printf("HERE1\n");
         enemy[i] = create_new_enemy();
+        printf("HERE2\n");
         initialize_enemy(id_enemy,enemy[i]);
     }
 }
@@ -48,6 +50,7 @@ void initialize_main_character(Character *player){
     player->skill_array[1].id = 1;
     player->skill_array[2].id = 2;
     player->skill_array[3].id = 3; 
+    load_skill(SKILL_FILE,player->skill_array);
     player->is_player = true;
     strcpy(player->name,"David");
     player->ability_stack.top = -1;

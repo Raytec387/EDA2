@@ -34,5 +34,6 @@ void initialize_enemy(int i, Character *enemy);
 void initialize_enemies_array(int id_enemy,Character *enemy[],int number_of_enemies);
 
 void initialize_main_character(Character *player);
+
 #endif
 

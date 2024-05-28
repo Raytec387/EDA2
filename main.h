@@ -4,7 +4,6 @@
 #include "common.h"
 #include "scenario.h"
 #include "game.h"
-#include "ui.c"
 
 /* Explain the usage in discord
 typedef struct {

@@ -7,7 +7,6 @@
 #include "skill.h"
 #include "character.h"
 #include "game.h"
-#include "ui.c"
 
 #define MAX_TURNS 10
 #define MAX_ENEMIES 3
