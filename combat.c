@@ -25,7 +25,6 @@ void apply_active_effect(Character *character) {
     for (int i = 0; i < MAX_ACTIVE_EFFECTS; i++){
         Effect *current_effect = &character->active_effects[i];
         if (current_effect->duration > 0){
-            printf("N: %s, E: %d, D: %d\n", character->name, current_effect->type, current_effect->duration);
             current_effect->duration--;
             switch (current_effect->type) {
                 case DMG_OVER_TIME:
@@ -94,7 +93,7 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
                 heal_amount = skill->value;
             }
             heal(heal_amount, target);
-            printf("%s healed for %.2f hp!. \n", target->name, heal_amount);
+            printf("%s healed for %.2f hp!\n", target->name, heal_amount);
             break;
         case DAMAGE:
             if (skill->is_percentile) {
@@ -103,10 +102,20 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
                 damage_amount = skill->value;
             }
             damage_amount = damage(damage_amount, target->def);
+<<<<<<< HEAD
 
             printf("%s dealt %.2f damage to %s\n", user->name, damage_amount, target->name);
             target->hp -= damage_amount;
             if(target->hp < 0) {target->hp = 0; printf("%s was defeated by %s!\n", target->name, user->name);}
+=======
+            if (damage_amount > target->hp) {
+                printf("%s deafeted %s\n", user->name, target->name);
+                target->hp = 0;
+            } else {
+                printf("%s dealt %.2f damage to %s\n", user->name, damage_amount, target->name);
+                target->hp -= damage_amount;
+            }
+>>>>>>> 5bcf0f3 (Updated combat.c)
             break;
         case BUFF:
         case DEBUFF:
@@ -345,6 +354,7 @@ Turn_queue* create_Tqueue() {
 void init_Tqueue(Turn_queue *queue, Character *player, Character *enemies[], int n_enemies) {
     int size = n_enemies + 1;
     queue->player = player;
+    queue->num_turns = 1;
 
     for (int i = 0; i < n_enemies; i++) {
         if (enemies[i] != NULL) {
@@ -393,7 +403,6 @@ void init_Tqueue(Turn_queue *queue, Character *player, Character *enemies[], int
             new_node->is_last = true;
         }
     }
-    printf("queue size: %d\n", queue->size);
 }
 
 // Function to enqueue node to a queue
@@ -435,6 +444,8 @@ void display_enemies(Turn_queue *queue) {
 
 void display_battle(Turn_queue *queue) {
     Character *player = queue->player;
+    printf("\n== ONGOING BATTLE ==\n");
+    printf("Turn: %d\n", queue->num_turns);
     printf("%s: HP [%.2f/%.2f]\n", player->name, player->hp, player->hp_limit);
     display_enemies(queue);
 }
@@ -452,6 +463,36 @@ void display_skills(Turn_node *node) {
         printf("\"%s\"\n", node->available_Skill[i]->desc);
         printf("\n");
     }
+}
+
+void remove_enemy(Turn_queue *queue, Turn_node *node, int index) {
+    Turn_node *current_node = queue->head;
+    Turn_node *temp;
+
+    // Remove node from queue
+    if (current_node = node) {
+        temp = current_node;
+        dequeue(queue);
+    } else {
+        while (current_node->next != NULL) {
+            if (current_node->next == node) {
+                temp = current_node->next;
+                if (current_node->next == queue->tail) {
+                    queue->tail = current_node;
+                }
+                current_node->next = current_node->next->next;
+                queue->size--;
+            }
+        }
+    }
+
+    for (int i = index; i < queue->size; i++) {
+        // Move enemies down one index
+        queue->enemies[i - 1] = queue->enemies[i];
+    }
+
+    free(temp->character);
+    free(temp);
 }
 
 void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) {
@@ -479,7 +520,7 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
                     if (queue->enemies[target - 1]->hp < 0) {
                         queue->enemies[target - 1]->hp = 0.0;
                         printf("%s was defeated by %s!\n", queue->enemies[target - 1]->name, player->name);
-                        // Function to remove character from lits and queue
+                        remove_node(queue, queue->enemies[target - 1]);
                     } else {
                         printf("%s dealt %.2f damage to %s!\n", player->name, damage_amount, queue->enemies[target - 1]->name);
                     }
@@ -515,6 +556,7 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
 
                         case CROWD_TARGET:
                             for (int i = 0; i < queue->size - 1; i++) {
+                                printf("CROWD: %d\n", i);
                                 apply_skill(skill_idx - 1, node, queue->enemies[i]);
                             }
                             break;
@@ -534,6 +576,46 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
         }
     } while (!turn_done); 
     
+}
+
+// Function that selects random skill
+void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_state) {
+    int option = rand() % 2;
+    Character *enemy = node->character;
+    Character *player = queue->player;
+    
+    if (option == 0) {
+        float damage_amount = damage(enemy->atk, player->def);
+        player->hp -= damage_amount;
+
+        if (player->hp < 0) {
+            player->hp = 0.0;
+            printf("%s was defeated by %s!\n", player->name, enemy->name);
+        } else {
+            printf("%s dealt %.2f damage to %s!\n", enemy->name, damage_amount, player->name);
+        }
+    } else {
+        int choice = rand() % node->num_skill;
+        Skill *skill = node->available_Skill[choice - 1];
+        switch (skill->target) {
+            case SELF:
+                apply_skill(choice, node, enemy);
+                break;
+            case TARGET:
+                apply_skill(choice, node, player);
+                break;
+            case CROWD_SELF:
+                for (int i = 0; i < queue->size - 1; i++) {
+                    apply_skill(choice, node, queue->enemies[i]);
+                }
+                break;
+            case CROWD_TARGET:
+                // Player character is alone
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 bool combat(Character *player, Character *enemies[], Game_state *current_state, int n_enemies) {
@@ -568,34 +650,8 @@ bool combat(Character *player, Character *enemies[], Game_state *current_state, 
             dequeue(queue);
             enqueue(queue, current_node);
         }
+        queue->num_turns++;
     }
 
     return end;
-}
-
-// Function that selects random skill
-void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_state) {
-    int choice = rand() % node->num_skill;
-    Skill *skill = node->available_Skill[choice - 1];
-    Character *enemy = node->character;
-    Character *player = queue->player;
-
-    switch (skill->target) {
-        case SELF:
-            apply_skill(choice, node, enemy);
-            break;
-        case TARGET:
-            apply_skill(choice, node, player);
-            break;
-        case CROWD_SELF:
-            for (int i = 0; i < queue->size - 1; i++) {
-                apply_skill(choice, node, queue->enemies[i]);
-            }
-            break;
-        case CROWD_TARGET:
-            // Player character is alone
-            break;
-        default:
-            break;
-    }
 }

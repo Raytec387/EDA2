@@ -76,7 +76,7 @@
     },
     {
         "name": "Good sword-art",
-        "description": "Dear all enemies damage 1.2 times ATK.",
+        "description": "Deal all enemies damage 1.2 times ATK.",
         "type": 1,
         "target": 3,
         "value": 1.2,
