@@ -177,7 +177,7 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO], Game_state *curre
                 if(number_of_enemies == 3){
                     currentState->character.atk += 50;
                     currentState->character.def += 50;
-                    currentState->character.hp += 100;
+                    currentState->character.hp_limit += 100;
                     printf("\nDavid grew up because of the decision he has chosen.\n");
                     printf("\natk+50\tdef+50\thp limit+50\n");
                 }
