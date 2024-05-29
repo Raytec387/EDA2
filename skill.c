@@ -1,8 +1,5 @@
 #include "skill.h"
 
-int time_strike_use = 0;
-int top = -1;
-
 // Load Skill from Json
 void load_skill(const char *filename, Skill *skills) {
     // Open json file
