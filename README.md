@@ -11,7 +11,7 @@ Open world: The game world is structured as a Scenario Graph. Using the console 
 
 Scenario: Each scenario shows a main text that presents part of the story and asks the player to make a decision. This decision will decide how many enemies there are(1 or 3) during the battle, the player will face in battle immediately after. Harder battle will increase the atk,def,hp_limit of the main character.
 
-Battle system: Turn-based combat system, queue-based combat system, each character's turn will be stored in the queue. Once the character’s turn reaches, character can do a manipulation, for user he can use a skill or basic atk, for enemies they will apply the skill randomly.
+Battle system: Turn-based combat system, queue-based combat system, each character's turn will be stored in the queue. Once the character's turn reaches, character can do a manipulation, for user he can use a skill or basic atk, for enemies they will apply the skill randomly.
 
 Start the game: game.exe to start,if there is no game.exe compile the code in the terminal with the following command:
 gcc skill.c scenario.c common.c cJSON.c character.c game.c main.c combat.c  -o game -Wall
@@ -34,15 +34,3 @@ Combat:
 
 The library used in the project: cJSON.h and cJSON.c, 
 the original author:	Dave Gamble         URL of the cJSON: https://github.com/DaveGamble/cJSON
-
-
-	
-
-
-
-
-The first session 24/04/2024 - 08/05/2024:
-  1. We create a branch called character in Github, and in there we will upload files such as common.h, character.h, etc.
-  In character.h, we implement the data structure of the main character, the Skill of the main character, and the enemy.
-
-  2. The game story will be based on a self-created story called Red Rain. The background is in Middle Ages.
