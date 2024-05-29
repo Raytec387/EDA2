@@ -91,12 +91,6 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
     Skill *skill = node->available_Skill[idx_skill];
 
     printf("%s uses %s on %s\n", user->name, skill->name, target->name);
-    
-    // For dictionary and Timestrike(with stack)
-    if(user->is_player) {
-        use_ability(user->tracker, skill->name);   
-        push(user, skill->id);
-    }
 
     switch (skill->type) {
         case HEAL:
@@ -564,6 +558,10 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
                             break;
                     }
                     apply_cooldown(skill_idx - 1, node);
+                    // For time-strike and dictionary
+                    use_ability(player->tracker, skill->name);   
+                    push(player, skill->id);
+                    
                     turn_done = true;
                 }
                 break;
