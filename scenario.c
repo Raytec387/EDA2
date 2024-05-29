@@ -54,7 +54,6 @@ int scenario_txt(char txt[NAME_LENGTH]){
     FILE *fp;
 
     fp = fopen(txt, "r");
-    printf("\033[2J\033[1;1H");
 
     char choose;
 
@@ -68,7 +67,6 @@ int scenario_txt(char txt[NAME_LENGTH]){
         while(1){
             if (c == '&') {
                 scanf("%c", &choose);
-                printf("\033[2J\033[1;1H");
                 c = fgetc(fp);
             }
             else if(c == '*'){
@@ -92,7 +90,6 @@ int scenario_txt(char txt[NAME_LENGTH]){
         else{
             printf("\n(Please choose 1 or 2.)\n");
             scanf("%c", &choose);
-            printf("\033[2J\033[1;1H");
         }
     }
     printf("\nError here!\n");
@@ -117,7 +114,6 @@ void scenario_end_txt(char txt[NAME_LENGTH]){
         while(1){
             if (c == '&') {
                 scanf("%c", &choose);
-                printf("\033[2J\033[1;1H");
                 c = fgetc(fp);
             }
             else if(c == EOF){
