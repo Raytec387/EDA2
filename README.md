@@ -13,7 +13,21 @@ Scenario: Each scenario shows a main text that presents part of the story and as
 
 Battle system: Turn-based combat system, queue-based combat system, each character's turn will be stored in the queue. Once the character’s turn reaches, character can do a manipulation, for user he can use a skill or basic atk, for enemies they will apply the skill randomly.
 
+Start the game: game.exe to start,
 Exit game: Enter Ctrl + c in the terminal.
+
+Available option in the menu:
+0.-Go back:finish the game, or go back the previous step
+1.-Start a new game:start the game
+2.-Load Game: load the game if you have saved the game
+3.-Save Game: save the game
+4.-Change the skill of main character: Change the skill
+5.-Show how many times is the skill used: Show the used skill and the counts of the usage
+
+Combat:
+1.-Basic atack: damage based on the atk of the main charcter
+2.-Use a skill, you can check the skill and its description once you click "Change the skill of main character", each skill holds different cooldown.
+3.-Time Strike : Ultimate skill, only can use once in each battle, randomly choose a used skill in the battle, the value of the skill will be doubled.
 
 The library used in the project: cJSON.h and cJSON.c, 
 the original author:	Dave Gamble         URL of the cJSON: https://github.com/DaveGamble/cJSON
