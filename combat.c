@@ -200,7 +200,6 @@ void apply_skill(int idx_skill, Turn_node *node, Character *target) {
             }
         }   
     }
-
 }
 
 void update_cooldowns (Turn_node *node) {
@@ -217,51 +216,190 @@ void update_cooldowns (Turn_node *node) {
     }
 }
 
-/*  Allows access to the history of moves executed by the player (which is a stack) 
-    and randomly selects the k-th move executed counting from the last one          */
-void TimeStrike(int id, Character *user, Character *target) {
-    
-    if (!isempty(user) && user->ability_stack.time_strike_use == 1){
-        Skill TimeStrike;
-        TimeStrike.id = id;
+void load_TimeStrike(Skill* TimeStrike){
+        TimeStrike->id;
         // Open json file
         cJSON *json = create_json("skill.json");
         // Read skills array
-        cJSON *skill_json = cJSON_GetArrayItem(json, TimeStrike.id);
+        cJSON *skill_json = cJSON_GetArrayItem(json, TimeStrike->id);
 
         // Read skills
-        strncpy(TimeStrike.name, cJSON_GetObjectItem(skill_json, "name")->valuestring, NAME_LENGTH);
-        strncpy(TimeStrike.desc, cJSON_GetObjectItem(skill_json, "description")->valuestring, DESCRITPION_LENGTH);
-        TimeStrike.type = cJSON_GetObjectItem(skill_json, "type")->valueint;
-        TimeStrike.target = cJSON_GetObjectItem(skill_json, "target")->valueint;
-        TimeStrike.value = cJSON_GetObjectItem(skill_json, "value")->valuedouble;
-        TimeStrike.is_percentile = cJSON_GetObjectItem(skill_json, "is_percentile")->valueint;
-        TimeStrike.cooldown = cJSON_GetObjectItem(skill_json, "cooldown")->valueint;
+        strncpy(TimeStrike->name, cJSON_GetObjectItem(skill_json, "name")->valuestring, NAME_LENGTH);
+        strncpy(TimeStrike->desc, cJSON_GetObjectItem(skill_json, "description")->valuestring, DESCRITPION_LENGTH);
+        TimeStrike->type = cJSON_GetObjectItem(skill_json, "type")->valueint;
+        TimeStrike->target = cJSON_GetObjectItem(skill_json, "target")->valueint;
+        TimeStrike->value = cJSON_GetObjectItem(skill_json, "value")->valuedouble;
+        TimeStrike->is_percentile = cJSON_GetObjectItem(skill_json, "is_percentile")->valueint;
+        TimeStrike->cooldown = cJSON_GetObjectItem(skill_json, "cooldown")->valueint;
 
         // Read effect
         cJSON *effect_json = cJSON_GetObjectItem(skill_json, "effects");
-        TimeStrike.effect.type = cJSON_GetObjectItem(effect_json, "type")->valueint;
-        TimeStrike.effect.value = cJSON_GetObjectItem(effect_json, "value")->valuedouble;
-        TimeStrike.effect.duration = cJSON_GetObjectItem(effect_json, "duration")->valueint;
+        TimeStrike->effect.type = cJSON_GetObjectItem(effect_json, "type")->valueint;
+        TimeStrike->effect.value = cJSON_GetObjectItem(effect_json, "value")->valuedouble;
+        TimeStrike->effect.is_percentile = cJSON_GetObjectItem(effect_json, "is_percentile")->valueint;
+        TimeStrike->effect.duration = cJSON_GetObjectItem(effect_json, "duration")->valueint;
     
         cJSON_Delete(json);
-        // Use only one time every battle
-        user->ability_stack.time_strike_use = 0;
         // TimeStrike has 2 times of original value
-        TimeStrike.value *= 2;
-        TimeStrike.effect.value *= 2;
+        TimeStrike->value *= 2;
+        TimeStrike->effect.value *= 2;
+}
 
-        // Need to apply skill
+void execute_TimeStrike(Skill* skill,Character *user,Character *target){
+    float heal_amount;
+    float damage_amount;
+
+    printf("%s uses %s on %s\n", user->name, skill->name, target->name);
+
+    switch (skill->type) {
+        case HEAL:
+            if (skill->is_percentile) {
+                heal_amount = skill->value * (target->hp_limit - target->hp); // n% of missing
+            } else {
+                heal_amount = skill->value;
+            }
+            heal(heal_amount, target);
+            printf("%s healed for %.2f hp!\n", target->name, heal_amount);
+            break;
+        case DAMAGE:
+            if (skill->is_percentile) {
+                damage_amount = skill->value * user->atk;
+            } else {
+                damage_amount = skill->value;
+            }
+            damage_amount = damage(damage_amount, target->def);
+            if (damage_amount > target->hp) {
+                printf("%s defeated %s\n", user->name, target->name);
+                target->hp = 0;
+            } else {
+                printf("%s dealt %.2f damage to %s\n", user->name, damage_amount, target->name);
+                target->hp -= damage_amount;
+            }
+            break;
+        case BUFF:
+        case DEBUFF:
+            switch (skill->effect.type) {
+                float buff_amount;
+                case DEF:
+                    if (skill->effect.is_percentile) {
+                        buff_amount = (skill->effect.value * target->def) - target->def;
+                    } else {
+                        buff_amount = skill->effect.value;
+                    }
+                    target->def += buff_amount;
+                    if (skill->type == BUFF) {
+                        printf("%s defence increased by %.2f!\n", target->name, buff_amount);
+                    } else {
+                        printf("%s defence decreased by %.2f!\n", target->name, buff_amount);
+                    }
+                    break;
+                case HP:
+                    if (skill->effect.is_percentile) {
+                        buff_amount = (skill->effect.value * target->hp_limit) - target->hp_limit;
+                    } else {
+                        buff_amount = skill->effect.value;
+                    }
+                    target->hp_limit += buff_amount;
+                    if (skill->type == BUFF) {
+                        printf("%s max hp increased by %.2f!\n", target->name, buff_amount);
+                    } else {
+                        printf("%s max hp decreased by %.2f!\n", target->name, buff_amount);
+                    }
+                    break;
+                case ATK:
+                    if (skill->effect.is_percentile) {
+                        buff_amount = (skill->effect.value * target->atk) - target->atk;
+                    } else {
+                        buff_amount = skill->effect.value;
+                    }
+                    target->atk += buff_amount;
+                    if (skill->type == BUFF) {
+                        printf("%s attack increased by %.2f!\n", target->name, buff_amount);
+                    } else {
+                        printf("%s attack decreased by %.2f!\n", target->name, buff_amount);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            break;
     }
-    else{
-        printf("Can't use TimeStrike!\n");
-        return;
+
+    // Apply skill effects
+    if (skill->effect.duration > 0) {
+        for (int i = 0; i < MAX_ACTIVE_EFFECTS; i++) {
+            if (target->active_effects[i].duration <= 0) {
+                switch (skill->effect.type) {
+                    case DMG_OVER_TIME:
+                        target->active_effects[i].type = skill->effect.type;
+                        target->active_effects[i].duration = skill->effect.duration;
+                        target->active_effects[i].value = skill->effect.value;
+                        target->active_effects[i].is_percentile = skill->effect.is_percentile;
+                        printf("%s is being afflicted with ongoing damage!\n", target->name);
+                        break;
+                    case HEAL_OVER_TIME:
+                        target->active_effects[i].type = skill->effect.type;
+                        target->active_effects[i].duration = skill->effect.duration;
+                        target->active_effects[i].value = skill->effect.value;
+                        target->active_effects[i].is_percentile = skill->effect.is_percentile;
+                        printf("%s is being afflicted with ongoing healing!\n", target->name);
+                        break;
+                    case DEF:
+                    case HP:
+                    case ATK:
+                        target->active_effects[i].type = skill->effect.type;
+                        target->active_effects[i].duration = skill->effect.duration;
+                        target->active_effects[i].value = skill->effect.value;
+                        target->active_effects[i].is_percentile = skill->effect.is_percentile;
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            }
+        }   
+    }
+}
+/*  Allows access to the history of moves executed by the player (which is a stack) 
+    and randomly selects the k-th move executed counting from the last one          */
+void apply_TimeStrike(int id,Game_state *currentState,Turn_queue *queue) {
+    Skill skill;
+    skill.id = id;
+    load_TimeStrike(&skill);
+    printf("\n%s uses TimeStrike(based on %s)\n", currentState->character.name, skill.name);
+
+    int target;
+
+    switch (skill.target) {
+        case SELF:
+            execute_TimeStrike(&skill,&currentState->character,&currentState->character);
+            break;
+
+        case TARGET:
+            printf("Please select an enemy to use the skill on.\n");
+            display_enemies(queue);
+            target = check_input(1, queue->size - 1);
+            execute_TimeStrike(&skill,&currentState->character,queue->enemies[target - 1]);
+            break;
+
+        case CROWD_SELF:
+            // Player character is always alone :(
+            break;
+
+        case CROWD_TARGET:
+            for (int i = 0; i < queue->size - 1; i++) {
+                execute_TimeStrike(&skill,&currentState->character,queue->enemies[i]);
+            }
+            break;
+
+        default:
+            break;
     }
 }
 
 // Function to choose a random skill in the stack
 int random_Time_Strike(Character *character) {
-    int k_th = rand() % character->ability_stack.time_strike_use;
+    int k_th = rand() % character->ability_stack.top+1;
     int id;
     for(int i = 0; i < k_th;i++) {
         id = pop(character);
@@ -308,12 +446,13 @@ int pop(Character *character) {
 
 /* Function to insert into the stack */
 void push(Character *character, int data) {
-   if(!isfull(character)) {
-      character->ability_stack.top++;
-      character->ability_stack.stack[character->ability_stack.top] = data;
-   } else {
-      printf("Could not insert data, Stack is full.\n");
-   }
+    if(!isfull(character)) {
+        character->ability_stack.top++;
+        character->ability_stack.stack[character->ability_stack.top] = data;
+    } 
+    else {
+        printf("Could not insert data, Stack is full.\n");
+    }
 }
 
 // Function to initialize a node struct
@@ -560,13 +699,22 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
                     apply_cooldown(skill_idx - 1, node);
                     // For time-strike and dictionary
                     use_ability(player->tracker, skill->name);   
-                    push(player, skill->id);
+                    push(&current_state->character, skill->id);
 
                     turn_done = true;
                 }
                 break;
 
             case USE_TIME_STRIKE:
+                if(current_state->character.ability_stack.time_strike_use == true && !isempty(&current_state->character)){
+                    int id = random_Time_Strike(&current_state->character);
+                    apply_TimeStrike(id,current_state,queue);
+                    current_state->character.ability_stack.time_strike_use = false;
+                    turn_done = true;
+                } 
+                else{
+                    printf("Please use TimeStrike correctly!\n");
+                }
                 break;
 
             default:
@@ -671,6 +819,7 @@ bool combat(Character *player, Character *enemies[], Game_state *current_state, 
     bool end = false;
     Turn_queue *queue = create_Tqueue();
     init_Tqueue(queue, player, enemies, n_enemies);
+    current_state->character.ability_stack.time_strike_use = true;
 
     while(!end) {
         bool end_turn = false;
