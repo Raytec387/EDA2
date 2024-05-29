@@ -1,6 +1,9 @@
 The project name : Red rain
 Author: Rui Lin, Zihao Zhou, Marti Melcio
 
+Demo of the game:
+https://drive.google.com/file/d/1vTb_2_dpRAxUaYDXp0_AqlqIvpILjiaN/view?usp=drivesdk
+
 Red Rain is a Role Playing Game, this game uses the C programming language, and it executes the codes in the terminal. The game story will be based on a self-created story called Red Rain. The background is in Middle Ages.
 
 The characteristic of the game:
