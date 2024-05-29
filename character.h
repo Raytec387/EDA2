@@ -11,7 +11,7 @@
 typedef struct {
     int top;
     int stack[MAX_STACK_SIZE];
-    int time_strike_use;
+    bool time_strike_use;
 } Time_strike_stack;
 
 // Data structure of character it holds the basic datas of the characters
