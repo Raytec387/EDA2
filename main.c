@@ -56,7 +56,7 @@ void start_game(Game_state *currentState) {
     return;
 }
 
-void load_game(const char *file_name, Game_state *currentState){
+void load_game(const char *file_name, Game_state *currentState) {
     currentState->character.tracker = load_tracker(TRACKER_FILE);
     FILE *fp = fopen(file_name, "r");
     if (fp == NULL) {
@@ -87,7 +87,7 @@ void load_game(const char *file_name, Game_state *currentState){
     return;
 }
 
-void save_game(const char *file_name, Game_state *currentState){
+void save_game(const char *file_name, Game_state *currentState) {
     save_tracker(currentState->character.tracker,TRACKER_FILE);
     cJSON *json = create_json_from_game_state(currentState);
     char *json_string = cJSON_Print(json);

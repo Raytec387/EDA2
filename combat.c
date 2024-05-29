@@ -512,7 +512,7 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
                     float damage_amount = damage(player->atk, queue->enemies[target - 1]->def);
                     queue->enemies[target - 1]->hp -= damage_amount;
 
-                    if (queue->enemies[target - 1]->hp < 0) {
+                    if (queue->enemies[target - 1]->hp < 0.0) {
                         queue->enemies[target - 1]->hp = 0.0;
                         printf("%s was defeated by %s!\n", queue->enemies[target - 1]->name, player->name);
                     } else {
@@ -561,7 +561,7 @@ void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state) 
                     // For time-strike and dictionary
                     use_ability(player->tracker, skill->name);   
                     push(player, skill->id);
-                    
+
                     turn_done = true;
                 }
                 break;
@@ -703,12 +703,12 @@ bool combat(Character *player, Character *enemies[], Game_state *current_state, 
 
             // Remove any enemy who got defeated
             for (int i = 0; i < queue->size - 1; i++) {
-                if (queue->enemies[i]->hp <= 0) {
+                if (queue->enemies[i]->hp <= 0.0) {
                     remove_enemy(queue, queue->enemies[i], i);
                 }
             }
 
-            if (player->hp <= 0) {
+            if (player->hp <= 0.0) {
                 end = true;
                 outcome = false; // player lost
                 end_turn = true;

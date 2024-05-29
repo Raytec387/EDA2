@@ -72,6 +72,9 @@ void display_enemies(Turn_queue *queue);
 void display_battle(Turn_queue *queue);
 void display_skills(Turn_node *node);
 
+void remove_enemy(Turn_queue *queue, Character *enemy, int index);
+void reset_player(Character *player);
+
 // Action in the trun
 void player_turn(Turn_node *node, Turn_queue *queue, Game_state *current_state);
 void enemy_skill_use(Turn_node *node, Turn_queue *queue, Game_state *current_state);

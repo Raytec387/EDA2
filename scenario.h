@@ -14,4 +14,15 @@ typedef struct Scenario {
     int adjCount;
 } Scenario;
 
+Scenario* createScenario(int id, const char* name); 
+void addEdge(Scenario* src, Scenario* dest); 
+void showAdjacentScenarios(Scenario* scenario);
+ 
+Scenario* getScenarioById(Scenario* scenarios[], int id, int count); 
+void freeScenarios(Scenario* scenarios[], int count); 
+int scenario_txt(char txt[NAME_LENGTH]);
+void scenario_end_txt(char txt[NAME_LENGTH]);
+void graph_initialize(Scenario *scenarios[MAX_SCENARIO]);
+void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO], Game_state *currentState, Scenario* currentScenario);
+
 #endif

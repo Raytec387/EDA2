@@ -166,7 +166,7 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO], Game_state *curre
         // Ending of the story
         if (0==strcmp(currentScenario->name,"Ending.txt")){
             scenario_end_txt(currentScenario->name);
-            free_game_state(currentScenario);
+            free_game_state(currentState);
             free_tracker(currentState->character.tracker);
             break;
         }
@@ -202,7 +202,7 @@ void story_Navi_battleCheck(Scenario *scenarios[MAX_SCENARIO], Game_state *curre
         printf("\nEnter 0 to go to the menu:\n");
         int nextScenarioId = check_input(0,currentState->currentScenarioId+1);
 
-        // change skill,go next scenario or before
+        // change skill, go next scenario or before
         if (nextScenarioId == 0){
             run(currentState);
             /// Change skill function here //
