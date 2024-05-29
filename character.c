@@ -62,7 +62,7 @@ void initialize_main_character(Character *player){
     load_skill(SKILL_FILE,player->skill_array);
     player->is_player = true;
     strcpy(player->name,"David");
-    player->ability_stack.top = -1;
+    player->ability_stack.top = 0;
     player->ability_stack.time_strike_use = 0;
     reset_active_effects(player);
 }
